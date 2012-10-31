@@ -183,6 +183,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				HEADER_SEARCH_PATHS = "";
+				"HEADER_SEARCH_PATHS[arch=*]" = /Users/klaas/Code/Intel/tbb41_20121003oss/include;
 				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -196,6 +197,7 @@
 					"\"$(SRCROOT)\"",
 				);
 				HEADER_SEARCH_PATHS = "";
+				"HEADER_SEARCH_PATHS[arch=*]" = /Users/klaas/Code/Intel/tbb41_20121003oss/include;
 				LIBRARY_SEARCH_PATHS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
