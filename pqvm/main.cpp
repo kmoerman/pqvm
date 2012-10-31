@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <TBB/parallel_for.h>
-#include <TBB/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
 
 using namespace tbb;
 using namespace std;
