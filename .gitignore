@@ -41,3 +41,7 @@ Thumbs.db
 #########
 project.xcworkspace
 *.xcuserdatad
+
+# TBB #
+#######
+tbb
