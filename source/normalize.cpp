@@ -2,7 +2,8 @@
 #include <complex>
 #include <cstdlib>
 #include <ctime>
-#include "measure.h"
+#include <cmath>
+//#include "measure.h"
 
 using namespace std;
 
@@ -11,53 +12,124 @@ typedef double Real;
 typedef complex<Real> Complex;
 
 Real random_real () {
-  return ((Real) rand())/RAND_MAX;
+    return ((Real) rand())/RAND_MAX;
+}
+
+Real inner_product_term(Real a, Real b) {
+    return a*b;
 }
 
 Complex random_complex () {
-  Complex z (random_real(), random_real());
-  return z;
+    Complex z (random_real(), random_real());
+    return z;
+}
+
+Complex inner_product_term(const Complex& a, const Complex& b) {
+    return a*b.conj();
 }
 
 ostream& operator<< (ostream& os, const Complex& z) {
-  os << z.real() << "+" << z.imag() << "i";
+    os << z.real() << "+" << z.imag() << "i";
 }
 
 template <class Number, class Generator>
-void fill_vector (Number vector[], int size, Generator g) {
-  for (--size; size >= 0; --size) vector[size] = g();
+void fill_vector (Number vector[], size_t size, Generator g) {
+    for (--size; size >= 0; --size) vector[size] = g();
 }
 
-//Measure the time [seconds] of n consecutive executions
+//Measure the time [milliseconds] of n consecutive executions
 //of of functional object F.
+//TODO: put in separate .cpp file (strange linking errors)
 template <class Function>
-double measure(int n, Function F) {
+double measure(size_t n, Function F) {
+    static double factor = 1000 / CLOCKS_PER_SEC;
     clock_t zero = clock();
     for (; n > 0; --n) F();
-    return ((double)(clock() - zero)) / CLOCKS_PER_SEC;
+    return factor * ((clock() - zero));
+}
+
+//Normalization
+//Reduce to find the norm of the vector
+template <class Number>
+class InnerProduct {
+    Number* vector;
+public:
+    Number result;
+    void operator() (const blocked_range<size_t>& r) {
+        Number* v = vector;
+        Number res = result;
+        size_t end = r.end();
+        for (size_t i = r.begin(); i != end; ++i)
+            res += inner_product_term(v[i], v[i]);
+        result = res;
+    }
+    
+    InnerProduct (InnerProduct& ip, split) : vector(ip.vector), result(0) {}
+    
+    InnerProduct (Number v[]) : vector(c), result(0) {}
+    
+    void join (const InnerProduct& ip) {
+        result += ip.result;
+    }
+}
+
+template <class Number>
+Number norm (const Number vector[], size_t n) {
+    InnerProduct ip(vector);
+    parallel_reduce(blocked_range<size_t>(0,n), ip);
+    return sqrt(ip.result);
+}
+
+//Map to divide by the norm
+template <class Number>
+class Normalizer {
+    Number * const source;
+    Number norm;
+public:
+    Number * const destination;
+    void operator() (const blocked_range<size_t>& r) const {
+        Number * s = source;
+        Number * d = destination;
+        for (size_t i=r.begin(); i!=r.end(); ++i)
+            d[i] = s[i]/norm;
+    }
+    Normalizer (Number s[], Number d[], Number n) : source(s), destination(d), norm(n) {}
+}
+
+template <class Number>
+void normalize (Number source[], Number destination[], size_t n) {
+    parallel_for(blocked_range<size_t>(0,n),
+                 Normalizer (source, destination, norm(source, n)));
+}
+
+//Measure the results
+void normalize_real () {
+    normalize(xs, xd, TEST_SIZE);
+}
+
+void normalize_complex () {
+    normalize(zs, zd, TEST_SIZE);
 }
 
 
 //Test data
-#define TEST_SIZE 1000000
-#define TEST_ITER 100
+#define TEST_SIZE 100000
+#define TEST_ITER 1
 
-Real x[TEST_SIZE];
-Complex z[TEST_SIZE];
-
-void fill_real () {
-    fill_vector(x, TEST_SIZE, random_real);
-}
-
-void fill_complex () {
-    fill_vector(z, TEST_SIZE, random_complex);
-}
+Real xs[TEST_SIZE];
+Real xd[TEST_SIZE];
+Complex zs[TEST_SIZE];
+Complex zd[TEST_SIZE];
 
 int main (int argc, const char * argv[]) {
-  srand(time(0));
-
-  cout << measure(TEST_ITER, fill_real) << endl;
-  cout << measure(TEST_ITER, fill_complex) << endl;
-
-  return EXIT_SUCCESS;
+    
+    srand(time(0));
+    
+    fill_vector(x, TEST_SIZE, random_real);
+    fill_vector(z, TEST_SIZE, random_complex);
+    
+    cout << measure(TEST_ITER, normalize_real) << endl;
+    cout << measure(TEST_ITER, normalize_complex) << endl;
+    
+    return EXIT_SUCCESS;
 }
