@@ -1,50 +1,63 @@
 #include <iostream>
 #include <complex>
 #include <cstdlib>
+#include <ctime>
 #include "measure.h"
 
 using namespace std;
 
-#define TEST_SIZE 10//00000
-
+//Number types
 typedef double Real;
 typedef complex<Real> Complex;
 
-
-//#define UPPER 1000
-//#define LOWER -UPPER
-Real real_random() {
-	//static default_random_engine generator;
-	//static uniform_real_distribution<Real> distribution (LOWER, UPPER);
-	//static auto make = bind(distribution, generator);
-	//return make();
-	return ((Real) rand())/RAND_MAX;
+Real random_real () {
+  return ((Real) rand())/RAND_MAX;
 }
 
-Complex complex_random() {
-    Complex z (real_random(), real_random());
-    return z;
+Complex random_complex () {
+  Complex z (random_real(), random_real());
+  return z;
+}
+
+ostream& operator<< (ostream& os, const Complex& z) {
+  os << z.real() << "+" << z.imag() << "i";
 }
 
 template <class Number, class Generator>
-void fill_vector(Number vector[], int size, Generator g) {
-	for(--size; size >= 0; --size) vector[size] = g();
+void fill_vector (Number vector[], int size, Generator g) {
+  for (--size; size >= 0; --size) vector[size] = g();
+}
+
+//Measure the time [seconds] of n consecutive executions
+//of of functional object F.
+template <class Function>
+double measure(int n, Function F) {
+    clock_t zero = clock();
+    for (; n > 0; --n) F();
+    return ((double)(clock() - zero)) / CLOCKS_PER_SEC;
+}
+
+
+//Test data
+#define TEST_SIZE 1000000
+#define TEST_ITER 100
+
+Real x[TEST_SIZE];
+Complex z[TEST_SIZE];
+
+void fill_real () {
+    fill_vector(x, TEST_SIZE, random_real);
+}
+
+void fill_complex () {
+    fill_vector(z, TEST_SIZE, random_complex);
 }
 
 int main (int argc, const char * argv[]) {
-	Real x[TEST_SIZE];
-	Complex z[TEST_SIZE];
-	
-	srand(time(0));
-	
-	fill_vector(x, TEST_SIZE, real_random);
-	fill_vector(z, TEST_SIZE, complex_random);
-	
-	for(int k = TEST_SIZE - 1; k >= 0; --k)
-		cout << x[k] << endl;
-	cout << endl;
-	for (int k = TEST_SIZE - 1; k >= 0; --k)
-		cout << z[k] << endl;
-    
-	return EXIT_SUCCESS;
+  srand(time(0));
+
+  cout << measure(TEST_ITER, fill_real) << endl;
+  cout << measure(TEST_ITER, fill_complex) << endl;
+
+  return EXIT_SUCCESS;
 }

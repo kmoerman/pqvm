@@ -1,10 +1,10 @@
 #compiler
-CC = gcc
-CFLAGS = -I ../tbb/include -L ../tbb/lib/libtbb.dylib
+CC = g++
+CFLAGS = -ltbb
 
 
 #objects
-OBJECTS = normalize.o measure.o
+OBJECTS = normalize.o
 
 #build
 
@@ -16,8 +16,8 @@ test: $(OBJECTS)
 normalize.o: normalize.cpp measure.h
 	$(CC) $(CFLAGS) -c normalize.cpp
 
-measure.o: measure.cpp measure.h
-	$(CC) $(CFLAGS) -c measure.cpp
+#measure.o: measure.cpp measure.h
+#	$(CC) $(CFLAGS) -c measure.cpp
 
 tbb: tbb_test.cpp
 	$(CC) $(CFLAGS) tbb_test.cpp

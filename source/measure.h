@@ -1,7 +1,7 @@
 #ifndef MEASURE_H
 #define MEASURE_H
 
-template <class Measurable>
-double measure(int iterations, Measurable subject)
+//template <class Function>
+//double measure(int n, Function F);
 
 #endif
