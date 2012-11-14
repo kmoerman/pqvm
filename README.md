@@ -1,1 +1,1 @@
-This repository contains the code for my [bachelor’s project](https://caliweb.cumulus.vub.ac.be/caliweb/?page=course-offer&id=006306&language=en) at the [computer science department](http://dinf.vub.ac.be) of the [Vrije Universiteit Brussel](http://www.vub.ac.be/en).
+This repository contains the code for my [bachelor’s paper project](https://caliweb.cumulus.vub.ac.be/caliweb/?page=course-offer&id=006306&language=en) at the [computer science department](http://dinf.vub.ac.be) of the [Vrije Universiteit Brussel](http://www.vub.ac.be/en).
