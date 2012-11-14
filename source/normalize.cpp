@@ -15,29 +15,29 @@ typedef double Real;
 typedef complex<Real> Complex;
 
 Real random_real () {
-    return ((Real) rand())/RAND_MAX;
+  return ((Real) rand())/RAND_MAX;
 }
 
 Real inner_product_term(Real a, Real b) {
-    return a*b;
+  return a * b;
 }
 
 Complex random_complex () {
-    Complex z (random_real(), random_real());
-    return z;
+  Complex z (random_real(), random_real());
+  return z;
 }
 
 Complex inner_product_term(const Complex& a, const Complex& b) {
-    return a*conj(b);
+  return a * conj(b);
 }
 
 ostream& operator<< (ostream& os, const Complex& z) {
-    os << real(z) << "+" << imag(z) << "i";
+  os << real(z) << "+" << imag(z) << "i";
 }
 
 template <class Number, class Generator>
 void fill_vector (Number vector[], size_t size, Generator g) {
-    for (--size; size >= 0; --size) vector[size] = g();
+  while (size > 0) vector[--size] = g();
 }
 
 //Measure the time [milliseconds] of n consecutive executions
@@ -45,10 +45,10 @@ void fill_vector (Number vector[], size_t size, Generator g) {
 //TODO: put in separate .cpp file (strange linking errors)
 template <class Function>
 double measure(size_t n, Function F) {
-    static double factor = 1000 / CLOCKS_PER_SEC;
-    clock_t zero = clock();
-    for (; n > 0; --n) F();
-    return factor * ((clock() - zero));
+  static double factor = 1000.0 / CLOCKS_PER_SEC;
+  clock_t zero = clock();
+  for (; n > 0; --n) F();
+  return factor * ((clock() - zero));
 }
 
 //Normalization
@@ -86,29 +86,28 @@ Number norm (Number vector[], size_t n) {
 //Map to divide by the norm
 template <class Number>
 class Normalizer {
-    Number * const source;
-    Number norm;
+  Number * const source;
+  Number norm;
 public:
-    Number * const destination;
-    void operator() (const blocked_range<size_t>& r) const {
-        Number * s = source;
-        Number * d = destination;
-        for (size_t i=r.begin(); i!=r.end(); ++i)
-            d[i] = s[i]/norm;
-    }
-    Normalizer (Number s[], Number d[], Number n) : source(s), destination(d), norm(n) {}
+  Number * const destination;
+  void operator() (const blocked_range<size_t>& r) const {
+    Number * s = source;
+    Number * d = destination;
+    for (size_t i=r.begin(); i!=r.end(); ++i)
+      d[i] = s[i]/norm;
+  }
+  Normalizer (Number s[], Number d[], Number n) : source(s), destination(d), norm(n) {}
 };
 
 template <class Number>
 void normalize (Number source[], Number destination[], size_t n) {
-    parallel_for(blocked_range<size_t>(0,n),
-                 Normalizer<Number> (source, destination, norm(source, n)));
+  parallel_for(blocked_range<size_t>(0,n),
+	       Normalizer<Number> (source, destination, norm(source, n)));
 }
 
-
 //Test data
-#define TEST_SIZE 100
-#define TEST_ITER 1
+#define TEST_SIZE 1000000
+#define TEST_ITER 10
 
 Real xs[TEST_SIZE];
 Real xd[TEST_SIZE];
