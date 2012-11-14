@@ -8,9 +8,7 @@ OBJECTS = normalize.o
 
 #build
 
-dummy:
-
-test: $(OBJECTS)
+normalize: $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) -o normalize
 
 normalize.o: normalize.cpp measure.h

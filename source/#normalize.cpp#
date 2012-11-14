@@ -77,7 +77,7 @@ public:
 };
 
 template <class Number>
-Number norm (Number vector[], size_t n) {
+Number norm (const Number vector[], size_t n) {
   InnerProduct<Number> ip(vector);
   parallel_reduce(blocked_range<size_t>(0,n), ip);
   return sqrt(ip.result);
@@ -115,23 +115,30 @@ Real xd[TEST_SIZE];
 Complex zs[TEST_SIZE];
 Complex zd[TEST_SIZE];
 
+//Measure the results                                                                                                 |
+void normalize_real () {                                                                                              |
+  normalize(xs, xd, TEST_SIZE);                                                                                     |
+    }                                                                                                                     |
+                                                                                                                      |
+														      void normalize_complex () {                                                                                           |
+															normalize(zs, zd, TEST_SIZE);											     }
+
 //Measure the results
-void normalize_real () {
-  normalize(xs, xd, TEST_SIZE);
-}
-void normalize_complex () {
-  normalize(zs, zd, TEST_SIZE);
-}
+void normalize_real () {                                                                                              |
+  normalize(xs, xd, TEST_SIZE);                                                                                     |
+    }                                                                                                                     |
+                                                                                                                      |
+						  
 
 int main (int argc, const char * argv[]) {
     
-  srand(time(0));
-  
-  fill_vector(xs, TEST_SIZE, random_real);
-  fill_vector(zs, TEST_SIZE, random_complex);
-  
-  cout << measure(TEST_ITER, normalize_real) << endl;
-  cout << measure(TEST_ITER, normalize_complex) << endl;
-  
-  return EXIT_SUCCESS;
+    srand(time(0));
+    
+    fill_vector(x, TEST_SIZE, random_real);
+    fill_vector(z, TEST_SIZE, random_complex);
+    
+    cout << measure(TEST_ITER, normalize_real) << endl;
+    cout << measure(TEST_ITER, normalize_complex) << endl;
+    
+    return EXIT_SUCCESS;
 }
