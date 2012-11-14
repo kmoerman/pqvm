@@ -107,7 +107,7 @@ void normalize (Number source[], Number destination[], size_t n) {
 
 
 //Test data
-#define TEST_SIZE 100000
+#define TEST_SIZE 100
 #define TEST_ITER 1
 
 Real xs[TEST_SIZE];
