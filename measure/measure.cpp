@@ -15,22 +15,25 @@ double diff(tbb_time_t start, tbb_time_t end) {
 
 utility::thread_number_range threads(tbb::task_scheduler_init::default_num_threads);
 
-std::string tab ("\t");
+std::string separator ("\t");
 
 // Measure the time [seconds] of n consecutive executions
 // of a function F.
 void measure(std::ostream& result, int iterations, void (*F)()) {
     
     result << "# Results for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
-    result << "# threads" << tab << "time [s]" << std::endl;
+    result << "# threads" << separator << "time per iteration (s)" << std::endl;
     
     for (int thread_n = threads.first; thread_n <= threads.last; ++thread_n) {
         tbb::task_scheduler_init init(thread_n);
         
-        tbb_time_t start = time();
-        for (int i = 0; i < iterations; ++i) F();
-        tbb_time_t stop = time();
-        
-        result << thread_n << tab << diff(start, stop) << std::endl;
+        result << thread_n;
+        for (int i = 0; i < iterations; ++i) {
+            tbb_time_t start = time();
+            F();
+            tbb_time_t stop = time();
+            result << separator << diff(start, stop);
+        }
+        result << std::endl;
     }
 }

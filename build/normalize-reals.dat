@@ -1,4 +1,6 @@
-# Results for 10 iterations on 1 - 2 threads.
+# Results for 10 iterations on 1 - 4 threads.
 # threads	time [s]
-1	0.267672
-2	0.125941
+1	0.096004
+2	0.053108
+3	0.047672
+4	0.051838
