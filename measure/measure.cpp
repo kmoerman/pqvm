@@ -4,6 +4,7 @@
 #include "utility.h"
 #include "measure.h"
 
+// Timing functions are based on TBB to always obtain wall-clock time
 tbb_time_t time() {
     return tbb::tick_count::now();
 }
@@ -16,8 +17,8 @@ utility::thread_number_range threads(tbb::task_scheduler_init::default_num_threa
 
 std::string tab ("\t");
 
-//Measure the time [seconds] of n consecutive executions
-//of a function F.
+// Measure the time [seconds] of n consecutive executions
+// of a function F.
 void measure(std::ostream& result, int iterations, void (*F)()) {
     
     result << "# Results for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;

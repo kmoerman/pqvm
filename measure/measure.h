@@ -4,7 +4,6 @@
 #include <ostream>
 #include "tbb/tick_count.h"
 
-// Timing functions are based on TBB to always obtain wall-clock time
 typedef tbb::tick_count tbb_time_t;
 
 tbb_time_t gettime();

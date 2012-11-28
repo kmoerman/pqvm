@@ -43,3 +43,8 @@ Thumbs.db
 project.xcworkspace
 *.xcuserdatad
 *.1
+
+# TBB #
+#######
+*.dylib
+build/pqvm.build

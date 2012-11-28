@@ -5,7 +5,7 @@
 #include <ctime>
 #include <cmath>
 #include <tbb/tbb.h>
-#include "measure.h"
+#include "../measure/measure.h"
 
 using namespace std;
 using namespace tbb;
@@ -93,7 +93,7 @@ void normalize (Number source[], Number destination[], size_t n) {
 
 //Test data
 #define TEST_SIZE 1000000
-#define TEST_ITER 100
+#define TEST_ITER 10
 
 Real xs[TEST_SIZE];
 Real xd[TEST_SIZE];
