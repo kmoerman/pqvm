@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <complex>
 #include <cstdlib>
 #include <cstddef>
@@ -112,11 +113,17 @@ int main (int argc, const char * argv[]) {
     
     srand(time(0));
     
+    ofstream file_real ("normalize-reals.dat");
+    ofstream file_complex ("normalize-complex.dat");
+    
     fill_vector(xs, TEST_SIZE, random_real);
     fill_vector(zs, TEST_SIZE, random_complex);
     
-    measure(cout, TEST_ITER, normalize_real);
-    measure(cout, TEST_ITER, normalize_complex);
+    measure(file_real, TEST_ITER, normalize_real);
+    measure(file_complex, TEST_ITER, normalize_complex);
+    
+    file_real.close();
+    file_complex.close();    
     
     return EXIT_SUCCESS;
 }

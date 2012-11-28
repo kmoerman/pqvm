@@ -27,7 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		4A05B400165D5A4600A1EDC7 /* normalize */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = normalize; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A05B400165D5A4600A1EDC7 /* normalize.out */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = normalize.out; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A05B40D165D5ACF00A1EDC7 /* measure.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = measure.cpp; sourceTree = "<group>"; };
 		4A05B40E165D5ACF00A1EDC7 /* measure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = measure.h; sourceTree = "<group>"; };
 		4AD48BFE165D599D009EA8B7 /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = ../tbb/lib/libtbb.dylib; sourceTree = "<group>"; };
@@ -85,7 +85,7 @@
 		4AD48BF2165D5974009EA8B7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4A05B400165D5A4600A1EDC7 /* normalize */,
+				4A05B400165D5A4600A1EDC7 /* normalize.out */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -114,7 +114,7 @@
 			);
 			name = normalize;
 			productName = normalize;
-			productReference = 4A05B400165D5A4600A1EDC7 /* normalize */;
+			productReference = 4A05B400165D5A4600A1EDC7 /* normalize.out */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -161,7 +161,7 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME).out";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
 			};
 			name = Debug;
@@ -171,7 +171,7 @@
 			buildSettings = {
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME).out";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-8";
 			};
 			name = Release;
