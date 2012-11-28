@@ -24,7 +24,7 @@ void measure(std::ostream& result, int iterations, void (*F)()) {
     result << "# Results for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
     result << "# threads" << tab << "time [s]" << std::endl;
     
-    for (int thread_n = threads.first; thread_n <= threads.last; thread_n = threads.step(thread_n)) {
+    for (int thread_n = threads.first; thread_n <= threads.last; ++thread_n) {
         tbb::task_scheduler_init init(thread_n);
         
         tbb_time_t start = time();
