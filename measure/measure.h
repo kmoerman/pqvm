@@ -6,10 +6,10 @@
 
 typedef tbb::tick_count tbb_time_t;
 
-tbb_time_t gettime();
+tbb_time_t gettime ();
 
-double time_diff(tbb_time_t start, tbb_time_t end);
+double time_diff (tbb_time_t start, tbb_time_t end);
 
-void measure(std::ostream& result, int iterations, void (*F)());
+void measure (std::ostream& result, int iterations, void (*F)());
 
 #endif
