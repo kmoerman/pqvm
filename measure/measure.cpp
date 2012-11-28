@@ -1,7 +1,7 @@
 #include <ostream>
 #include <string>
 #include "tbb/task_scheduler_init.h"
-#include "utility.h"
+#include "tbb/extra/utility.h" //to be found in tbb/examples/common/utility
 #include "measure.h"
 
 // Timing functions are based on TBB to always obtain wall-clock time
