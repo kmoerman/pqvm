@@ -49,5 +49,6 @@ project.xcworkspace
 #######
 *.dylib
 build/pqvm.build
-
+build/*.out
+build/*.dat
 plot/*.png
