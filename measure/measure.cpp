@@ -1,7 +1,7 @@
 #include <ostream>
 #include <string>
-#include "tbb/task_scheduler_init.h"
-#include "tbb/extra/utility.h" //to be found in tbb/examples/common/utility
+#include <tbb/task_scheduler_init.h>
+#include <tbb/extra/utility.h> //to be found in tbb/examples/common/utility
 #include "measure.h"
 
 // Timing functions are based on TBB to always obtain wall-clock time
@@ -19,7 +19,8 @@ std::string separator ("\t");
 
 // Measure the time [seconds] of n consecutive executions
 // of a function F.
-void measure(std::ostream& data, int iterations, void (*F)()) {
+void measure(std::ostream& data, size_t iterations, void (*F)()) {
+
     
     data << "# Results for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
     data << "# threads" << separator << "time per iteration (s)" << std::endl;
