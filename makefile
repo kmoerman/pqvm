@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -ltbb -O3
+CFLAGS = -ltbb -O2
 
 UNAME := $(shell uname)
 
