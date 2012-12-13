@@ -63,7 +63,7 @@ void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
             time_data << thread_n << separator << p_time << separator << std::endl;
         }
         speedup_data << thread_n << separator << s_time/t_time << separator << t_time/iterations << std::endl;
-        log << "Speedup: " << s_time/t_time << std::endl;
+        log << "Speedup: " << s_time/t_time << std::endl << std::endl;
     }
     
     speedup_data.close();
