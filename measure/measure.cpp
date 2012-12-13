@@ -24,6 +24,9 @@ const std::string separator ("\t");
 // executed in parallel, compared to its equivalent sequential algorithm S.
 void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
     
+    //Log the results
+    std::ostream log = std::cout;
+    
     //Open the data files
     std::ofstream time_data ((name + ".times.data").c_str());
     std::ofstream speedup_data ((name + ".speedup.data").c_str());
@@ -31,25 +34,25 @@ void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
     time_data << "# Execution time for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
     
     //Measure sequential average time as speedup reference
-    std::cout << "Sequential algorithm." << std::endl << "Iterations: ";
+    log << "Sequential algorithm." << std::endl << "Iterations: ";
     double s_time = 0;
     tbb_time_t start;
     for (int i = 0; i < iterations; ++i) {
         start = time();
         S();
         s_time += diff(start, time());
-        std::cout << i + 1<< " ";
+        log << i + 1<< " ";
     }
     speedup_data << "# Average sequential time: " << s_time/iterations << " s." << std::endl;
     
     //Measure parallel execution times
-    std::cout std::endl << std::endl << "Parallel algorithm." << std::endl;
+    log << std::endl << std::endl << "Parallel algorithm." << std::endl;
     time_data << "# threads" << separator << separator << "execution time [s]" << std::endl;
     speedup_data << "# threads" << separator << separator << "average speedup" << separator << "average execution time [s]"<<std::endl;
     double p_time = 0;
     double t_time = 0;
     for (int thread_n = threads.first; thread_n <= threads.last; ++thread_n) {
-        std::cout << std::endl << "Threads: " << thread_n << std::endl << "Iterations: ";
+        log << std::endl << "Threads: " << thread_n << std::endl << "Iterations: ";
         tbb::task_scheduler_init init(thread_n);
 
         for (int i = 0; i < iterations; ++i) {
@@ -58,10 +61,10 @@ void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
             p_time = diff(start, time());
             t_time += p_time;
             time_data << thread_n << separator << p_time << separator << std::endl;
-            std::cout << i + 1 << " ";
+            log << i + 1 << " ";
         }
         speedup_data << thread_n << separator << s_time/t_time << separator << t_time/iterations << std::endl;
-        std::cout << std::endl << "Speedup: " << s_time/t_time << std::endl;
+        log << std::endl << "Speedup: " << s_time/t_time << std::endl;
     }
     
     speedup_data.close();
