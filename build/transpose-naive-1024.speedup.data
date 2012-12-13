@@ -1,0 +1,5 @@
+# Average speedup for 100 iterations on 1 - 2 threads.
+# Average sequential time: 0.0206713 s.
+# threads		average speedup	average execution time [s]
+1	1.10455	0.0187147
+2	0.595286	0.034725
