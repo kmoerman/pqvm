@@ -25,7 +25,7 @@ const std::string separator ("\t");
 void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
     
     //Log the results
-    std::ostream log = std::cout;
+    std::ostream& log = std::cout;
     
     //Open the data files
     std::ofstream time_data ((name + ".times.data").c_str());
