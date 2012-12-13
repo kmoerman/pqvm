@@ -52,3 +52,9 @@ build/pqvm.build
 build/*.out
 build/*.dat
 plot/*.png
+
+# Measure #
+##########
+.plot
+.data
+.png
