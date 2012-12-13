@@ -43,8 +43,9 @@ void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
         end = tbb_time();
         s_time += tbb_difftime(start, end);
     }
-    speedup_data << "# Average sequential time: " << s_time / iterations << std::endl;
-    log << "Average sequential time: " << s_time / iterations << std::endl;
+    s_time /= iterations;
+    speedup_data << "# Average sequential time: " << s_time << std::endl;
+    log << "Average sequential time: " << s_time << std::endl;
     
     //Measure parallel execution times
     log << std::endl << "# PARALLEL" << std::endl;
@@ -65,8 +66,9 @@ void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
             t_time += p_time;
             time_data << thread_n << separator << p_time << separator << std::endl;
         }
-        speedup_data << thread_n << separator << s_time / t_time << separator << t_time/iterations << std::endl;
-        log << "Average parallel time: " << t_time / iterations << std::endl;
+        t_time /= iterations;
+        speedup_data << thread_n << separator << s_time / t_time << separator << t_time << std::endl;
+        log << "Average parallel time: " << t_time << std::endl;
         log << "Speedup: " << s_time / t_time << std::endl << std::endl;
     }
     

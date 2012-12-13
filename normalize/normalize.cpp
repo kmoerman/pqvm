@@ -29,7 +29,7 @@ Complex random_complex () {
 }
 
 Complex inner_product_term(const Complex& a, const Complex& b) {
-    return a * conj(b);
+    return conj(a) * b;
 }
 
 template <class Number, class Generator>
@@ -37,6 +37,13 @@ void fill_vector (Number vector[], size_t size, Generator g) {
     for (int i = 0; i < size; ++i)
         vector[i] = g();
 }
+
+//Test data
+Real* xs;
+Real* xd;
+Complex* zs;
+Complex* zd;
+size_t p_size;
 
 //Normalization
 //Reduce to find the norm of the vector
@@ -63,16 +70,17 @@ public:
     }
 };
 
-/*template <class Number>
+//Caclulate norm
+template <class Number>
 Number norm (Number vector[], size_t n) {
     InnerProduct<Number> ip(vector);
     parallel_reduce(blocked_range<size_t>(0,n), ip);
     return sqrt(ip.result);
-}*/
+}
 
 //Map to divide by the norm
 template <class Number>
-class Normalizer {
+class Normalize {
     Number * const source;
     Number norm;
 public:
@@ -83,52 +91,67 @@ public:
         for (size_t i=r.begin(); i!=r.end(); ++i)
             d[i] = s[i]/norm;
     }
-    Normalizer (Number s[], Number d[], Number n) : source(s), destination(d), norm(n) {}
+    Normalize (Number s[], Number d[], Number n) : source(s), destination(d), norm(n) {}
 };
 
-template <class Number>
-void normalize (Number source[], Number destination[], size_t n) {
-    parallel_for(blocked_range<size_t>(0,n),
-                 Normalizer<Number> (source, destination, norm(source, n)));
+
+void normalize_real_par () {
+    parallel_for(blocked_range<size_t>(0, p_size),
+                 Normalize<Real>(xs, xd, norm(xs, p_size)));
+}
+void normalize_complex_par () {
+    parallel_for(blocked_range<size_t>(0, p_size),
+                 Normalize<Complex>(zs, zd, norm(zs, p_size)));
 }
 
-
-
-//Test data
-#define TEST_SIZE 1000000
-#define TEST_ITER 10
-
-Real xs[TEST_SIZE];
-Real xd[TEST_SIZE];
-Complex zs[TEST_SIZE];
-Complex zd[TEST_SIZE];
-
-//Measure the results
-void normalize_real () {
-    normalize(xs, xd, TEST_SIZE);
+void normalize_real_seq () {
+    Real norm;
+    for (size_t i = 0; i < p_size; ++i)
+        norm += inner_product_term(xs[i], xs[i]);
+    norm = sqrt(norm);
+    for (size_t i = 0; i < p_size; ++i)
+        xd[i] = xs[i] / norm;    
 }
-void normalize_complex () {
-    normalize(zs, zd, TEST_SIZE);
+
+void normalize_complex_seq () {
+    Complex norm;
+    for (size_t i = 0; i < p_size; ++i)
+        norm += inner_product_term(zs[i], zs[i]);
+    norm = sqrt(norm);
+    for (size_t i = 0; i < p_size; ++i)
+        zd[i] = zs[i] / norm;
 }
 
 int main (int argc, const char * argv[]) {
-    
     srand(time(0));
     
-    ofstream file_real ("normalize-reals.dat");
-    ofstream file_complex ("normalize-complex.dat");
+    p_size = atoi(argv[1]);
+    size_t iterations = atoi(argv[2]);
+    string name;
     
-    fill_vector(xs, TEST_SIZE, random_real);
-    fill_vector(zs, TEST_SIZE, random_complex);
+    //test real
+    xs = new Real [p_size];
+    xd = new Real [p_size];
     
-    measure(file_real, TEST_ITER, normalize_real);
-    measure(file_complex, TEST_ITER, normalize_complex);
+    fill_vector(xs, p_size, random_real);
     
-    file_real.close();
-    file_complex.close();
+    name = "normalize-real" + string(argv[1]);
+    measure(name, iterations, normalize_real_seq, normalize_real_par);
+    
+    delete xs;
+    delete xd;
+    
+    //test complex
+    zs = new Complex [p_size];
+    zd = new Complex [p_size];
+    fill_vector(zs, p_size, random_complex);
+    
+    name = "normalize-complex" + string(argv[1]);
+    measure(name, iterations, normalize_complex_seq,normalize_complex_par);
+    delete zs;
+    delete zd;
     
     return EXIT_SUCCESS;
-    
     
 }
 
