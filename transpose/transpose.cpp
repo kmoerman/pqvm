@@ -64,6 +64,14 @@ void deinterleave(uint32_t source, uint32_t& even, uint32_t& odd) {
     odd  = deinterleave_util(source >> 1);
 }
 
+void transpose_prokopp_seq () {
+    uint32_t i, j;
+    for (size_t k = 0; k < m_size; ++k) {
+        deinterleave (k, j, i);
+        B[j * p_size + i] = A[i * p_size + j];
+    }
+}
+
 void transpose_prokopp_pll (const blocked_range<size_t>& r) {
     uint32_t i, j;
     for (size_t k = r.begin(); k != r.end(); ++k) {
@@ -77,12 +85,12 @@ void transpose_prokopp_par () {
 }
 
 /* Setup Experiment */
-size_t algo_n = 1;
+size_t algo_n = 2;
 void (*algorithms[])() = {
     transpose_naive_seq,
-    transpose_naive_par/*,
+    transpose_naive_par,
     transpose_prokopp_seq,
-    transpose_prokopp_par*/
+    transpose_prokopp_par
 };
 
 string names[] = {
@@ -127,9 +135,9 @@ int main (int argc, const char * argv[]) {
     }*/
     
     
-    for (size_t i = 0; i < algo_n; i+=2) {
-        string name (base + names[i / 2] + '-' + string(argv[1]));
-        measure(name, iterations, algorithms[i], algorithms[i + 1]);
+    for (size_t i = 0; i < algo_n; ++i) {
+        string name (base + names[i] + '-' + string(argv[1]));
+        measure(name, iterations, algorithms[i * 2], algorithms[i * 2 + 1]);
     }
     
     delete A;
