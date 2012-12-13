@@ -90,6 +90,7 @@ string names[] = {
     "prokopp"
 };
 
+//transpose <problem size> <iterations>
 int main (int argc, const char * argv[]) {
     
     srand(time(0));
