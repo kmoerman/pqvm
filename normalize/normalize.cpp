@@ -63,12 +63,12 @@ public:
     }
 };
 
-template <class Number>
+/*template <class Number>
 Number norm (Number vector[], size_t n) {
     InnerProduct<Number> ip(vector);
     parallel_reduce(blocked_range<size_t>(0,n), ip);
     return sqrt(ip.result);
-}
+}*/
 
 //Map to divide by the norm
 template <class Number>
@@ -91,6 +91,8 @@ void normalize (Number source[], Number destination[], size_t n) {
     parallel_for(blocked_range<size_t>(0,n),
                  Normalizer<Number> (source, destination, norm(source, n)));
 }
+
+
 
 //Test data
 #define TEST_SIZE 1000000
@@ -123,7 +125,10 @@ int main (int argc, const char * argv[]) {
     measure(file_complex, TEST_ITER, normalize_complex);
     
     file_real.close();
-    file_complex.close();    
+    file_complex.close();
     
     return EXIT_SUCCESS;
+    
+    
 }
+

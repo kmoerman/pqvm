@@ -1,10 +1,13 @@
-#include <ostream>
+#include <cstddef>
 #include <string>
+#include <fstream>
 #include <tbb/task_scheduler_init.h>
+#include <tbb/tick_count.h>
 #include <tbb/extra/utility.h> //to be found in tbb/examples/common/utility
-#include "measure.h"
 
 // Timing functions are based on TBB to always obtain wall-clock time
+typedef tbb::tick_count tbb_time_t;
+
 tbb_time_t time() {
     return tbb::tick_count::now();
 }
@@ -13,26 +16,48 @@ double diff(tbb_time_t start, tbb_time_t end) {
     return (end - start).seconds();
 }
 
-utility::thread_number_range threads(tbb::task_scheduler_init::default_num_threads);
+utility::thread_number_range threads (tbb::task_scheduler_init::default_num_threads);
 
-std::string separator ("\t");
+const std::string separator ("\t");
 
-// Measure the time [seconds] of n consecutive executions
-// of a function F.
-void measure(std::ostream& data, size_t iterations, void (*F)()) {
-
+// Measure the time [seconds] of n consecutive executions of a algorithm P,
+// executed in parallel, compared to its equivalent sequential algorithm S.
+void measure (std::string& name, size_t iterations, void (*S)(), void (*P)()) {
     
-    data << "# Results for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
-    data << "# threads" << separator << "time per iteration (s)" << std::endl;
+    //Open the data files
+    std::ofstream time_data ((name + ".times.data").c_str());
+    std::ofstream speedup_data ((name + ".speedup.data").c_str());
+    speedup_data << "# Average speedup for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
+    time_data << "# Execution time for " << iterations << " iterations on " << threads.first << " - " << threads.last << " threads." << std::endl;
     
+    //Measure sequential average time as speedup reference
+    double s_time = 0;
+    tbb_time_t start;
+    for (int i = 0; i < iterations; ++i) {
+        start = time();
+        S();
+        s_time += diff(start, time());
+    }
+    speedup_data << "# Average sequential time: " << s_time/iterations << " s." << std::endl;
+    
+    //Measure parallel execution times
+    time_data << "# threads" << separator << separator << "execution time [s]" << std::endl;
+    speedup_data << "# threads" << separator << separator << "average speedup" << separator << "average execution time [s]"<<std::endl;
+    double p_time = 0;
+    double t_time = 0;
     for (int thread_n = threads.first; thread_n <= threads.last; ++thread_n) {
         tbb::task_scheduler_init init(thread_n);
 
         for (int i = 0; i < iterations; ++i) {
             tbb_time_t start = time();
-            F();
-            tbb_time_t stop = time();
-            data << thread_n << separator << diff(start, stop) << std::endl;
+            P();
+            p_time = diff(start, time());
+            t_time += p_time;
+            time_data << thread_n << separator << p_time << separator << std::endl;
         }
+        speedup_data << thread_n << separator << s_time/t_time << separator << t_time/iterations << std::endl;
     }
+    
+    speedup_data.close();
+    time_data.close();
 }

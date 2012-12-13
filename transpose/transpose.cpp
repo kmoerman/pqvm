@@ -1,5 +1,4 @@
-#include <iostream>
-#include <fstream>
+//#include <iostream>
 #include <complex>
 #include <cstdlib>
 #include <cstddef>
@@ -34,19 +33,21 @@ size_t m_size;
 
 
 //Naive transpose
-void transpose_naive_fn (const blocked_range<size_t>& r) {
-    size_t i, j, k, l;
-    for (i = r.begin(), k = i*p_size; i!=r.end(); ++i, k+=p_size)
-        for (j = 0, l = 0; j < p_size; ++j, l+=p_size)
-            B[l + i] = A[k + j];
+void transpose_naive_seq () {
+    for (size_t i = 0; i < p_size; ++i)
+        for (size_t j = 0; j < p_size; ++j)
+            B[j*p_size + i] = A[i*p_size + j];
 }
 
-void transpose_naive () {
-    parallel_for(blocked_range<size_t>(0, p_size), &transpose_naive_fn);
+void transpose_naive_pll (const blocked_range<size_t>& r) {
+    for (size_t i = r.begin(); i!=r.end(); ++i)
+        for (size_t j = 0; j < p_size; ++j)
+            B[j*p_size + i] = A[i*p_size + j];
 }
 
-size_t block_size;
-size_t num_blocks;
+void transpose_naive_par () {
+    parallel_for(blocked_range<size_t>(0, p_size), &transpose_naive_pll);
+}
 
 //Prokopp transpose
 uint32_t deinterleave_util(uint32_t x) {
@@ -63,22 +64,25 @@ void deinterleave(uint32_t source, uint32_t& even, uint32_t& odd) {
     odd  = deinterleave_util(source >> 1);
 }
 
-void transpose_prokopp_fn (const blocked_range<size_t>& r) {
+void transpose_prokopp_pll (const blocked_range<size_t>& r) {
     uint32_t i, j;
     for (size_t k = r.begin(); k != r.end(); ++k) {
         deinterleave(k, j, i);
-        B[p_size * j + i] = A[p_size * i + j];
+        B[j * p_size + i] = A[i * p_size + j];
     }
 }
 
-void transpose_prokopp () {
-    parallel_for(blocked_range<size_t>(0, m_size), &transpose_prokopp_fn);
+void transpose_prokopp_par () {
+    parallel_for(blocked_range<size_t>(0, m_size), &transpose_prokopp_pll);
 }
 
 /* Setup Experiment */
+size_t algo_n = 1;
 void (*algorithms[])() = {
-    transpose_naive,
-    transpose_prokopp
+    transpose_naive_seq,
+    transpose_naive_par/*,
+    transpose_prokopp_seq,
+    transpose_prokopp_par*/
 };
 
 string names[] = {
@@ -86,13 +90,11 @@ string names[] = {
     "prokopp"
 };
 
-int algo_n = 2;
-
 int main (int argc, const char * argv[]) {
     
     srand(time(0));
     
-    string problem_name = "transpose-";
+    string base = "transpose-";
     
     p_size = atoi(argv[1]);
     m_size = p_size * p_size;
@@ -103,9 +105,9 @@ int main (int argc, const char * argv[]) {
     
     fill_vector(A, m_size, random_real);
     
-    transpose_prokopp();
-    
-    /*for (int i = 0; i < 8; i++) {
+    /*
+     //Check if transposed, dirty will do for now.
+     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++)
             cout << A[i*p_size + j] << " ";
         cout << endl;
@@ -124,19 +126,12 @@ int main (int argc, const char * argv[]) {
     }*/
     
     
-    for (int i = 0; i < algo_n; ++i) {
-        string f_name = problem_name;
-        f_name.append(names[i]);
-        f_name.append("-");
-        f_name.append(argv[1]);
-        f_name.append(".dat");
-        
-        ofstream data_file (f_name.c_str());
-        
-        measure(data_file, iterations, transpose_naive);
-        
-        data_file.close();
+    for (size_t i = 0; i < algo_n; i+=2) {
+        string name (base + names[i / 2] + '-' + string(argv[1]));
+        measure(name, iterations, algorithms[i], algorithms[i + 1]);
     }
     
+    delete A;
+    delete B;
     return EXIT_SUCCESS;
 }
