@@ -5,7 +5,7 @@ cd data
 for i in $(seq $1 $2); do
 	S=$((2 ** $i))
 	echo $S
-	../build/transpose.out $S 50
+	../build/transpose.out $S 20
 done
 
 cd ..
