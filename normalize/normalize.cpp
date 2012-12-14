@@ -135,7 +135,7 @@ int main (int argc, const char * argv[]) {
     
     fill_vector(xs, p_size, random_real);
     
-    name = "normalize-real" + string(argv[1]);
+    name = "normalize-real-" + string(argv[1]);
     measure(name, iterations, normalize_real_seq, normalize_real_par);
     
     delete xs;
@@ -146,8 +146,8 @@ int main (int argc, const char * argv[]) {
     zd = new Complex [p_size];
     fill_vector(zs, p_size, random_complex);
     
-    name = "normalize-complex" + string(argv[1]);
-    measure(name, iterations, normalize_complex_seq,normalize_complex_par);
+    name = "normalize-complex-" + string(argv[1]);
+    measure(name, iterations, normalize_complex_seq, normalize_complex_par);
     delete zs;
     delete zd;
     
