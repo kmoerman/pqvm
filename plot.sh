@@ -1,29 +1,65 @@
 #! /bin/bash
 
-NAME = $1;
-SIZE = $2
-LIMIT = $3
+# generate data
+cd data
+for i in {$1..$2}
+do
+	s = 2^$i
+	../build/transpose.out $s 50
+done
 
-PLOTFILE = $NAME;
+# generate plotfile
+cd ..
+
+PLOT = "transpose.plot";
 
 cat <<- HEAD
-\# Plot file for $NAME.
+set title "Matrix Transpose Speedup"
+set size square
+set xlabel "threads"
+set ylabel "speedup"
+set xrange [1:8]
+set yrange [1:8]
+
+set terminal pdf
+set output "prokopp.pdf"
+
+set style data linespoints
+
+f(x) = x
+
 set multiplot
-set xlabel "Threads \$p\$"
-set ylabel "\frac{T_1}{T_p}"
-set term latex
-set output "$NAME.tex"
+
+plot f(x) with lines lt 0 lw 0.5 title ''
+
+set ket left top
+plot 
 HEAD
-> $PLOTFILE;
+> $PLOT
 
-until [$SIZE -lt $LIMIT]; do
-	../ 
+for i in {$1..$2}
+do
+	s = 2^$i
+	echo "'data/transpose-prokopp-$s.speedup.data' using 1:2 title 'prokopp $s' with linespoints lw 2 lt $i" >> $PLOT
+	if [$i != $2]; then
+		echo ", " >> $PLOT
+	fi
+done
 
-gnuplot <<- EOF
-	set xlabel "Threads p"
-	set ylabel "Speedup S [\frac{T_1}{T_p}]"
-	set term latex
-	set output "plot/$1.tex"
-	set style data boxplot
-	plot "build/$NAME.dat" using (1.0):2:(0):1 title "$1"
-EOF
+echo <<- STYLE
+
+set termoption dashed
+set key right bottom
+
+plot 
+STYLE >> $PLOT
+for i in {$1..$2}
+do
+	s = 2^$i
+	echo "'data/transpose-naive-$s.speedup.data' using 1:2 title 'prokopp $s' with linespoints lw 2 lt $i" >> $PLOT
+	if [$i != $2]; then
+		echo ", " >> $PLOT
+	fi
+done
+
+#generate graph
