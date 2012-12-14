@@ -87,9 +87,7 @@ void transpose_prokopp_par () {
 /* Setup Experiment */
 size_t algo_n = 2;
 void (*algorithms[])() = {
-    transpose_naive_seq,
     transpose_naive_par,
-    transpose_prokopp_seq,
     transpose_prokopp_par
 };
 
@@ -135,7 +133,7 @@ int main (int argc, const char * argv[]) {
     
     for (size_t i = 0; i < algo_n; ++i) {
         string name (names[i] + '-' + string(argv[1]));
-        measure(name, iterations, algorithms[i * 2], algorithms[i * 2 + 1]);
+        measure(name, iterations, transpose_prokopp_seq, algorithms[i]);
     }
     
     delete A;
