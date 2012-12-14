@@ -3,7 +3,7 @@ set title "Vector Normalize Speedup"
 set xlabel "threads"
 set ylabel "speedup"
 set xrange [1:8]
-set yrange [0:12]
+set yrange [1:8]
 
 set terminal pdf
 set output "normalize.pdf"
