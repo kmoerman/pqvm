@@ -55,6 +55,6 @@ plot/*.png
 
 # Measure #
 ##########
-*.plot
 *.data
 *.png
+*.pdf
