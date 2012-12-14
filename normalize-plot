@@ -21,7 +21,7 @@ echo -n "plot " >> $PLOT
 for i in $(seq $1 $2); do
 	S=$((2 ** $i))
 	T=$(($i-$1+5+$2-$1))
-	echo -n "'data/transpose-complex-$S.speedup.data' using 1:2 title 'complex $S' with linespoints lw 2 lt $T" >> $PLOT
+	echo -n "'data/normalize-complex-$S.speedup.data' using 1:2 title 'complex $S' with linespoints lw 2 lt $T" >> $PLOT
 	if [ $i -ne $2 ]; then
 		echo -n ", " >> $PLOT
 	fi
