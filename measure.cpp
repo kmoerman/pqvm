@@ -2,9 +2,10 @@
 #include "measure.h"
 
 double x, y, z;
+
 void test_pll (const tbb::blocked_range<unsigned int>& r) {
     for (unsigned int i (r.begin()); i < r.end(); ++i)
-        z = x * y;
+        z = x * y + i;
 }
 
 int main (int argc, char** args) {

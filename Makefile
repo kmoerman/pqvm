@@ -1,6 +1,6 @@
 CC = gcc
-SOURCES = pqvm.cpp
-TARGETS = pqvm
+SOURCES = qvm.cpp measure.cpp
+TARGETS = qvm test
 
 INCPATH = #-I
 LIBPATH = #-L
@@ -11,13 +11,15 @@ CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH)
 
 DEST_OBJS=$(SOURCES:.cpp=.o)
 
-all: pqvm
+all: qvm
 
-pqvm: $(DEST_OBJS)
-	$(CC) $(CFLAGS) -o $@ $(DEST_OBJS) $(LIBS)
+test: measure.cpp measure.h
+	$(CC) $(CFLAGS) -c measure.cpp
+	$(CC) $(CFLAGS) -o measure  measure.o -ltbb
 
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c -o $@ $<
+qvm: qvm.cpp qvm.h
+	$(CC) $(CFLAGS) -c qvm.cpp
+	$(CC) $(CFLAGS) -o qvm qvm.o $(LIBS)
 
 clean:
 	rm -f $(TARGETS) $(DEST_OBJS)

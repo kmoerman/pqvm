@@ -20,7 +20,7 @@
 //#include "libquantum/config.h"
 
 #include "bitmask.h"
-#include "pqvm.h"
+#include "qvm.h"
 
 #define STRING_SIZE (size_t)UCHAR_MAX	
 #define MAX_TANGLES (size_t)SHRT_MAX
@@ -280,7 +280,7 @@ void print_qmem( const qmem_t*  qmem ) {
 }
 
 qmem_t* init_qmem() {
-  qmem_t*  qmem = static_cast<qmem_t*>(malloc(sizeof(qmem_t))); //ALLOC qmem
+  qmem_t*  qmem = (qmem_t*) malloc(sizeof(qmem_t)); //ALLOC qmem
 
   qmem->size = 0;
   //qmem->tangles = calloc(MAX_TANGLES,sizeof(tangle_t*)); //ALLOC tangles
@@ -697,7 +697,7 @@ quantum_diag_measure(int pos, double angle, quantum_reg*  reg)
   // TODO: currently just measures to <+_alpha|
   out.width = reg->width-1;
   out.size = reg->size;
-  out.node = static_cast<quantum_reg_node_struct*>(calloc(reg->size, sizeof(quantum_reg_node)));
+  out.node = (quantum_reg_node*)calloc(reg->size, sizeof(quantum_reg_node));
   //quantum_memman(size * sizeof(quantum_reg_node));
   out.hashw = reg->hashw;
   out.hash = reg->hash;
@@ -749,7 +749,7 @@ quantum_diag_measure(int pos, double angle, quantum_reg*  reg)
   }
   out.size = free;
   if( out.size != reg->size ) {
-    out.node = static_cast<quantum_reg_node_struct*>(realloc(out.node, (out.size)*sizeof(quantum_reg_node)));
+    out.node = (quantum_reg_node*) realloc(out.node, (out.size)*sizeof(quantum_reg_node));
     if(out.node == NULL) 
       quantum_error(QUANTUM_ENOMEM);
   }
