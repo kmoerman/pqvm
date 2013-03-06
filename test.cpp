@@ -2,7 +2,7 @@
 #include "measure.h"
 
 double x, y, z;
-void test_pll (tbb::blocked_range<unsigned int>& r) {
+void test_pll (const tbb::blocked_range<unsigned int>& r) {
     for (unsigned int i (r.begin()); i < r.end(); ++i)
         z = x * y;
 }

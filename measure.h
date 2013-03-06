@@ -54,14 +54,13 @@ namespace measure {
             //increment the iteration counter
             inline void after () {
                 time end = now();
-                interval t = diff(begin, end);
-                output << threads << "\t" << t << std::endl;
+                output << threads << "\t" << diff(begin, end) << std::endl;
                 ++iteration;
             }
             
             //increment the thread counter when necessary
             //halt when we run out of threads
-            //store the starting time for the subsequent measurement
+            //store the starting time for the next iteration
             inline bool before () {
                 if (iteration == iterations) {
                     ++threads;
@@ -80,9 +79,8 @@ namespace measure {
             parallel (std::string filename, int iters):
             iterations(iters), iteration (0), threads(1),
             output(filename.c_str(), std::ios_base::out) {
-                int n (max_threads());
                 output  << "# Wall-clock time (seconds) for " << iterations
-                        << " iterations on 1" << " to " << n << " threads."
+                        << " iterations on 1" << " to " << max_threads() << " threads."
                         << std::endl;
                 set_threads (threads);
             }
