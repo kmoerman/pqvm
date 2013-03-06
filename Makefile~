@@ -5,7 +5,7 @@ TARGETS = qvm test
 INCPATH = #-I
 LIBPATH = #-L
 LIBS = -lsexp -lquantum -ltbb
-OFLAGS = -m32 #-O2 -Wall
+OFLAGS = #-O2 -Wall
 DFLAGS = #-g3
 CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH)
 
