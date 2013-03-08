@@ -44,6 +44,7 @@ project.xcworkspace
 *.xcuserdatad
 *.1
 *.out
+pqvm/*
 
 # TBB #
 #######

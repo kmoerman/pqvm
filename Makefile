@@ -1,11 +1,11 @@
-CC = gcc
+CC = g++
 SOURCES = qvm.cpp measure.cpp
 TARGETS = qvm test
 
 INCPATH = #-I
 LIBPATH = #-L
 LIBS = -lsexp -lquantum -ltbb
-OFLAGS = -m32 #-O2 -Wall
+OFLAGS = #-O2 -Wall
 DFLAGS = #-g3
 CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH)
 
@@ -15,7 +15,7 @@ all: qvm
 
 test: measure.cpp measure.h
 	$(CC) $(CFLAGS) -c measure.cpp
-	$(CC) $(CFLAGS) -o measure  measure.o -ltbb
+	$(CC) $(CFLAGS) -o measure  measure.o $(LIBS)
 
 qvm: qvm.cpp qvm.h
 	$(CC) $(CFLAGS) -c qvm.cpp
