@@ -77,21 +77,21 @@ struct signal_map {
     map_type signals;
     
     bool operator[] (qid q) const {
-        if (entries[qid])
+        if (entries[q])
             return signals[qid];
-        else error();
-    }
-    
-    map_type::reference& operator[] (qid) {
-        if (entries[qid])
-            return signals[qid];
-        else error();
-    }
-    
-private:
-    error () {
-        io::error << "I was asked a signal map entry (qid " << qid << ") that isn't there, check quantum program correctness." << std::endl << "Signal map: " << *this;
+        else {
+        io::error << "I was asked a signal map entry (qid " << qid << ") that isn't there, check quantum program correctness. Signal map: " << *this;
         exit(EXIT_FAILURE);
+        }
+    }
+    
+    map_type::reference& operator[] (qid q) {
+        if (entries[q])
+            return signals[q];
+        else {
+        io::error << "I was asked to set an signal map entry (qid " << qid << ") that is already set, check quantum program correctness. Signal map: " << *this;
+            exit(EXIT_FAILURE);
+        }
     }
     
 };
