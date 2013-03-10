@@ -12,8 +12,8 @@
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0AD216EA2CC1002F1ECA /* measure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD116EA2CC1002F1ECA /* measure.cpp */; };
-		4A0E0ADD16EA3722002F1ECA /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
+		4A1812E516EBA60800B1865E /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -191,8 +191,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A0E0ADD16EA3722002F1ECA /* qvm.cpp in Sources */,
 				4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */,
+				4A1812E516EBA60800B1865E /* qvm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

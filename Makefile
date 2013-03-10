@@ -1,6 +1,6 @@
 CC = g++
 SOURCES = qvm.cpp measure.cpp
-TARGETS = qvm test
+TARGETS = qvm measure
 
 INCPATH = #-I
 LIBPATH = #-L
@@ -13,7 +13,7 @@ DEST_OBJS=$(SOURCES:.cpp=.o)
 
 all: qvm
 
-test: measure.cpp measure.h
+measure: measure.cpp measure.h
 	$(CC) $(CFLAGS) -c measure.cpp
 	$(CC) $(CFLAGS) -o measure  measure.o $(LIBS)
 
