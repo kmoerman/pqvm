@@ -50,7 +50,7 @@ namespace quantum {
         
     }
     
-    reg* kronecker(reg& left, reg& right) {
+    reg* kronecker (reg& left, reg& right) {
         typedef typename reg::size_type size;
         typedef tbb::blocked_range<size> range;
         size    n (left.size()),
@@ -58,8 +58,31 @@ namespace quantum {
         
         reg* result = new reg(n * m);
         
-        tbb::parallel_for(range(0, n),  details::kronecker {m, left, right, result});
+        tbb::parallel_for(range(0, n),  details::kronecker (m, left, right, result));
         return result;
+    }
+    
+    namespace details {
+        struct single_gate {
+            typedef typename reg::size_type size;
+            const reg* a;
+            const axis_type* m;
+            single_gate (axis_type* m_, reg* a_) :
+            m(m_), a(a_) {}
+            void operator() (const tbb::blocked_range<size>& r) const {
+                for (size i (r.begin()); i < r.end(); ++i) ;
+            }
+        };
+    }
+    
+    void hadamard (reg::size_type target, reg& r) {
+        typedef typename reg::size_type size;
+        typedef tbb::blocked_range<size> range;
+        size    n (r.size());
+        details::axis_type half_sqrt (std::sqrt(0.5));
+        details::axis_type m[4] = {half_sqrt, half_sqrt, half_sqrt, -half_sqrt};
+        
+        tbb::parallel_for(range(0, n), details::single_gate (m, &r));
         
     }
     

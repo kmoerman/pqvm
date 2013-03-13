@@ -47,13 +47,13 @@
 		4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qvm.cpp; sourceTree = "<group>"; };
 		4A0E0AD716EA2D07002F1ECA /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
 		4A0E0AD816EA2D40002F1ECA /* bitmask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitmask.h; sourceTree = "<group>"; };
-		4A0E0AD916EA2D40002F1ECA /* measure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = measure.h; sourceTree = "<group>"; };
+		4A0E0AD916EA2D40002F1ECA /* measure.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = measure.h; sourceTree = "<group>"; };
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
 		4A0E0ADB16EA2D40002F1ECA /* pqvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqvm.h; sourceTree = "<group>"; };
 		4A0E0ADC16EA2D40002F1ECA /* qvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qvm.h; sourceTree = "<group>"; };
-		4A1B70CC16EFA0380013D47E /* quantum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quantum.h; sourceTree = "<group>"; };
+		4A1B70CC16EFA0380013D47E /* quantum.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = quantum.h; sourceTree = "<group>"; };
 		4A1B70CD16EFAD320013D47E /* kronecker_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kronecker_test.cpp; sourceTree = "<group>"; };
-		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
+		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = vector.h; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
