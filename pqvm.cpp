@@ -8,7 +8,7 @@
 #include <sexp/sexp_ops.h>
 #include <sexp/sexp_vis.h>
 
-#include <quantum.h>
+#include "quantum.h"
 
 #include "pqvm.h"
 
@@ -21,12 +21,14 @@ namespace pqvm {
 }
 
 namespace limits {
-    enum limits : size_t {
+    enum limits {
         qubits  = SHRT_MAX,
         string  = UCHAR_MAX,
         tanlges = SHRT_MAX
     };
-}
+};
+
+struct qubit;
 
 /**
  * Tangle.
@@ -39,6 +41,7 @@ namespace limits {
  */
 struct tangle : public std::vector<qid> {
     quantum_reg qureg;
+    qubit find (const qid i)
 };
 
 std::ostream& operator << (std::ostream& out, const tangle& t) {
@@ -54,44 +57,54 @@ std::ostream& operator << (std::ostream& out, const tangle& t) {
  * Qubit.
  */
 struct qubit {
-    tangle& tangle;
-    qid qid;
+    tangle* tangle;
+    qid id;
+    
+    qubit (const tangle* t, const qid_type i):
+    tangle(t), id(i) {}
     
     inline quantum_reg& qureg () const {
-        return tangle.qureg;
+        return tangle->qureg;
     }
     
-    inline bool valid () const {
-        return tangle;
+    inline bool invalid () const {
+        return tangle == NULL;
     }
-    
 };
+
+namespace pqvm {
+    qubit invalid_qubit (NULL, -1);
+}
 
 /**
  * QMem.
- *
+ * 
  */
-struct signal_map {
-    typedef std::bitset<limits::qubits> map_type;
-    map_type entries;
-    map_type signals;
     
-    bool operator[] (qid q) const {
-        if (entries[q])
-            return signals[qid];
-        else {
-        io::error << "I was asked a signal map entry (qid " << qid << ") that isn't there, check quantum program correctness. Signal map: " << *this;
-        exit(EXIT_FAILURE);
-        }
+class signal_map {
+    typedef std::bitset<2*limits::qubits> bitset;
+    
+public:
+    bool test (const qid i) {
+        return entries[i<<1];
     }
     
-    map_type::reference& operator[] (qid q) {
-        if (entries[q])
-            return signals[q];
-        else {
-        io::error << "I was asked to set an signal map entry (qid " << qid << ") that is already set, check quantum program correctness. Signal map: " << *this;
-            exit(EXIT_FAILURE);
+    bool get (const qid i) {
+        qid k = i<<1;
+        if (entries[k]) return signals[k];
+        io::error << "I was asked a signal map entry (qid " << i << ") that isn't there, check quantum program correctness. Signal map: " << *this;
+        exit(EXIT_FAILURE);
+    }
+    
+    void set (const qid i, const bool signal) {
+        qid k = i<<1;
+        if (!entries[k]) {
+            entries[k] = true;
+            signals[k] = signal;
+            return;
         }
+        io::error << "I was asked to set an signal map entry (qid " << i << ") that is already set, check quantum program correctness. Signal map: " << *this;
+        exit(EXIT_FAILURE);
     }
     
 };
@@ -99,8 +112,8 @@ struct signal_map {
 std::ostream& operator<< (std::ostream& stream, signal_map& map) {
     stream << "(" << std::endl;
     for (size_t i = 0; i < limits::qubits; ++i)
-        if (map.entries.test(i))
-            stream << "(" << i << " " << map.signals.test(i) ? 1 : 0 << ")" << std::endl;
+        if (map.test(i))
+            stream << "(" << i << " " << map.get(i) ? 1 : 0 << ")" << std::endl;
     return stream << ")" << std::endl;
 }
 
@@ -138,7 +151,7 @@ namespace io {
     
 }
 
-int main (int args); char* argv[]) {
+int main (int args, char* argv[]) {
     sexp_iowrap* input_port;
     sexp_t* mc_program;
     qmem qmem();

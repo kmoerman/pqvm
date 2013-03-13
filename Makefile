@@ -1,6 +1,6 @@
-CC = g++
-SOURCES = qvm.cpp measure.cpp
-TARGETS = qvm measure
+CC = clang
+SOURCES = qvm.cpp kronecker_test.cpp
+TARGETS = qvm kronecker_test
 
 INCPATH = #-I
 LIBPATH = #-L
@@ -13,9 +13,9 @@ DEST_OBJS=$(SOURCES:.cpp=.o)
 
 all: qvm
 
-measure: measure.cpp measure.h
-	$(CC) $(CFLAGS) -c measure.cpp
-	$(CC) $(CFLAGS) -o measure  measure.o $(LIBS)
+test: measure.cpp measure.h
+	$(CC) $(CFLAGS) -c kronecker_test.cpp
+	$(CC) $(CFLAGS) -o kronecker_test  kronecker_test.o $(LIBS)
 
 qvm: qvm.cpp qvm.h
 	$(CC) $(CFLAGS) -c qvm.cpp

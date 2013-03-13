@@ -11,9 +11,9 @@
 		4A0E0ACB16EA28FC002F1ECA /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
-		4A0E0AD216EA2CC1002F1ECA /* measure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD116EA2CC1002F1ECA /* measure.cpp */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
 		4A1812E516EBA60800B1865E /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
+		4A1B70CE16EFAD320013D47E /* kronecker_test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A1B70CD16EFAD320013D47E /* kronecker_test.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +51,9 @@
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
 		4A0E0ADB16EA2D40002F1ECA /* pqvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqvm.h; sourceTree = "<group>"; };
 		4A0E0ADC16EA2D40002F1ECA /* qvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qvm.h; sourceTree = "<group>"; };
+		4A1B70CC16EFA0380013D47E /* quantum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = quantum.h; sourceTree = "<group>"; };
+		4A1B70CD16EFAD320013D47E /* kronecker_test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kronecker_test.cpp; sourceTree = "<group>"; };
+		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -83,6 +86,7 @@
 				4A0E0AD716EA2D07002F1ECA /* qops.cpp */,
 				4A0E0AD316EA2CDF002F1ECA /* gates.c */,
 				4A0E0AD116EA2CC1002F1ECA /* measure.cpp */,
+				4A1B70CD16EFAD320013D47E /* kronecker_test.cpp */,
 			);
 			name = Scraps;
 			sourceTree = "<group>";
@@ -95,6 +99,8 @@
 				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
 				4A0E0ADC16EA2D40002F1ECA /* qvm.h */,
 				4A0E0AD416EA2CEE002F1ECA /* qops.h */,
+				4A1B70CC16EFA0380013D47E /* quantum.h */,
+				4A1B70D016F01CCE0013D47E /* vector.h */,
 				4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */,
 				4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */,
 				4A0E0AD016EA2CAE002F1ECA /* Scraps */,
@@ -200,7 +206,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A0E0AD216EA2CC1002F1ECA /* measure.cpp in Sources */,
+				4A1B70CE16EFAD320013D47E /* kronecker_test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
