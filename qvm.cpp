@@ -693,7 +693,7 @@ quantum_diag_measure(int pos, double angle, quantum_reg*  reg)
   double limit = (1.0 / ((MAX_UNSIGNED) 1 << reg->width)) / 1000000;
   double prob=0, norm = 0;
   COMPLEX_FLOAT amp = 0;
-
+  
   // TODO: currently just measures to <+_alpha|
   out.width = reg->width-1;
   out.size = reg->size;

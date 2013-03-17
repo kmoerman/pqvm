@@ -62,6 +62,10 @@ namespace quantum {
         return result;
     }
     
+    /**
+     * Finish single gate operators.
+     * ...
+     */
     namespace details {
         struct single_gate {
             typedef typename reg::size_type size;
@@ -83,7 +87,16 @@ namespace quantum {
         details::axis_type m[4] = {half_sqrt, half_sqrt, half_sqrt, -half_sqrt};
         
         tbb::parallel_for(range(0, n), details::single_gate (m, &r));
+    }
+    
+    namespace details {
+        struct measure {
         
+        };
+    }
+    
+    void measure (reg::size_type target, reg& r) {
+    
     }
     
 }
