@@ -89,14 +89,33 @@ namespace quantum {
         tbb::parallel_for(range(0, n), details::single_gate (m, &r));
     }
     
+    /**
+     * Measurement. We measure in the |+alpha> |-alpha> basis (on the equator
+     * of the Bloch sphere). For unitary opertors, it suffices to assume
+     * the outcome signal zero and transform only the register.
+     */
     namespace details {
-        struct measure {
         
-        };
+        typedef reg::size_type size;
+        
+        template <typename F>
+        void stride_operator (reg in, reg out, size stride, F f) {
+            size period = 2 * stride;
+            
+            
+            
+        }
+        
     }
     
-    void measure (reg::size_type target, reg& r) {
-    
+    reg* measure (reg::size_type target, double angle, reg& r) {
+        reg::size_type N = r.size();
+        reg* outcome = new reg(N / 2);
+        
+        
+        
+        return outcome;
+        
     }
     
 }

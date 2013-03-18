@@ -45,13 +45,15 @@ public:
     /*
      * Constructor.
      * Allocate: allocate space for n elements.
-     * //Copy: allocate space for n elements and copy them from the original.
      */
     explicit vector (const size_type n, const allocator_type& a = allocator_type ()) :
     __alloc (a),
     __begin (__alloc.allocate(n)),
     __end   (__begin + n) {}
     
+    /*
+     * Copy constructor: allocate space for n elements and copy them from the original.
+     */
 /* 
     vector (const self_type& v) :
     __alloc (v.__alloc),

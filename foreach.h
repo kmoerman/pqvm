@@ -8,7 +8,7 @@ namespace macros {
     namespace foreach {
         
         #define foreach(range, iterator) \
-            for (auto iterator (macros::foreach::begin(range)); iterator != macros::foreach::end(range); ++i)
+            for (auto iterator (macros::foreach::begin(range)); iterator != macros::foreach::end(range); ++iterator)
         
         template <typename T>
         inline typename T::iterator begin (const T& range) {
