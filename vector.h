@@ -37,49 +37,45 @@ public:
     typedef const_pointer const_iterator;
 
 private:
-    allocator_type __alloc;
-    const pointer __begin;
-    const pointer __end;
+    const pointer  _begin;
+    const pointer  _end;
+    allocator_type _alloc;
 
 public:
     /*
      * Constructor.
-     * Allocate: allocate space for n elements.
+     * Allocate: allocate space for n elements, or wait for allocation to be called later.
      */
     explicit vector (const size_type n, const allocator_type& a = allocator_type ()) :
-    __alloc (a),
-    __begin (__alloc.allocate(n)),
-    __end   (__begin + n) {}
+    _alloc (a),
+    _begin (_alloc.allocate(n)),
+    _end   (_begin + n) {}
     
-    /*
-     * Copy constructor: allocate space for n elements and copy them from the original.
-     */
-/* 
-    vector (const self_type& v) :
-    __alloc (v.__alloc),
-    __begin (__alloc.allocate(v.size())),
-    __end   (__begin + v.size()) {
-        std::copy(v.begin(), v.end(), __begin);
-    }
- */
+    explicit vector (const allocator_type& a = allocator_type ()) :
+    _alloc(a) {}
     
     /*
      * Destructor.
      * Basic destruction only. No destuctors are called on the member objects.
      */
     ~vector () {
-        __alloc.deallocate(__begin, size());
+        _alloc.deallocate(_begin, size());
     }
     
     /*
      * Storage.
      */
+    inline void reserve (const size_type n) const {
+        _begin = _alloc.allocate(n);
+        _end = (_begin + n);
+    }
+    
     inline size_type size () const {
-        return static_cast<size_type>(__end - __begin);
+        return static_cast<size_type>(_end - _begin);
     }
     
     inline allocator_type get_allocator () const {
-        return __alloc;
+        return _alloc;
     }
     
     /*
@@ -91,19 +87,19 @@ public:
     
 public:
     inline iterator begin () {
-        return __begin;
+        return _begin;
     }
     
     inline const_iterator begin () const {
-        return __begin;
+        return _begin;
     }
     
     inline iterator end () {
-        return __end;
+        return _end;
     }
     
     inline const_iterator end () const {
-        return __end;
+        return _end;
     }
     
     /*
@@ -115,36 +111,36 @@ public:
      */
     
     inline reference operator [] (size_type i) {
-        return __begin[i];
+        return _begin[i];
     }
     
     inline const_reference operator [] (size_type i) const {
-        return __begin[i];
+        return _begin[i];
     }
     
     inline reference front () {
-        return __begin;
+        return _begin;
     }
     
     inline const_reference front () const {
-        return __begin;
+        return _begin;
     }
     
     inline reference back () {
-        return __end - 1;
+        return _end - 1;
     }
     
     inline const_reference back () const {
-        return __end - 1;
+        return _end - 1;
     }
     
     reference at (size_type i) {
-        if (0 < i && i < size()) return __begin[i];
+        if (0 < i && i < size()) return _begin[i];
         else throw std::out_of_range ("Index " + i + "out of range for vector of size " + size() + ".");
     }
     
     const_reference at (size_type i) const {
-        if (0 < i && i < size()) return __begin[i];
+        if (0 < i && i < size()) return _begin[i];
         else throw std::out_of_range ("Index " + i + "out of range for vector of size " + size() + ".");
     }
 

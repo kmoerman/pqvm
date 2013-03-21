@@ -8,12 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		4A0E0ACA16EA28FC002F1ECA /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
-		4A0E0ACB16EA28FC002F1ECA /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
 		4A1812E516EBA60800B1865E /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
-		4A35B89F16F2957300EFB13B /* test-foreach.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A35B89E16F2957300EFB13B /* test-foreach.cpp */; };
+		4AC6D40A16F8BE8E00FE8276 /* test-sizes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AC6D40916F8BE8E00FE8276 /* test-sizes.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -56,6 +55,7 @@
 		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = vector.h; sourceTree = "<group>"; };
 		4A35B89D16F2927E00EFB13B /* foreach.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foreach.h; sourceTree = "<group>"; };
 		4A35B89E16F2957300EFB13B /* test-foreach.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-foreach.cpp"; sourceTree = "<group>"; };
+		4AC6D40916F8BE8E00FE8276 /* test-sizes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-sizes.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -75,7 +75,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A0E0ACB16EA28FC002F1ECA /* libtbb.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +86,7 @@
 			children = (
 				4A0E0AD716EA2D07002F1ECA /* qops.cpp */,
 				4A0E0AD316EA2CDF002F1ECA /* gates.c */,
+				4AC6D40916F8BE8E00FE8276 /* test-sizes.cpp */,
 				4A0E0AD116EA2CC1002F1ECA /* test-measure.cpp */,
 				4A1B70CD16EFAD320013D47E /* test-kronecker.cpp */,
 				4A35B89E16F2957300EFB13B /* test-foreach.cpp */,
@@ -210,7 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A35B89F16F2957300EFB13B /* test-foreach.cpp in Sources */,
+				4AC6D40A16F8BE8E00FE8276 /* test-sizes.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
