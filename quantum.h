@@ -78,15 +78,13 @@ namespace quantum {
     
     namespace details {
         
-        struct sigma_x {
+        struct sigma_x_even {
             const size_type target;
             const iterator input, output;
             
-            sigma_x (size_type target_, quregister& input_, quregister& output_) :
+            sigma_x_even (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
-        };
-        
-        struct sigma_x_even : public sigma_x {
+
             void operator () (range& r) {
                 size_type stride (1 << target),
                           period (stride << 1),
@@ -103,7 +101,13 @@ namespace quantum {
             }
         };
         
-        struct sigma_x_odd : public sigma_x {
+        struct sigma_x_odd {
+            const size_type target;
+            const iterator input, output;
+            
+            sigma_x_odd (size_type target_, quregister& input_, quregister& output_) :
+            input (input_.begin()), output (output_.begin()), target (target_) {}
+
             void operator () (range& r) {
                 size_type stride (1 << target),
                           period (stride << 1),
@@ -124,10 +128,11 @@ namespace quantum {
     void sigma_x (size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
         output.reserve(n);
-        details::sigma_x x (target, input, output);
+        details::sigma_x_even even (target, input, output);
+        details::sigma_x_odd  odd  (target, input, output);
         
-        tbb::parallel_for (range (0, n), *(static_cast<details::sigma_x_even*>(&x)));
-        tbb::parallel_for (range (0, n), *(static_cast<details::sigma_x_odd*>(&x)));
+        tbb::parallel_for (range (0, n), even);
+        tbb::parallel_for (range (0, n), odd);
     }
     
     
@@ -273,28 +278,33 @@ namespace quantum {
         
         void test () {}
         
-        struct measure {
+        struct measure_even {
             const size_type target;
             const real angle;
             const iterator input, output;
             
-            measure (size_type target_, real angle_, quregister& input_, quregister& output_) :
-                target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
-        };
-        
-        struct measure_even : public measure {
+            measure_even (size_type target_, real angle_, quregister& input_, quregister& output_) :
+            target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
+            
             void operator() (range& r) const {
                 size_type stride (1 << target - 1),
-                          period (stride << 1),
-                          i (r.begin()),
-                          j ((i / stride) * period + (i % stride));
+                period (stride << 1),
+                i (r.begin()),
+                j ((i / stride) * period + (i % stride));
                 
                 for (; i < r.end(); ++i, i % stride ? ++j : j += period)
                     output[j] = input[i];
             }
         };
         
-        struct measure_odd : public measure {
+        struct measure_odd {
+            const size_type target;
+            const real angle;
+            const iterator input, output;
+            
+            measure_odd (size_type target_, real angle_, quregister& input_, quregister& output_) :
+            target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
+            
             void operator() (range& r) const {
                 size_type stride (1 << target - 1),
                           period (stride << 1),
@@ -311,10 +321,11 @@ namespace quantum {
     void measure (size_type target, real angle, quregister& input, quregister& output) {
         size_type n (input.size() / 2);
         output.reserve(n);
-        details::measure m (target, angle, input, output);
+        details::measure_even even (target, angle, input, output);
+        details::measure_odd  odd  (target, angle, input, output);
         
-        tbb::parallel_for(range (0, n), *(static_cast<details::measure_even*>(&m)));
-        tbb::parallel_for(range (0, n), *(static_cast<details::measure_odd*>(&m)));
+        tbb::parallel_for(range (0, n), even);
+        tbb::parallel_for(range (0, n), odd);
     }
     
 }

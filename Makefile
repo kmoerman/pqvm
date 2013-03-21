@@ -1,4 +1,4 @@
-CC = c++
+CC = g++
 SOURCES = qvm.cpp test-*.cpp
 TARGETS = qvm test-*
 
