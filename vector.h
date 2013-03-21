@@ -37,8 +37,8 @@ public:
     typedef const_pointer const_iterator;
 
 private:
-    const pointer  _begin;
-    const pointer  _end;
+    pointer  _begin;
+    pointer  _end;
     allocator_type _alloc;
 
 public:
@@ -65,9 +65,9 @@ public:
     /*
      * Storage.
      */
-    inline void reserve (const size_type n) const {
-        _begin = _alloc.allocate(n);
-        _end = (_begin + n);
+    inline void reserve (const size_type n) {
+        //_begin = _alloc.allocate(n);
+        //_end = (_begin + n);
     }
     
     inline size_type size () const {

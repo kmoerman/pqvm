@@ -73,6 +73,7 @@ typedef struct qureg {
 void base_quantum_X(const qureg_t * const input, qureg_t *output) {
   int i;
   for( i=0; i<input->size; i+=2 ) {
+      //swap (only pseudo code!)
     output->amplitudes[i+1] = input->amplitudes[i];
     output->amplitudes[i]   = input->amplitudes[i+1];
   }

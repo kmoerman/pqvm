@@ -24,81 +24,191 @@ namespace quantum {
         return out;
     }
     
-    
+    /*
+     * Some quantum operators are implemented as strided access pattern. The vectors
+     * are accessed twice, once for the even and once for the odd elements.
+     *
+     * For an operator on a target qubit t (zero based) in quregister A, the stride s
+     * is given by s = 2^t; we call p = 2s the stride period. Example, for a 3-qubit
+     * register A, on target qubit 1:
+     *
+     *     t = 1, s = 2, p = 4
+     *
+     *         E1  E2  O1  O2  E3  E4  O3  O4
+     *        +---+---+---+---+---+---+---+---+
+     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *        +---+---+---+---+---+---+---+---+
+     *        ' \___|___/   | ' \___|_'_/   |
+     *        '     \_______/ '     \_'_____/
+     *        '               '       '
+     *        '               '       '
+     *        '<----- p ----->'<- s ->'
+     *
+     * The odd/even access pattern permutes (E1 01 E2 O2 E3 O3 E4 O4) into
+     * (E1 E2 E3 E4 O1 O1 O3 O4) without the need to copy a permutation vector first.
+     *
+     * This should work well for large strides; for small strides, a single (parallel)
+     * iteration might be faster. I assume the minimal stride period should equal the
+     * cache line size, but this needs experimental validation.
+     * The threads should be spread accross the destination vector, aligned with the cache
+     * and with the stride periods; this needs experimental validation.
+     *
+     * @TODO Apply software prefetching (and test its performace).
+     *
+     */
     
     /*
-     * Pauli-X gate.
-     * In place operation.
-     * @TODO This jumps around in the input vector: turn into strided pattern.
+     * Sigma-X gate.
+     *
+     *     t = 1
+     *
+     *         E1  E2  O1  O2  E3  E4  O3  O4
+     *        +---+---+---+---+---+---+---+---+
+     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *        +---+---+---+---+---+---+---+---+
+     *        ' \   \  .   .  ' \   \  .   .  '
+     *        '   \  .\  .    '   \  .\  .    '
+     *        '    .\  .\     '    .\  .\     '
+     *        '  .  . \   \   '  .  . \   \   '
+     *        +---+---+---+---+---+---+---+---+
+     *     B: | 2 | 3 | 0 | 1 | 6 | 7 | 4 | 5 |
+     *        +---+---+---+---+---+---+---+---+
+     *
      */
     
     namespace details {
-        struct pauli_x {
-            const size_type mask;
-            const iterator input;
+        
+        struct sigma_x {
+            const size_type target;
+            const iterator input, output;
             
-            pauli_x (size_type target_, quregister& input_) :
-            input (input_.begin()), mask (1 << target_)) {}
-            
-            void operator() (range& r) {
-                for (size_type i (r.begin()); i != r.end(); ++i)
-                    if (i & bitmask == bitmask)
-                        input[i] = input[i^mask];
+            sigma_x (size_type target_, quregister& input_, quregister& output_) :
+            input (input_.begin()), output (output_.begin()), target (target_) {}
+        };
+        
+        struct sigma_x_even : public sigma_x {
+            void operator () (range& r) {
+                size_type stride (1 << target),
+                          period (stride << 1),
+                          i      (r.begin()),
+                          offset (i % period);
+                if (offset >= stride)
+                    i += period - offset;
+                
+                while (i < r.end()) {
+                    output[i + stride] = input[i];
+                    i++;
+                    if (i % stride) i+= stride;
+                }
+            }
+        };
+        
+        struct sigma_x_odd : public sigma_x {
+            void operator () (range& r) {
+                size_type stride (1 << target),
+                          period (stride << 1),
+                          i      (r.begin()),
+                          offset (i % period);
+                if (offset < stride)
+                    i += stride - offset;
+                
+                while (i < r.end()) {
+                    output[i - stride] = input[i];
+                    i++;
+                    if (i % stride) i+= stride;
+                }
             }
         };
     }
     
+    void sigma_x (size_type target, quregister& input, quregister& output) {
+        size_type n (input.size());
+        output.reserve(n);
+        details::sigma_x x (target, input, output);
+        
+        tbb::parallel_for (range (0, n), *(static_cast<details::sigma_x_even*>(&x)));
+        tbb::parallel_for (range (0, n), *(static_cast<details::sigma_x_odd*>(&x)));
+    }
+    
     
     /*
-     * Pauli-Z gate.
-     * In place operation.
-     * @TODO Maybe we can do better than iterating the whole register?
+     * Sigma-Z gate.
+     *     
+     *     t = 1
+     *
+     *        +---+---+---+---+---+---+---+---+
+     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *        +---+---+---+---+---+---+---+---+
+     *          |   |   |   |   |   |   |   |
+     *        +---+---+---+---+---+---+---+---+
+     *     B: | 0 | 1 |-2 |-3 | 4 | 5 |-6 |-7 |
+     *        +---+---+---+---+---+---+---+---+
+     *
+     * @TODO What happens with state |0...0> ?
+     * @TODO Make in-place (easy, but depends on execution model of the pqvm).
+     *
      */
     
     namespace details {
-        struct pauli_z {
+        struct sigma_z {
             const size_type mask;
-            const iterator input;
+            const iterator input, output;
             
-            pauli_z (size_type target_, quregister& input_) :
-            input (input_.begin()), mask (1 << target_)) {}
+            sigma_z (size_type target_, quregister& input_, quregister& output_) :
+            input (input_.begin()), output (output_.begin()), mask (1 << target_) {}
             
             void operator() (range& r) {
                 for (size_type i (r.begin()); i < r.end(); ++i)
-                    if (i & bitmask == bitmask)
-                        input[i] *= -1;
+                    if (i & mask) output[i] = -input[i];
+                    else output[i] = input[i];
             }
         };
     }
     
-    void pauli_z (size_type target, quregister& input) {
-        tbb::parallel_for (range (0, input.size()), details::pauli_z (target, input));
+    void sigma_z (size_type target, quregister& input, quregister& output) {
+        size_type n (input.size());
+        output.reserve(n);
+        tbb::parallel_for (range (0, n), details::sigma_z (target, input, output));
     }
     
     /*
      * Controlled-Z gate.
-     * In place operation.
-     * @TODO Maybe we can do better than iterating the whole register?
+     * 
+     *     c = 0, t = 1
+     *
+     *        +---+---+---+---+---+---+---+---+
+     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *        +---+---+---+---+---+---+---+---+
+     *          |   |   |   |   |   |   |   |
+     *        +---+---+---+---+---+---+---+---+
+     *     B: | 0 | 1 | 2 |-3 | 4 | 5 | 6 |-7 |
+     *        +---+---+---+---+---+---+---+---+
+     *
+     * @TODO What happens with state |0...0> ?
+     * @TODO Make in-place (easy, but depends on execution model of the pqvm).
+     *
      */
     
     namespace details {
         struct controlled_z {
             const size_type mask;
-            const iterator input;
+            const iterator input, output;
             
-            controlled_z (const size_type control_, const size_type target_, const quregister& input_) :
-            input (input_.begin()), mask ((1 << control_) | (1 << target_)) {}
+            controlled_z (const size_type control_, const size_type target_, quregister& input_, quregister& output_) :
+            input (input_.begin()), output(output_.begin()), mask ((1 << control_) | (1 << target_)) {}
             
             void operator() (range& r) {
-                for (size i (r.begin()); i < r.end(); ++i)
-                    if((i & bitmask) == bitmask)
-                        input[i] *= -1;
+                for (size_type i (r.begin()); i < r.end(); ++i)
+                    if((i & mask) == mask) output[i] = -input[i];
+                    else output[i] = input[i];
             }
         };
     }
     
-    void controlled_z (const size_type control, const size_type target, const quregister& input) {
-        tbb::parallel_for (range (0, input.size()), details::controlled_z (control, target, input));
+    void controlled_z (const size_type control, const size_type target, quregister& input, quregister& output) {
+        size_type n (input.size());
+        output.reserve(n);
+        tbb::parallel_for (range (0, n), details::controlled_z (control, target, input, output));
     };
     
     /*
@@ -107,6 +217,7 @@ namespace quantum {
      * Fills a vector of size n x m in parallel.
      * Straightforward implementation: spread threads accross the result vector
      * and then perform a double loop to calculate the results.
+     *
      */
     
     namespace details {
@@ -118,83 +229,72 @@ namespace quantum {
                 left (left_.begin()), right (right_.begin()), result (result_.begin()), m (right_.size()) {}
             
             void operator() (range& r) const {
-                for (size_type i (r.begin()), k (i * m); i != r.end(); ++i)
+                for (size_type i (r.begin()), k (i * m); i < r.end(); ++i)
                     for (size_type j (0); j < m; ++j, ++k)
                         right[k] = left[i] * right[j];
             }
         };
     }
     
-    void kronecker (quregister& left, quregister& right, quregister& result) {
+    inline void kronecker (quregister& left, quregister& right, quregister& result) {
         result.reserve(left.size() * right.size());
         tbb::parallel_for(range (0, left.size()),  details::kronecker (left, right, result));
     }
     
     /*
      * Measurement.
-     * We measure in the (|+alpha>, |-alpha>) basis (on the equator
-     * of the Bloch sphere). For unitary operators, it suffices to assume
-     * the outcome signal zero (|+alpha>) and transform only the register.
+     * We measure in the (|+alpha>, |-alpha>) basis (on the equator of the
+     * Bloch sphere). For unitary operators, it suffices to assume the
+     * outcome signal zero (|+alpha>) and transform only the register.
      * 
-     * Measurement is performed on a target qubit t, relative to an angle a. This
-     * results in a strided access pattern on the input vector. FOr a given target t
-     * (one-based), the stride s is given by s = 2^(t-1). We call p = 2s the stride
-     * period.
+     * Measurement is performed on a target qubit t, relative to an angle a.
      *
-     * Example, measurement of a 3 qubit register A, for target bit 2.
+     *     t = 1, s = 2, p = 4:
      *
-     *     s = 2, p = 4:
      *         E1  E2  O1  O2  E3  E4  O3  O4
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | ...
+     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
      *        +---+---+---+---+---+---+---+---+
-     *         |   |   .   .   /   /    .   .
-     *         |   | .   .   /   / .   .
-     *         |   |   .   /  ./  .
-     *         | . | .   /   /
+     *          |   |  .   .   /   /   .   .
+     *          |   |.   .   /   /.   .
+     *          |  .|  .   / . / .
+     *          |.  |.  ./  ./
      *        +---+---+---+---+
-     *     B: | 0 | 1 | 2 | 3 | ...
+     *     B: | 0 | 1 | 2 | 3 |
      *        +---+---+---+---+
+     *     
+     *     even: B[j]  = A[Ej]
+     *     odd:  B[j] += exp(-a*i) * A[Oj]
      *
-     *     B[k]  = A[Ek] + exp(-a*i) * A[Ok]
-     *
-     * The strided access pattern is resolved by iterating the result vector twice,
-     * first copying the even amplitudes, then adding the odd amplitudes.
-     *
-     *     B[k]  = A[Ek]
-     *     B[k] += exp(-a*i) * A[Ok]
-     *
-     * This should work well for large strides; for small strides, a single (parallel)
-     * iteration might be faster. I assume the minimal stride period should equal the
-     * cache line size, but this needs experimental validation.
-     * The threads should be spread accross the result vector, aligned with the cache
-     * and with the stride periods; this needs experimental validation.
-     * @TODO Test effects of software prefetching.
      */
     
     namespace details {
+        
+        
+        void test () {}
+        
         struct measure {
             const size_type target;
             const real angle;
             const iterator input, output;
             
-            measure (size_type t_, real a_, quregister& i_, quregister& o_) :
-                target (t_), angle (a_), input (i_.begin()), output (o_.begin()) {}
+            measure (size_type target_, real angle_, quregister& input_, quregister& output_) :
+                target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
         };
         
-        struct even : public measure {
+        struct measure_even : public measure {
             void operator() (range& r) const {
                 size_type stride (1 << target - 1),
                           period (stride << 1),
                           i (r.begin()),
-                          j ((k / stride) * period + (i % stride));
+                          j ((i / stride) * period + (i % stride));
                 
-                for (; i != r.end(); ++i, i % stride ? ++j : j += period)
-                    output[k] = input[i];
+                for (; i < r.end(); ++i, i % stride ? ++j : j += period)
+                    output[j] = input[i];
             }
         };
         
-        struct odd : public measure {
+        struct measure_odd : public measure {
             void operator() (range& r) const {
                 size_type stride (1 << target - 1),
                           period (stride << 1),
@@ -202,19 +302,19 @@ namespace quantum {
                           j ((i / stride) * period + (i % stride) + stride);
                 complex factor (exp(complex (0, -angle)));
                 
-                for (; i != r.end(); ++i, i % stride ? ++j : j += period)
-                    output[k] += factor * input[i];
+                for (; i < r.end(); ++i, i % stride ? ++j : j += period)
+                    output[j] += factor * input[i];
             }
         };
     }
     
     void measure (size_type target, real angle, quregister& input, quregister& output) {
-        size_type n (source.size() / 2);
-        destination.reserve(n);
+        size_type n (input.size() / 2);
+        output.reserve(n);
         details::measure m (target, angle, input, output);
         
-        tbb::parallel_for(range (0, n), (details::even) m);
-        tbb::parallel_for(range (0, n), (details::odd) m);
+        tbb::parallel_for(range (0, n), *(static_cast<details::measure_even*>(&m)));
+        tbb::parallel_for(range (0, n), *(static_cast<details::measure_odd*>(&m)));
     }
     
 }
