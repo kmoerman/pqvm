@@ -14,7 +14,7 @@ namespace quantum {
     typedef vector<complex> quregister;
     typedef quregister::iterator iterator;
     typedef quregister::size_type size_type;
-    typedef const tbb::blocked_range<size_type> range;
+    typedef tbb::blocked_range<size_type> range;
         
     std::ostream& operator << (std::ostream& out, quregister& reg) {
         out << "( ";
@@ -28,15 +28,15 @@ namespace quantum {
      * Some quantum operators are implemented as strided access pattern. The vectors
      * are accessed twice, once for the even and once for the odd elements.
      *
-     * For an operator on a target qubit t (zero based) in quregister A, the stride s
-     * is given by s = 2^t; we call p = 2s the stride period. Example, for a 3-qubit
-     * register A, on target qubit 1:
+     * For an operator on a target qubit t (zero based) in quregister Q, the stride s
+     * is given by s = 2^t; we call p = 2s the stride period. Example: operator on
+     * 3-qubit register, on target qubit 1:
      *
      *     t = 1, s = 2, p = 4
      *
      *         E1  E2  O1  O2  E3  E4  O3  O4
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     Q: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
      *        +---+---+---+---+---+---+---+---+
      *        ' \___|___/   | ' \___|_'_/   |
      *        '     \_______/ '     \_'_____/
@@ -44,14 +44,14 @@ namespace quantum {
      *        '               '       '
      *        '<----- p ----->'<- s ->'
      *
-     * The odd/even access pattern permutes (E1 01 E2 O2 E3 O3 E4 O4) into
+     * The odd/even access pattern permutes (E1 E1 E2 O2 E3 O3 E4 O4) into
      * (E1 E2 E3 E4 O1 O1 O3 O4) without the need to copy a permutation vector first.
      *
      * This should work well for large strides; for small strides, a single (parallel)
      * iteration might be faster. I assume the minimal stride period should equal the
      * cache line size, but this needs experimental validation.
-     * The threads should be spread accross the destination vector, aligned with the cache
-     * and with the stride periods; this needs experimental validation.
+     * The threads should be spread accross the destination vector, aligned with the
+     * cache and with the stride periods; this needs experimental validation.
      *
      * @TODO Apply software prefetching (and test its performace).
      *
@@ -85,7 +85,7 @@ namespace quantum {
             sigma_x_even (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (range& r) {
+            void operator () (const range& r) const {
                 size_type stride (1 << target),
                           period (stride << 1),
                           i      (r.begin()),
@@ -108,7 +108,7 @@ namespace quantum {
             sigma_x_odd (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (range& r) {
+            void operator () (const range& r) const {
                 size_type stride (1 << target),
                           period (stride << 1),
                           i      (r.begin()),
@@ -162,7 +162,7 @@ namespace quantum {
             sigma_z (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), mask (1 << target_) {}
             
-            void operator() (range& r) {
+            void operator() (const range& r) const {
                 for (size_type i (r.begin()); i < r.end(); ++i)
                     if (i & mask) output[i] = -input[i];
                     else output[i] = input[i];
@@ -202,7 +202,7 @@ namespace quantum {
             controlled_z (const size_type control_, const size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output(output_.begin()), mask ((1 << control_) | (1 << target_)) {}
             
-            void operator() (range& r) {
+            void operator() (const range& r) const {
                 for (size_type i (r.begin()); i < r.end(); ++i)
                     if((i & mask) == mask) output[i] = -input[i];
                     else output[i] = input[i];
@@ -233,17 +233,19 @@ namespace quantum {
             kronecker (quregister& left_, quregister& right_, quregister& result_) :
                 left (left_.begin()), right (right_.begin()), result (result_.begin()), m (right_.size()) {}
             
-            void operator() (range& r) const {
+            void operator() (const range& r) const {
                 for (size_type i (r.begin()), k (i * m); i < r.end(); ++i)
                     for (size_type j (0); j < m; ++j, ++k)
-                        right[k] = left[i] * right[j];
+                        result[k] = left[i] * right[j];
             }
         };
     }
     
     inline void kronecker (quregister& left, quregister& right, quregister& result) {
         result.reserve(left.size() * right.size());
-        tbb::parallel_for(range (0, left.size()),  details::kronecker (left, right, result));
+        details::kronecker k (left, right, result);
+        
+        tbb::parallel_for(range (0, left.size()),  k);
     }
     
     /*
@@ -286,7 +288,7 @@ namespace quantum {
             measure_even (size_type target_, real angle_, quregister& input_, quregister& output_) :
             target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
             
-            void operator() (range& r) const {
+            void operator() (const range& r) const {
                 size_type stride (1 << target - 1),
                 period (stride << 1),
                 i (r.begin()),
@@ -305,7 +307,7 @@ namespace quantum {
             measure_odd (size_type target_, real angle_, quregister& input_, quregister& output_) :
             target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
             
-            void operator() (range& r) const {
+            void operator() (const range& r) const {
                 size_type stride (1 << target - 1),
                           period (stride << 1),
                           i (r.begin()),
@@ -321,6 +323,7 @@ namespace quantum {
     void measure (size_type target, real angle, quregister& input, quregister& output) {
         size_type n (input.size() / 2);
         output.reserve(n);
+        
         details::measure_even even (target, angle, input, output);
         details::measure_odd  odd  (target, angle, input, output);
         

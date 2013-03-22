@@ -10,7 +10,7 @@
  * The measure namespace exposes the tbb::tick_count functionality,
  * and allows us to control the number of threads during measurements.
  */
-namespace measure {
+namespace performance {
     
     typedef tbb::tick_count time;
     typedef double interval;
@@ -117,8 +117,8 @@ namespace measure {
             
             //initialize the output file
             sequential (std::string filename, int iters):
-            iterations(iters), iteration(0), begin(now()),
-            output(filename.c_str(), std::ios_base::out) {
+            iterations (iters), iteration (0), begin (now()),
+            output (filename.c_str(), std::ios_base::out) {
                 output  << "# Wall-clock time (seconds) for " << iterations
                         << " iterations on 1 thread." << std::endl;
             }   
@@ -133,11 +133,11 @@ namespace measure {
         #define MS_EXPERIMENT MS_CONCAT(experiment_, __LINE__)
                 
         #define measure_parallel(name, iterations) \
-            for (measure::details::parallel MS_EXPERIMENT (name, iterations); \
+            for (performance::details::parallel MS_EXPERIMENT (name, iterations); \
                  MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
                 
         #define measure_sequential(name, iterations) \
-            for (measure::details::sequential MS_EXPERIMENT (name, iterations); \
+            for (performance::details::sequential MS_EXPERIMENT (name, iterations); \
                  MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
         
     }

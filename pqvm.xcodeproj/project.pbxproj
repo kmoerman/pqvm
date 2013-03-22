@@ -12,6 +12,7 @@
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
 		4A1812E516EBA60800B1865E /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
+		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		D0DA7D2516FB661900D1095E /* test-quantum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DA7D2416FB625300D1095E /* test-quantum.cpp */; };
 /* End PBXBuildFile section */
 
@@ -45,7 +46,7 @@
 		4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qvm.cpp; sourceTree = "<group>"; };
 		4A0E0AD716EA2D07002F1ECA /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
 		4A0E0AD816EA2D40002F1ECA /* bitmask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitmask.h; sourceTree = "<group>"; };
-		4A0E0AD916EA2D40002F1ECA /* measure.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = measure.h; sourceTree = "<group>"; };
+		4A0E0AD916EA2D40002F1ECA /* performance.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = performance.h; sourceTree = "<group>"; };
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
 		4A0E0ADB16EA2D40002F1ECA /* pqvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqvm.h; sourceTree = "<group>"; };
 		4A0E0ADC16EA2D40002F1ECA /* qvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qvm.h; sourceTree = "<group>"; };
@@ -76,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,7 +103,7 @@
 			children = (
 				4A35B89D16F2927E00EFB13B /* foreach.h */,
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
-				4A0E0AD916EA2D40002F1ECA /* measure.h */,
+				4A0E0AD916EA2D40002F1ECA /* performance.h */,
 				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
 				4A0E0ADC16EA2D40002F1ECA /* qvm.h */,
 				4A0E0AD416EA2CEE002F1ECA /* qops.h */,

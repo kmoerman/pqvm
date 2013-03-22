@@ -47,12 +47,10 @@ public:
      * Allocate: allocate space for n elements, or wait for allocation to be called later.
      */
     explicit vector (const size_type n, const allocator_type& a = allocator_type ()) :
-    _alloc (a),
-    _begin (_alloc.allocate(n)),
-    _end   (_begin + n) {}
+    _alloc (a), _begin (_alloc.allocate(n)), _end (_begin + n) {}
     
     explicit vector (const allocator_type& a = allocator_type ()) :
-    _alloc(a) {}
+    _alloc (a), _begin (NULL), _end (NULL) {}
     
     /*
      * Destructor.
@@ -66,16 +64,22 @@ public:
      * Storage.
      */
     inline void reserve (const size_type n) {
-        //_begin = _alloc.allocate(n);
-        //_end = (_begin + n);
+        _begin = _alloc.allocate(n);
+        _end = _begin + n;
     }
     
     inline size_type size () const {
-        return static_cast<size_type>(_end - _begin);
+        return _end - _begin;
     }
     
     inline allocator_type get_allocator () const {
         return _alloc;
+    }
+    
+    inline allocator_type empty () {
+        _alloc.deallocate(_begin, size());
+        _begin = 0;
+        _end = 0;
     }
     
     /*
