@@ -11,9 +11,7 @@
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
-		4A1812E516EBA60800B1865E /* qvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */; };
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
-		D0DA7D2516FB661900D1095E /* test-quantum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0DA7D2416FB625300D1095E /* test-quantum.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,23 +39,18 @@
 		4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libtbb.dylib; path = ../../../../usr/local/lib/libtbb.dylib; sourceTree = "<group>"; };
 		4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libquantum.a; path = ../../../../usr/local/lib/libquantum.a; sourceTree = "<group>"; };
 		4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsexp.a; path = ../../../../usr/local/lib/libsexp.a; sourceTree = "<group>"; };
-		4A0E0AD116EA2CC1002F1ECA /* test-measure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-measure.cpp"; sourceTree = "<group>"; };
-		4A0E0AD416EA2CEE002F1ECA /* qops.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qops.h; sourceTree = "<group>"; };
-		4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = qvm.cpp; sourceTree = "<group>"; };
-		4A0E0AD716EA2D07002F1ECA /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
 		4A0E0AD816EA2D40002F1ECA /* bitmask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitmask.h; sourceTree = "<group>"; };
 		4A0E0AD916EA2D40002F1ECA /* performance.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = performance.h; sourceTree = "<group>"; };
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
 		4A0E0ADB16EA2D40002F1ECA /* pqvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqvm.h; sourceTree = "<group>"; };
 		4A0E0ADC16EA2D40002F1ECA /* qvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qvm.h; sourceTree = "<group>"; };
 		4A1B70CC16EFA0380013D47E /* quantum.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = quantum.h; sourceTree = "<group>"; };
-		4A1B70CD16EFAD320013D47E /* test-kronecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-kronecker.cpp"; sourceTree = "<group>"; };
 		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = vector.h; sourceTree = "<group>"; };
-		4A35B89D16F2927E00EFB13B /* foreach.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = foreach.h; sourceTree = "<group>"; };
-		4A35B89E16F2957300EFB13B /* test-foreach.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-foreach.cpp"; sourceTree = "<group>"; };
-		4AC6D40916F8BE8E00FE8276 /* test-sizes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "test-sizes.cpp"; sourceTree = "<group>"; };
-		D0DA7D2216FB39D000D1095E /* gates.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gates.c; sourceTree = "<group>"; };
-		D0DA7D2416FB625300D1095E /* test-quantum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "test-quantum.cpp"; sourceTree = "<group>"; };
+		4A3CAB6616FDE80300D3966C /* gates.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gates.c; sourceTree = "<group>"; };
+		4A3CAB6716FDE80300D3966C /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
+		4A3CAB6916FDE80300D3966C /* performance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = performance.cpp; sourceTree = "<group>"; };
+		4A3CAB6A16FDE80300D3966C /* quantum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = quantum.cpp; sourceTree = "<group>"; };
+		4A3CAB6B16FDE80300D3966C /* sizes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sizes.cpp; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -84,56 +77,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4A0E0AD016EA2CAE002F1ECA /* Scraps */ = {
+		4A3CAB6516FDE80300D3966C /* scraps */ = {
 			isa = PBXGroup;
 			children = (
-				4A0E0AD716EA2D07002F1ECA /* qops.cpp */,
-				D0DA7D2416FB625300D1095E /* test-quantum.cpp */,
-				D0DA7D2216FB39D000D1095E /* gates.c */,
-				4AC6D40916F8BE8E00FE8276 /* test-sizes.cpp */,
-				4A0E0AD116EA2CC1002F1ECA /* test-measure.cpp */,
-				4A1B70CD16EFAD320013D47E /* test-kronecker.cpp */,
-				4A35B89E16F2957300EFB13B /* test-foreach.cpp */,
+				4A3CAB6616FDE80300D3966C /* gates.c */,
+				4A3CAB6716FDE80300D3966C /* qops.cpp */,
 			);
-			name = Scraps;
+			path = scraps;
+			sourceTree = "<group>";
+		};
+		4A3CAB6816FDE80300D3966C /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				4A3CAB6916FDE80300D3966C /* performance.cpp */,
+				4A3CAB6A16FDE80300D3966C /* quantum.cpp */,
+				4A3CAB6B16FDE80300D3966C /* sizes.cpp */,
+			);
+			path = tests;
 			sourceTree = "<group>";
 		};
 		D0EAD5C116E75F290026EE11 = {
 			isa = PBXGroup;
 			children = (
-				4A35B89D16F2927E00EFB13B /* foreach.h */,
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
 				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
 				4A0E0ADC16EA2D40002F1ECA /* qvm.h */,
-				4A0E0AD416EA2CEE002F1ECA /* qops.h */,
 				4A1B70CC16EFA0380013D47E /* quantum.h */,
 				4A1B70D016F01CCE0013D47E /* vector.h */,
 				4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */,
-				4A0E0AD516EA2CF2002F1ECA /* qvm.cpp */,
-				4A0E0AD016EA2CAE002F1ECA /* Scraps */,
-				D0EAD5F116E7675E0026EE11 /* Binaries */,
-				D0EAD5CB16E75F290026EE11 /* Products */,
+				4A3CAB6516FDE80300D3966C /* scraps */,
+				4A3CAB6816FDE80300D3966C /* tests */,
+				D0EAD5F116E7675E0026EE11 /* libraries */,
+				D0EAD5CB16E75F290026EE11 /* products */,
 			);
 			sourceTree = "<group>";
 		};
-		D0EAD5CB16E75F290026EE11 /* Products */ = {
+		D0EAD5CB16E75F290026EE11 /* products */ = {
 			isa = PBXGroup;
 			children = (
 				D0EAD5CA16E75F290026EE11 /* pqvm */,
 				D0EAD5E616E762D40026EE11 /* test */,
 			);
-			name = Products;
+			name = products;
 			sourceTree = "<group>";
 		};
-		D0EAD5F116E7675E0026EE11 /* Binaries */ = {
+		D0EAD5F116E7675E0026EE11 /* libraries */ = {
 			isa = PBXGroup;
 			children = (
 				4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */,
 				4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */,
 				4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */,
 			);
-			name = Binaries;
+			name = libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,7 +186,7 @@
 				en,
 			);
 			mainGroup = D0EAD5C116E75F290026EE11;
-			productRefGroup = D0EAD5CB16E75F290026EE11 /* Products */;
+			productRefGroup = D0EAD5CB16E75F290026EE11 /* products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -206,7 +202,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */,
-				4A1812E516EBA60800B1865E /* qvm.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +209,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0DA7D2516FB661900D1095E /* test-quantum.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
