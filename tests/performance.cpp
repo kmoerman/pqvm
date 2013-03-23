@@ -1,5 +1,5 @@
 #include <tbb/tbb.h>
-#include "measure.h"
+#include "../performance.h"
 
 double x, y, z;
 

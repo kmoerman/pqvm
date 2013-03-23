@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "performance.h"
-#include "quantum.h"
+#include "../performance.h"
+#include "../quantum.h"
 
 
 using namespace quantum;

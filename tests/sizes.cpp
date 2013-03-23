@@ -1,7 +1,7 @@
-#include <iostream>
-#include "vector.h"
 #include <vector>
 #include <complex>
+#include <iostream>
+#include "../vector.h"
 
 vector<double> a (50);
 double b [50];
