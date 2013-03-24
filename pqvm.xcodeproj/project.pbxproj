@@ -11,6 +11,7 @@
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
+		4A3CAB6C16FDFFFD00D3966C /* quantum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3CAB6A16FDE80300D3966C /* quantum.cpp */; };
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 /* End PBXBuildFile section */
 
@@ -209,6 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A3CAB6C16FDFFFD00D3966C /* quantum.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +229,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "";
+				CONFIGURATION_TEMP_DIR = "";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -271,6 +275,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "";
+				CONFIGURATION_TEMP_DIR = "";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;

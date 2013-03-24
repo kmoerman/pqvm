@@ -6,10 +6,10 @@
 
 /**
  * Fixed-length vector of objects of type T.
- * @WARNING Contrary to the std::vector, this vector does not
+ * @WARNING Contrary to the std::vector, this container does not
  * construct or destruct its members. This container is desinged
- * primarily with numeric or simple compound types in mind,
- * and to be as STL compatible as possible without compromising
+ * primarily with numeric or simple compound types in mind, and
+ * to be as STL compatible as possible without compromising
  * performance.
  */
 

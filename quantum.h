@@ -36,7 +36,7 @@ namespace quantum {
      *
      *         E1  E2  O1  O2  E3  E4  O3  O4
      *        +---+---+---+---+---+---+---+---+
-     *     Q: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     Q: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
      *        ' \___|___/   | ' \___|_'_/   |
      *        '     \_______/ '     \_'_____/
@@ -62,16 +62,16 @@ namespace quantum {
      *
      *     t = 1
      *
-     *         E1  E2  O1  O2  E3  E4  O3  O4
+     *         000 001 010 011 100 101 110 111
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     S: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
      *        ' \   \  .   .  ' \   \  .   .  '
      *        '   \  .\  .    '   \  .\  .    '
      *        '    .\  .\     '    .\  .\     '
      *        '  .  . \   \   '  .  . \   \   '
      *        +---+---+---+---+---+---+---+---+
-     *     B: | 2 | 3 | 0 | 1 | 6 | 7 | 4 | 5 |
+     *     D: | C | D | A | B | G | H | E | F |
      *        +---+---+---+---+---+---+---+---+
      *
      */
@@ -96,7 +96,8 @@ namespace quantum {
                 while (i < r.end()) {
                     output[i + stride] = input[i];
                     i++;
-                    if (i % stride) i+= stride;
+                    if (i % stride) continue;
+                    else i+= stride;
                 }
             }
         };
@@ -119,7 +120,8 @@ namespace quantum {
                 while (i < r.end()) {
                     output[i - stride] = input[i];
                     i++;
-                    if (i % stride) i+= stride;
+                    if (i % stride) continue;
+                    else i+= stride;
                 }
             }
         };
@@ -127,12 +129,12 @@ namespace quantum {
     
     void sigma_x (size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
-        output.reserve(n);
+        //output.reserve(n);
         details::sigma_x_even even (target, input, output);
         details::sigma_x_odd  odd  (target, input, output);
         
-        tbb::parallel_for (range (0, n), even);
-        tbb::parallel_for (range (0, n), odd);
+        tbb::parallel_for (range (0, n, 1024), even);
+        tbb::parallel_for (range (0, n, 1024), odd);
     }
     
     
@@ -141,16 +143,16 @@ namespace quantum {
      *     
      *     t = 1
      *
+     *         000 001 010 011 100 101 110 111
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     S: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
      *          |   |   |   |   |   |   |   |
      *        +---+---+---+---+---+---+---+---+
-     *     B: | 0 | 1 |-2 |-3 | 4 | 5 |-6 |-7 |
+     *     D: | A | B |-C |-D | E | F |-G |-H |
      *        +---+---+---+---+---+---+---+---+
      *
      * @TODO What happens with state |0...0> ?
-     * @TODO Make in-place (easy, but depends on execution model of the pqvm).
      *
      */
     
@@ -181,16 +183,16 @@ namespace quantum {
      * 
      *     c = 0, t = 1
      *
+     *         000 001 010 011 100 101 110 111
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     S: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
      *          |   |   |   |   |   |   |   |
      *        +---+---+---+---+---+---+---+---+
-     *     B: | 0 | 1 | 2 |-3 | 4 | 5 | 6 |-7 |
+     *     D: | A | B | C |-D | E | F | G |-H |
      *        +---+---+---+---+---+---+---+---+
      *
      * @TODO What happens with state |0...0> ?
-     * @TODO Make in-place (easy, but depends on execution model of the pqvm).
      *
      */
     
@@ -204,7 +206,7 @@ namespace quantum {
             
             void operator() (const range& r) const {
                 for (size_type i (r.begin()); i < r.end(); ++i)
-                    if((i & mask) == mask) output[i] = -input[i];
+                    if ((i & mask) == mask) output[i] = -input[i];
                     else output[i] = input[i];
             }
         };
@@ -222,7 +224,6 @@ namespace quantum {
      * Fills a vector of size n x m in parallel.
      * Straightforward implementation: spread threads accross the result vector
      * and then perform a double loop to calculate the results.
-     *
      */
     
     namespace details {
@@ -242,7 +243,7 @@ namespace quantum {
     }
     
     inline void kronecker (quregister& left, quregister& right, quregister& result) {
-        result.reserve(left.size() * right.size());
+        //result.reserve(left.size() * right.size());
         details::kronecker k (left, right, result);
         
         tbb::parallel_for(range (0, left.size()),  k);
@@ -257,21 +258,23 @@ namespace quantum {
      * Measurement is performed on a target qubit t, relative to an angle a.
      *
      *     t = 1, s = 2, p = 4:
-     *
-     *         E1  E2  O1  O2  E3  E4  O3  O4
+     *     
+     *          E   E   O   O   E   E   O   O
+     *         000 001 010 011 100 101 110 111
      *        +---+---+---+---+---+---+---+---+
-     *     A: | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+     *     S: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
      *          |   |  .   .   /   /   .   .
      *          |   |.   .   /   /.   .
      *          |  .|  .   / . / .
      *          |.  |.  ./  ./
      *        +---+---+---+---+
-     *     B: | 0 | 1 | 2 | 3 |
+     *     D: | I | J | K | L |
      *        +---+---+---+---+
+     *         00  01  10  11
      *     
-     *     even: B[j]  = A[Ej]
-     *     odd:  B[j] += exp(-a*i) * A[Oj]
+     *     even: D[Ej]  = A[j]
+     *     odd:  D[Oj] += exp(-a*i) * A[j]
      *
      */
     
@@ -289,13 +292,18 @@ namespace quantum {
             target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
             
             void operator() (const range& r) const {
-                size_type stride (1 << target - 1),
-                period (stride << 1),
-                i (r.begin()),
-                j ((i / stride) * period + (i % stride));
+                size_type stride (1 << target),
+                          period (stride << 1),
+                          i      (r.begin()),
+                          j      (period * (i / stride) + stride + i % stride);
                 
-                for (; i < r.end(); ++i, i % stride ? ++j : j += period)
-                    output[j] = input[i];
+                while (i < r.end()) {
+                    output[i] = input[j];
+                    ++i;
+                    ++j;
+                    if (i % stride) continue;
+                    else j+= stride;
+                }
             }
         };
         
@@ -308,14 +316,19 @@ namespace quantum {
             target (target_), angle (angle_), input (input_.begin()), output (output_.begin()) {}
             
             void operator() (const range& r) const {
-                size_type stride (1 << target - 1),
+                size_type stride (1 << target),
                           period (stride << 1),
-                          i (r.begin()),
-                          j ((i / stride) * period + (i % stride) + stride);
+                          i      (r.begin()),
+                          j      (period * (i / stride) + i % stride);
                 complex factor (exp(complex (0, -angle)));
                 
-                for (; i < r.end(); ++i, i % stride ? ++j : j += period)
-                    output[j] += factor * input[i];
+                while (i < r.end()) {
+                    output[i] += factor * input[j];
+                    ++i;
+                    ++j;
+                    if (i % stride) continue;
+                    else j+= stride;
+                }
             }
         };
     }

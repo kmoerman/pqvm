@@ -49,6 +49,7 @@ namespace performance {
             int threads;
             int iterations;
             int iteration;
+            bool verbose;
             
             //calculate and print the interval
             //increment the iteration counter
@@ -71,17 +72,23 @@ namespace performance {
                     iteration = 0;
                     tbb::task_scheduler_init init(threads);
                 }
+                if (verbose)
+                    std::cout << "threads: " << threads << ", iteration: " << iteration + 1 << std::endl;
                 begin = now();
                 return true;
             }
             
             //initialize the output file and set the initial number of threads
-            parallel (std::string filename, int iters):
-            iterations(iters), iteration (0), threads(1),
+            parallel (std::string filename, int iters, bool v_ = true):
+            iterations(iters), iteration (0), threads(1), verbose(v_),
             output(filename.c_str(), std::ios_base::out) {
-                output  << "# Wall-clock time (seconds) for " << iterations
-                        << " iterations on 1" << " to " << max_threads() << " threads."
-                        << std::endl;
+                output << "# Wall-clock time (seconds) for " << iterations
+                       << " iterations on 1" << " to " << max_threads() << " threads."
+                       << std::endl;
+                if (verbose)
+                    std::cout << "Wall-clock time (seconds) for " << iterations
+                              << " iterations on 1" << " to " << max_threads() << " threads."
+                              << std::endl;
                 set_threads (threads);
             }
             
@@ -132,12 +139,12 @@ namespace performance {
         #define MS_CONCAT(x, y) MS_CONCAT_(x, y)
         #define MS_EXPERIMENT MS_CONCAT(experiment_, __LINE__)
                 
-        #define measure_parallel(name, iterations) \
-            for (performance::details::parallel MS_EXPERIMENT (name, iterations); \
+        #define measure_parallel(...) \
+            for (performance::details::parallel MS_EXPERIMENT (__VA_ARGS__); \
                  MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
                 
-        #define measure_sequential(name, iterations) \
-            for (performance::details::sequential MS_EXPERIMENT (name, iterations); \
+        #define measure_sequential(...) \
+            for (performance::details::sequential MS_EXPERIMENT (__VA_ARGS__); \
                  MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
         
     }
