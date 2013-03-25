@@ -87,18 +87,19 @@ namespace quantum {
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
             void operator () (size_type r) const {
-                size_type stride (1 << target),
+                size_type stride (1 << target)/*,
                           period (stride << 1),
                           i      (0),
                           offset (i % period);
                 if (offset >= stride)
-                    i += period - offset;
+                    i += period - offset*/;
                 
-                while (i < r) {
+                #pragma omp parallel for
+                for (size_type i = 0; i < r; (i + 1) % stride ? ++i : i+=stride) {
                     output[i + stride] = input[i];
-                    i++;
+                    /*i++;
                     if (i % stride) continue;
-                    else i+= stride;
+                    else i+= stride;*/
                 }
             }
         };
@@ -111,16 +112,19 @@ namespace quantum {
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
             void operator () (size_type r) const {
-                size_type stride (1 << target);/*,
+                size_type stride (1 << target)/*,
                           period (stride << 1),
                           i      (0),
                           offset (i % period);
                 if (offset < stride)
-                    i += stride - offset;*/
+                    i += stride - offset*/;
                 
                 #pragma omp parallel for
-                for (size_type i (0);i < r; (i + 1) % stride ? ++i : i+= stride) {
+                for (size_type i = 0;i < r; (i + 1) % stride ? ++i : i+= stride) {
                     output[i - stride] = input[i];
+                    /*i++;
+                     if (i % stride) continue;
+                     else i+= stride;*/
                 }
             }
         };

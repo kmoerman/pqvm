@@ -30,7 +30,7 @@ int main (int argc, char** argv) {
     }
     
     
-    measure_parallel("sigma-x.data", iterations) {
+    measure_sequential("sigma-x.data", iterations) {
         sigma_x(target, a, b);
     }    
     
