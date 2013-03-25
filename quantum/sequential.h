@@ -47,9 +47,9 @@ namespace quantum {
      * The odd/even access pattern permutes (E1 E1 E2 O2 E3 O3 E4 O4) into
      * (E1 E2 E3 E4 O1 O1 O3 O4) without the need to copy a permutation vector first.
      *
-     * This should work well for large strides; for small strides, a single (parallel)
-     * iteration might be faster. I assume the minimal stride period should equal the
-     * cache line size, but this needs experimental validation.
+     * This should work well for large strides; for small strides, a single iteration
+     * might be faster. I assume the minimal stride period should equal the cache
+     * line size, but this needs experimental validation.
      * The threads should be spread accross the destination vector, aligned with the
      * cache and with the stride periods. This can be achieved by setting the grainsize
      * parameter or set a partioner in tbb.
@@ -79,18 +79,19 @@ namespace quantum {
     
     void sigma_x (size_type target, quregister& input, quregister& output) {
         size_type   stride  (1 << target),
+                    period  (stride << 1),
                     n       (input.size());
         
         output.reserve(n);
         
         //even
-        for (size_type i = 0, j = 0; i < n; ++i, j += stride)
-            for (size_type k = 0; k < stride; ++k)
+        for (size_type i = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j)
                 output[i + j + stride] = input[i + j];
         
         //odd
-        for (size_type i = 0, j = 0; i < n; ++i, j += stride)
-            for (size_type k = 0; k < stride; ++k)
+        for (size_type i = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j)
                 output[i + j] = input[i + j + stride];
     }
     
@@ -108,8 +109,6 @@ namespace quantum {
      *        +---+---+---+---+---+---+---+---+
      *     D: | A | B |-C |-D | E | F |-G |-H |
      *        +---+---+---+---+---+---+---+---+
-     *
-     * @TODO What happens with state |0...0> ?
      *
      */
     
@@ -136,8 +135,6 @@ namespace quantum {
      *        +---+---+---+---+---+---+---+---+
      *     D: | A | B | C |-D | E | F | G |-H |
      *        +---+---+---+---+---+---+---+---+
-     *
-     * @TODO What happens with state |0...0> ?
      *
      */
 
@@ -196,27 +193,28 @@ namespace quantum {
      *        +---+---+---+---+
      *         00  01  10  11
      *     
-     *     even: D[Ej]  = A[j]
-     *     odd:  D[Oj] += exp(-a*i) * A[j]
+     *     even: D[j]  = A[Ej]
+     *     odd:  D[j] += exp(-a*i) * A[Oj]
      *
      */
     
     void measure (size_type target, real angle, quregister& input, quregister& output) {
         size_type   n       (input.size() / 2),
-                    stride  (1 << target);
+                    stride  (1 << target),
+                    period  (stride << 1);
         complex     factor  (exp(complex (0, -angle)));
         
         output.reserve(n);
         
         //even
-        for (size_type i = 0, j = 0; i < n; ++i, j += stride)
-            for (size_type k = 0; k < stride; ++j, ++k)
-                output[i] = input[j];
+        for (size_type i = 0, k = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j, ++k)
+                output[k] = input[i + j];
         
         //odd
-        for (size_type i = 0, j = stride; i < n; ++i, j += stride)
-            for (size_type k = 0; k < stride; ++j, ++k)
-                output[i] += factor * input[j];
+        for (size_type i = 0, k = 0; i < n; i += period)
+            for (size_type j = stride; j < period; ++j, ++k)
+                output[k] += factor * input[i + j];
     }
     
 }

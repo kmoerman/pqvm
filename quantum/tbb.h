@@ -154,8 +154,6 @@ namespace quantum {
      *     D: | A | B |-C |-D | E | F |-G |-H |
      *        +---+---+---+---+---+---+---+---+
      *
-     * @TODO What happens with state |0...0> ?
-     *
      */
     
     namespace details {
@@ -195,8 +193,6 @@ namespace quantum {
      *        +---+---+---+---+---+---+---+---+
      *     D: | A | B | C |-D | E | F | G |-H |
      *        +---+---+---+---+---+---+---+---+
-     *
-     * @TODO What happens with state |0...0> ?
      *
      */
     
@@ -278,8 +274,8 @@ namespace quantum {
      *        +---+---+---+---+
      *         00  01  10  11
      *     
-     *     even: D[Ej]  = A[j]
-     *     odd:  D[Oj] += exp(-a*i) * A[j]
+     *     even: D[j]  = A[Ej]
+     *     odd:  D[j] += exp(-a*i) * A[Oj]
      *
      */
     
