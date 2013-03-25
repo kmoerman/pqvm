@@ -30,9 +30,9 @@ int main (int argc, char** argv) {
     
     std::cout << a;
     
-    measure_sequential ("sigma-z-omp.data", iterations) {
+    //measure_sequential ("sigma-z-omp.data", iterations) {
         sigma_z(target, a, b);
-    }
+    //}
     
     std::cout << b;
     
