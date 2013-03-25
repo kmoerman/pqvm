@@ -84,22 +84,16 @@ namespace quantum {
         output.reserve(n);
         
         //even
-        size_type j = 0;
         #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i) {
-            for (size_type k = 0; k < stride; ++k)
+        for (size_type i = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j)
                 output[i + j + stride] = input[i + j];
-            j += stride;
-        }
         
         //odd
-        size_type j = 0;
         #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i) {
-            for (size_type k = 0; k < stride; ++k)
+        for (size_type i = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j)
                 output[i + j] = input[i + j + stride];
-            j += stride;
-        }
     }
     
     
@@ -116,8 +110,6 @@ namespace quantum {
      *        +---+---+---+---+---+---+---+---+
      *     D: | A | B |-C |-D | E | F |-G |-H |
      *        +---+---+---+---+---+---+---+---+
-     *
-     * @TODO What happens with state |0...0> ?
      *
      */
     
@@ -145,8 +137,6 @@ namespace quantum {
      *        +---+---+---+---+---+---+---+---+
      *     D: | A | B | C |-D | E | F | G |-H |
      *        +---+---+---+---+---+---+---+---+
-     *
-     * @TODO What happens with state |0...0> ?
      *
      */
     
@@ -178,8 +168,7 @@ namespace quantum {
         result.reserve(n * m);
         
         #pragma omp parallel for
-        size_type k = 0;
-        for (size_type i = 0; i < n; ++i)
+        for (size_type i = 0, k = 0; i < n; ++i)
             for (size_type j = 0; j < m; ++j, ++k)
                 result[k] = left[i] * right[j];
     }
@@ -208,8 +197,8 @@ namespace quantum {
      *        +---+---+---+---+
      *         00  01  10  11
      *     
-     *     even: D[Ej]  = A[j]
-     *     odd:  D[Oj] += exp(-a*i) * A[j]
+     *     even: D[j]  = A[Oj]
+     *     odd:  D[j] += exp(-a*i) * A[Oj]
      *
      */
     
@@ -221,22 +210,16 @@ namespace quantum {
         output.reserve(n);
         
         //even
-        size_type j = 0;
         #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i) {
-            for (size_type k = 0; k < stride; ++j, ++k)
-                output[i] = input[j];
-            j += stride;
-        }
+        for (size_type i = 0, k = 0; i < n; i += period)
+            for (size_type j = 0; j < stride; ++j, ++k)
+                output[k] = input[i + j];
         
         //odd
-        size_type j = stride;
         #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i) {
-            for (size_type k = 0; k < stride; ++j, ++k)
-                output[i] += factor * input[j];
-            j += stride;
-        }
+        for (size_type i = 0, k = 0; i < n; i += period)
+            for (size_type j = stride; j < period; ++j, ++k)
+                output[k] += factor * input[i + j];
     }
     
 }

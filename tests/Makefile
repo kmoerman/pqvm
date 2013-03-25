@@ -9,8 +9,8 @@ DEST    = $(addsuffix .o,   $(TARGETS))
 INCPATH = #-I
 LIBPATH = #-L
 LIBS = -ltbb -lrt
-OFLAGS = #-O2 -Wall
-DFLAGS = #-g3
+OFLAGS = -Wall #-O2
+DFLAGS = -g3
 CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp
 
 all: $(TARGETS)

@@ -342,10 +342,8 @@ namespace quantum {
         details::measure_odd  odd  (target, angle, input, output);
         
         tbb::parallel_for(range (0, n), even);
-        
         tbb::parallel_for(range (0, n), odd);
     }
-    
 }
 
 #endif
