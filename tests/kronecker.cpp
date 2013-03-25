@@ -29,15 +29,11 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
         *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
-    
-    std::cout << a;
-    
+        
     measure_parallel("kronecker.data", iterations) {
         kronecker(a, b, c);
     }
-    
-    std::cout << b;
-    
+        
     return 0;
     
 }

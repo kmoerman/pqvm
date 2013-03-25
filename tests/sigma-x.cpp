@@ -29,13 +29,10 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    std::cout << a;
     
     measure_parallel("sigma-x.data", iterations) {
         sigma_x(target, a, b);
-    }
-    
-    std::cout << b;
+    }    
     
     return 0;
     
