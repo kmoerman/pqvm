@@ -79,7 +79,8 @@ namespace quantum {
     
     void sigma_x (size_type target, quregister& input, quregister& output) {
         size_type   stride  (1 << target),
-                    n       (input.size());
+                    n       (input.size()),
+                    period  (stride << 1);
         
         output.reserve(n);
         
@@ -121,7 +122,7 @@ namespace quantum {
         
         #pragma omp parallel for
         for (size_type i = 0; i < n; ++i)
-            output[i] = (i & mask) ? -input[i] = input[i];
+            output[i] = (i & mask) ? -input[i] : input[i];
     }
     
     /*
@@ -167,8 +168,9 @@ namespace quantum {
         
         result.reserve(n * m);
         
+        size_type k = 0;
         #pragma omp parallel for
-        for (size_type i = 0, k = 0; i < n; ++i)
+        for (size_type i = 0; i < n; ++i)
             for (size_type j = 0; j < m; ++j, ++k)
                 result[k] = left[i] * right[j];
     }
@@ -204,20 +206,23 @@ namespace quantum {
     
     void measure (size_type target, real angle, quregister& input, quregister& output) {
         size_type   n       (input.size() / 2),
-                    stride  (1 << target);
+                    stride  (1 << target),
+                    period  (stride << 1);
         complex     factor  (exp(complex (0, -angle)));
         
         output.reserve(n);
         
         //even
+        size_type k = 0;
         #pragma omp parallel for
-        for (size_type i = 0, k = 0; i < n; i += period)
+        for (size_type i = 0; i < n; i += period)
             for (size_type j = 0; j < stride; ++j, ++k)
                 output[k] = input[i + j];
         
         //odd
+        k = 0;
         #pragma omp parallel for
-        for (size_type i = 0, k = 0; i < n; i += period)
+        for (size_type i = 0; i < n; i += period)
             for (size_type j = stride; j < period; ++j, ++k)
                 output[k] += factor * input[i + j];
     }

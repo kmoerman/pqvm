@@ -12,9 +12,10 @@
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
+		D06C191C1700C79100B58CFB /* sigma-x-omp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x-omp.cpp */; };
+		D06C191D1700C79100B58CFB /* sigma-x-seq.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191B1700C79100B58CFB /* sigma-x-seq.cpp */; };
 		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
 		D0F76FA81700714E00595879 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
-		D0F76FA91700714E00595879 /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA51700714E00595879 /* sigma-x.cpp */; };
 		D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA61700714E00595879 /* sigma-z.cpp */; };
 /* End PBXBuildFile section */
 
@@ -51,12 +52,13 @@
 		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = vector.h; sourceTree = "<group>"; };
 		4A3CAB6616FDE80300D3966C /* gates.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gates.c; sourceTree = "<group>"; };
 		4A3CAB6716FDE80300D3966C /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
+		D06C191A1700C79100B58CFB /* sigma-x-omp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x-omp.cpp"; path = "tests/sigma-x-omp.cpp"; sourceTree = "<group>"; };
+		D06C191B1700C79100B58CFB /* sigma-x-seq.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x-seq.cpp"; path = "tests/sigma-x-seq.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F76FA017006AF200595879 /* quantum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = quantum; sourceTree = "<group>"; };
 		D0F76FA31700714E00595879 /* kronecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kronecker.cpp; path = tests/kronecker.cpp; sourceTree = "<group>"; };
 		D0F76FA41700714E00595879 /* performance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = performance.cpp; path = tests/performance.cpp; sourceTree = "<group>"; };
-		D0F76FA51700714E00595879 /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
 		D0F76FA61700714E00595879 /* sigma-z.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-z.cpp"; path = "tests/sigma-z.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,8 +132,9 @@
 		D0F76FA21700712700595879 /* tests */ = {
 			isa = PBXGroup;
 			children = (
+				D06C191A1700C79100B58CFB /* sigma-x-omp.cpp */,
+				D06C191B1700C79100B58CFB /* sigma-x-seq.cpp */,
 				D0F76FA31700714E00595879 /* kronecker.cpp */,
-				D0F76FA51700714E00595879 /* sigma-x.cpp */,
 				D0F76FA61700714E00595879 /* sigma-z.cpp */,
 				D0F76FA41700714E00595879 /* performance.cpp */,
 			);
@@ -217,8 +220,9 @@
 			files = (
 				D0F76FA71700714E00595879 /* kronecker.cpp in Sources */,
 				D0F76FA81700714E00595879 /* performance.cpp in Sources */,
-				D0F76FA91700714E00595879 /* sigma-x.cpp in Sources */,
 				D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */,
+				D06C191C1700C79100B58CFB /* sigma-x-omp.cpp in Sources */,
+				D06C191D1700C79100B58CFB /* sigma-x-seq.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
