@@ -51,7 +51,6 @@
 		4A3CAB6716FDE80300D3966C /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
 		4A3CAB6916FDE80300D3966C /* performance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = performance.cpp; sourceTree = "<group>"; };
 		4A3CAB6A16FDE80300D3966C /* quantum.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = quantum.cpp; sourceTree = "<group>"; };
-		4A3CAB6B16FDE80300D3966C /* sizes.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sizes.cpp; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -92,7 +91,6 @@
 			children = (
 				4A3CAB6916FDE80300D3966C /* performance.cpp */,
 				4A3CAB6A16FDE80300D3966C /* quantum.cpp */,
-				4A3CAB6B16FDE80300D3966C /* sizes.cpp */,
 			);
 			path = tests;
 			sourceTree = "<group>";

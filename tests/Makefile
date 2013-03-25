@@ -1,12 +1,10 @@
 CC = g++
 
-
-TARGETS = pqvm
-DEPS    = quantum.h vector.h pqvm.h
+TARGETS = quantum performance
+DEPS    = ../performance.h ../quantum.h ../vector.h
 
 SOURCES = $(addsuffix .cpp, $(TARGETS))
 DEST    = $(addsuffix .o,   $(TARGETS))
-
 
 INCPATH = #-I
 LIBPATH = #-L
@@ -17,7 +15,7 @@ CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH)
 
 all: $(TARGETS)
 
-$(TARGETS): $(SOURCES) $(DEST)
+$(TARGETS): $(DEST)
 	$(CC) $(CFLAGS) -o $@ $@.o $(LIBS)
 
 %.o: %.cpp $(DEPS)

@@ -1,6 +1,7 @@
 #ifndef MEASURE_H
 #define MEASURE_H
 
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <tbb/task_scheduler_init.h>
@@ -49,13 +50,14 @@ namespace performance {
             int threads;
             int iterations;
             int iteration;
+            double interval;
             bool verbose;
             
             //calculate and print the interval
             //increment the iteration counter
             inline void after () {
-                time end = now();
-                output << threads << "\t" << diff(begin, end) << std::endl;
+                interval = diff(begin, now());
+                output << threads << "\t" << interval << std::endl;
                 ++iteration;
             }
             
@@ -73,7 +75,7 @@ namespace performance {
                     tbb::task_scheduler_init init(threads);
                 }
                 if (verbose)
-                    std::cout << "threads: " << threads << ", iteration: " << iteration + 1 << std::endl;
+                    std::cout << threads << " threads, iteration: " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 begin = now();
                 return true;
             }
@@ -85,10 +87,6 @@ namespace performance {
                 output << "# Wall-clock time (seconds) for " << iterations
                        << " iterations on 1" << " to " << max_threads() << " threads."
                        << std::endl;
-                if (verbose)
-                    std::cout << "Wall-clock time (seconds) for " << iterations
-                              << " iterations on 1" << " to " << max_threads() << " threads."
-                              << std::endl;
                 set_threads (threads);
             }
             
@@ -102,12 +100,14 @@ namespace performance {
             time begin;
             int iterations;
             int iteration;
+            double interval;
+            bool verbose;
             
             //calculate and print the interval and
             //increment the iteration counter
             inline void after () {
-                time end = now();
-                output << diff(begin, end) << std::endl;
+                interval = diff(begin, now());
+                output << interval << std::endl;
                 ++iteration;
             }
             
@@ -118,14 +118,16 @@ namespace performance {
                     output.close();
                     return false;
                 }
+                if (verbose)
+                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 begin = now();
                 return true;
             }
             
             //initialize the output file
-            sequential (std::string filename, int iters):
+            sequential (std::string filename, int iters, bool v_ = true):
             iterations (iters), iteration (0), begin (now()),
-            output (filename.c_str(), std::ios_base::out) {
+            output (filename.c_str(), std::ios_base::out), verbose(v_) {
                 output  << "# Wall-clock time (seconds) for " << iterations
                         << " iterations on 1 thread." << std::endl;
             }   

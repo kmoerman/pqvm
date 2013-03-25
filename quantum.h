@@ -15,11 +15,12 @@ namespace quantum {
     typedef quregister::iterator iterator;
     typedef quregister::size_type size_type;
     typedef tbb::blocked_range<size_type> range;
-        
-    std::ostream& operator << (std::ostream& out, quregister& reg) {
-        out << "( ";
-        for (iterator i (reg.begin()), n (reg.end()); i != n; ++i)
-            out << *i << " ";
+    
+    std::ostream& operator << (std::ostream& out, const quregister& reg) {
+        out << "(";
+        for (quregister::const_iterator i (reg.begin()), n (reg.end()); i != n; ++i) {
+            out << std::real(*i) << "+" << std::imag(*i) << "i ";
+        }
         out << ")" << std::endl;
         return out;
     }

@@ -10,7 +10,7 @@ void test_pll (const tbb::blocked_range<unsigned int>& r) {
 
 int main (int argc, char** args) {
     x = 1.234, y = 5.678;
-    measure_parallel ("test.data", 10) {
+    measure_parallel ("performace.data", 10) {
         parallel_for (tbb::blocked_range<unsigned int>(0,10), &test_pll);
     }
     

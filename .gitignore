@@ -49,8 +49,7 @@ pqvm/*
 # TBB #
 #######
 *.dylib
-pqvm.build
-build/pqvm.build
+*.build
 build/*.out
 build/*.dat
 plot/*.png

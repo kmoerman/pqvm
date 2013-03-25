@@ -10,6 +10,7 @@ using namespace quantum;
 
 int main (int argc, char** argv) {
     
+    
     if (argc < 2 || argc > 3) {
         std::cout << "Usage: quantum problem-size [iterations=5]" << std::endl;
         return EXIT_FAILURE;
@@ -28,9 +29,13 @@ int main (int argc, char** argv) {
         //*j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    measure_parallel("sigma_x.data", 5) {
-        sigma_x(iterations, a, b);
-    }
+    std::cout << a;
+    
+    //measure_parallel("sigma_z.data", iterations) {
+        sigma_z(1, a, b);
+    //}
+    
+    std::cout << b;
     
     return 0;
     
