@@ -1,7 +1,7 @@
 CC = g++
 
 TARGETS = sigma-x sigma-z kronecker
-DEPS    = ../performance.h ../quantum.h ../vector.h
+DEPS    = ../performance.h ../quantum/*.h ../vector.h
 
 SOURCES = $(addsuffix .cpp, $(TARGETS))
 DEST    = $(addsuffix .o,   $(TARGETS))
