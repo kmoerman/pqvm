@@ -54,6 +54,10 @@ build/*.out
 build/*.dat
 plot/*.png
 
+# Emacs #
+#########
+*~
+
 # Measure #
 ##########
 *.data
