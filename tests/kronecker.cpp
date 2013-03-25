@@ -30,12 +30,13 @@ int main (int argc, char** argv) {
     }
     
     std::cout << a;
-    
-    measure_sequential ("kronecker-omp.data", iterations) {
-        kronecker(a, b, c);
-    }
-    
     std::cout << b;
+    
+    //measure_sequential ("kronecker-omp.data", iterations) {
+        kronecker(a, b, c);
+    //}
+    
+    std::cout << c;
         
     return 0;
     
