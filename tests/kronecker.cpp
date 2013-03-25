@@ -12,7 +12,7 @@ int main (int argc, char** argv) {
     
     
     if (argc < 2 || argc > 3) {
-        std::cout << "Usage: quantum problem-size [iterations=5]" << std::endl;
+        std::cout << "Usage: sigma-z problem-size [iterations=5]" << std::endl;
         return EXIT_FAILURE;
     }
     
@@ -22,18 +22,19 @@ int main (int argc, char** argv) {
     srand(time(NULL));
     
     quregister a (size),
-               b (size);
+               b (size),
+               c;
     
     for (iterator i (a.begin()), j (b.begin()); i < a.end(); ++i, ++j) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
-        //*j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
+        *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
     std::cout << a;
     
-    //measure_parallel("sigma_z.data", iterations) {
-        sigma_z(1, a, b);
-    //}
+    measure_parallel("kronecker.data", iterations) {
+        kronecker(a, b, c);
+    }
     
     std::cout << b;
     

@@ -130,7 +130,7 @@ namespace quantum {
     
     void sigma_x (size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
-        //output.reserve(n);
+        output.reserve(n);
         details::sigma_x_even even (target, input, output);
         details::sigma_x_odd  odd  (target, input, output);
         
@@ -244,7 +244,7 @@ namespace quantum {
     }
     
     inline void kronecker (quregister& left, quregister& right, quregister& result) {
-        //result.reserve(left.size() * right.size());
+        result.reserve(left.size() * right.size());
         details::kronecker k (left, right, result);
         
         tbb::parallel_for(range (0, left.size()),  k);
