@@ -5,7 +5,7 @@
 #include <complex>
 #include <tbb/tbb.h>
 
-#include "vector.h"
+#include "../vector.h"
 
 namespace quantum {
     
