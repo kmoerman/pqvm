@@ -118,11 +118,9 @@ namespace quantum {
                 if (offset < stride)
                     i += stride - offset;
                 
-                while (i < r) {
+                #pragma omp parallel for
+                for (;i < r; (i + 1) % stride ? ++i : i+= stride) {
                     output[i - stride] = input[i];
-                    i++;
-                    if (i % stride) continue;
-                    else i+= stride;
                 }
             }
         };
@@ -172,6 +170,7 @@ namespace quantum {
                 for (size_type i (r.begin()); i < r.end(); ++i)
                     if (i & mask) output[i] = -input[i];
                     else output[i] = input[i];
+                    //tertiary...
             }
         };
     }
