@@ -11,10 +11,11 @@
 		4A0E0ACE16EA2C8C002F1ECA /* libquantum.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */; };
 		4A0E0ACF16EA2C8C002F1ECA /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0ACD16EA2C8C002F1ECA /* libsexp.a */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
-		4A3CAB6C16FDFFFD00D3966C /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A3CAB6A16FDE80300D3966C /* sigma-z.cpp */; };
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
-		D0F76F9E1700574600595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76F9C1700574600595879 /* kronecker.cpp */; };
-		D0F76F9F1700574600595879 /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76F9D1700574600595879 /* sigma-x.cpp */; };
+		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
+		D0F76FA81700714E00595879 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
+		D0F76FA91700714E00595879 /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA51700714E00595879 /* sigma-x.cpp */; };
+		D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA61700714E00595879 /* sigma-z.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,16 +48,16 @@
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
 		4A0E0ADB16EA2D40002F1ECA /* pqvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pqvm.h; sourceTree = "<group>"; };
 		4A0E0ADC16EA2D40002F1ECA /* qvm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = qvm.h; sourceTree = "<group>"; };
-		4A1B70CC16EFA0380013D47E /* quantum.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = quantum.h; sourceTree = "<group>"; };
 		4A1B70D016F01CCE0013D47E /* vector.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = vector.h; sourceTree = "<group>"; };
 		4A3CAB6616FDE80300D3966C /* gates.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gates.c; sourceTree = "<group>"; };
 		4A3CAB6716FDE80300D3966C /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
-		4A3CAB6916FDE80300D3966C /* performance.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = performance.cpp; sourceTree = "<group>"; };
-		4A3CAB6A16FDE80300D3966C /* sigma-z.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "sigma-z.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
-		D0F76F9C1700574600595879 /* kronecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = kronecker.cpp; sourceTree = "<group>"; };
-		D0F76F9D1700574600595879 /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "sigma-x.cpp"; sourceTree = "<group>"; };
+		D0F76FA017006AF200595879 /* quantum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = quantum; sourceTree = "<group>"; };
+		D0F76FA31700714E00595879 /* kronecker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = kronecker.cpp; path = tests/kronecker.cpp; sourceTree = "<group>"; };
+		D0F76FA41700714E00595879 /* performance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = performance.cpp; path = tests/performance.cpp; sourceTree = "<group>"; };
+		D0F76FA51700714E00595879 /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
+		D0F76FA61700714E00595879 /* sigma-z.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-z.cpp"; path = "tests/sigma-z.cpp"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,17 +91,6 @@
 			path = scraps;
 			sourceTree = "<group>";
 		};
-		4A3CAB6816FDE80300D3966C /* tests */ = {
-			isa = PBXGroup;
-			children = (
-				4A3CAB6916FDE80300D3966C /* performance.cpp */,
-				D0F76F9D1700574600595879 /* sigma-x.cpp */,
-				4A3CAB6A16FDE80300D3966C /* sigma-z.cpp */,
-				D0F76F9C1700574600595879 /* kronecker.cpp */,
-			);
-			path = tests;
-			sourceTree = "<group>";
-		};
 		D0EAD5C116E75F290026EE11 = {
 			isa = PBXGroup;
 			children = (
@@ -108,11 +98,11 @@
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
 				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
 				4A0E0ADC16EA2D40002F1ECA /* qvm.h */,
-				4A1B70CC16EFA0380013D47E /* quantum.h */,
 				4A1B70D016F01CCE0013D47E /* vector.h */,
 				4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */,
+				D0F76FA017006AF200595879 /* quantum */,
+				D0F76FA21700712700595879 /* tests */,
 				4A3CAB6516FDE80300D3966C /* scraps */,
-				4A3CAB6816FDE80300D3966C /* tests */,
 				D0EAD5F116E7675E0026EE11 /* libraries */,
 				D0EAD5CB16E75F290026EE11 /* products */,
 			);
@@ -135,6 +125,17 @@
 				4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */,
 			);
 			name = libraries;
+			sourceTree = "<group>";
+		};
+		D0F76FA21700712700595879 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				D0F76FA31700714E00595879 /* kronecker.cpp */,
+				D0F76FA51700714E00595879 /* sigma-x.cpp */,
+				D0F76FA61700714E00595879 /* sigma-z.cpp */,
+				D0F76FA41700714E00595879 /* performance.cpp */,
+			);
+			name = tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,9 +215,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0F76F9F1700574600595879 /* sigma-x.cpp in Sources */,
-				4A3CAB6C16FDFFFD00D3966C /* sigma-z.cpp in Sources */,
-				D0F76F9E1700574600595879 /* kronecker.cpp in Sources */,
+				D0F76FA71700714E00595879 /* kronecker.cpp in Sources */,
+				D0F76FA81700714E00595879 /* performance.cpp in Sources */,
+				D0F76FA91700714E00595879 /* sigma-x.cpp in Sources */,
+				D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

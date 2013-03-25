@@ -3,8 +3,7 @@
 #include <ctime>
 
 #include "../performance.h"
-#include "../quantum.h"
-
+#include "../quantum/sequential.h"
 
 using namespace quantum;
 
@@ -29,10 +28,14 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
         *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
-        
-    measure_parallel("kronecker.data", iterations) {
+    
+    std::cout << a;
+    
+    measure_sequential ("kronecker-omp.data", iterations) {
         kronecker(a, b, c);
     }
+    
+    std::cout << b;
         
     return 0;
     

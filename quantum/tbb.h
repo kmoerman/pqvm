@@ -48,11 +48,12 @@ namespace quantum {
      * The odd/even access pattern permutes (E1 E1 E2 O2 E3 O3 E4 O4) into
      * (E1 E2 E3 E4 O1 O1 O3 O4) without the need to copy a permutation vector first.
      *
-     * This should work well for large strides; for small strides, a single (parallel)
-     * iteration might be faster. I assume the minimal stride period should equal the
-     * cache line size, but this needs experimental validation.
+     * This should work well for large strides; for small strides, a single iteration
+     * might be faster. I assume the minimal stride period should equal the cache
+     * line size, but this needs experimental validation.
      * The threads should be spread accross the destination vector, aligned with the
-     * cache and with the stride periods; this needs experimental validation.
+     * cache and with the stride periods. This can be achieved by setting the grainsize
+     * parameter or set a partioner in tbb.
      *
      * @TODO Apply software prefetching (and test its performace).
      *
@@ -86,20 +87,19 @@ namespace quantum {
             sigma_x_even (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (size_type r) const {
-                size_type stride (1 << target)/*,
+            void operator () (range& r) const {
+                size_type stride (1 << target),
                           period (stride << 1),
-                          i      (0),
+                          i      (r.begin()),
                           offset (i % period);
                 if (offset >= stride)
-                    i += period - offset*/;
+                    i += period - offset;
                 
-                #pragma omp parallel for
-                for (size_type i = 0; i < r; (i + 1) % stride ? ++i : i+=stride) {
+                while (i < r.end()) {
                     output[i + stride] = input[i];
-                    /*i++;
+                    i++;
                     if (i % stride) continue;
-                    else i+= stride;*/
+                    else i+= stride;
                 }
             }
         };
@@ -111,20 +111,19 @@ namespace quantum {
             sigma_x_odd (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (size_type r) const {
-                size_type stride (1 << target)/*,
+            void operator () (range& r) const {
+                size_type stride (1 << target),
                           period (stride << 1),
-                          i      (0),
+                          i      (r.begin()),
                           offset (i % period);
                 if (offset < stride)
-                    i += stride - offset*/;
+                    i += stride - offset;
                 
-                #pragma omp parallel for
-                for (size_type i = 0;i < r; (i + 1) % stride ? ++i : i+= stride) {
+                while (i < r.end()) {
                     output[i - stride] = input[i];
-                    /*i++;
-                     if (i % stride) continue;
-                     else i+= stride;*/
+                    i++;
+                    if (i % stride) continue;
+                    else i+= stride;
                 }
             }
         };
@@ -135,12 +134,9 @@ namespace quantum {
         output.reserve(n);
         details::sigma_x_even even (target, input, output);
         details::sigma_x_odd  odd  (target, input, output);
-        
-        even(n);
-        odd(n);
-        
-        //tbb::parallel_for (range (0, n, 1024), even);
-        //tbb::parallel_for (range (0, n, 1024), odd);
+
+        tbb::parallel_for (range (0, n, 1024), even);
+        tbb::parallel_for (range (0, n, 1024), odd);
     }
     
     
@@ -171,10 +167,11 @@ namespace quantum {
             input (input_.begin()), output (output_.begin()), mask (1 << target_) {}
             
             void operator() (const range& r) const {
-                for (size_type i (r.begin()); i < r.end(); ++i)
+                for (size_type i (r.begin()); i < r.end(); ++i) {
                     if (i & mask) output[i] = -input[i];
                     else output[i] = input[i];
                     //tertiary...
+                }
             }
         };
     }
@@ -212,9 +209,10 @@ namespace quantum {
             input (input_.begin()), output(output_.begin()), mask ((1 << control_) | (1 << target_)) {}
             
             void operator() (const range& r) const {
-                for (size_type i (r.begin()); i < r.end(); ++i)
+                for (size_type i (r.begin()); i < r.end(); ++i) {
                     if ((i & mask) == mask) output[i] = -input[i];
                     else output[i] = input[i];
+                }
             }
         };
     }
@@ -249,7 +247,7 @@ namespace quantum {
         };
     }
     
-    inline void kronecker (quregister& left, quregister& right, quregister& result) {
+    void kronecker (quregister& left, quregister& right, quregister& result) {
         result.reserve(left.size() * right.size());
         details::kronecker k (left, right, result);
         

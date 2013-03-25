@@ -3,8 +3,7 @@
 #include <ctime>
 
 #include "../performance.h"
-#include "../quantum.h"
-
+#include "../quantum/sequential.h"
 
 using namespace quantum;
 
@@ -29,10 +28,13 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
+    std::cout << a;
     
-    measure_sequential("sigma-x.data", iterations) {
+    measure_sequential ("sigma-x-omp.data", iterations) {
         sigma_x(target, a, b);
-    }    
+    }
+    
+    std::cout << b;
     
     return 0;
     
