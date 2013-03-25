@@ -9,8 +9,19 @@
 
 namespace quantum {
     
+    class complex : public std::complex<float> {
+        
+        complex() {
+            std::cout << "C";
+        }
+        
+        ~complex() {
+            std::cout << "D";
+        }
+    };
+    
     typedef float real;
-    typedef std::complex<real> complex;
+    //typedef std::complex<real> complex;
     typedef vector<complex> quregister;
     typedef quregister::iterator iterator;
     typedef quregister::size_type size_type;
