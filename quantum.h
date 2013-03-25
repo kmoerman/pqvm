@@ -86,15 +86,15 @@ namespace quantum {
             sigma_x_even (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (const range& r) const {
+            void operator () (size_type r) const {
                 size_type stride (1 << target),
                           period (stride << 1),
-                          i      (r.begin()),
+                          i      (0),
                           offset (i % period);
                 if (offset >= stride)
                     i += period - offset;
                 
-                while (i < r.end()) {
+                while (i < r) {
                     output[i + stride] = input[i];
                     i++;
                     if (i % stride) continue;
@@ -110,15 +110,15 @@ namespace quantum {
             sigma_x_odd (size_type target_, quregister& input_, quregister& output_) :
             input (input_.begin()), output (output_.begin()), target (target_) {}
 
-            void operator () (const range& r) const {
+            void operator () (size_type r) const {
                 size_type stride (1 << target),
                           period (stride << 1),
-                          i      (r.begin()),
+                          i      (0),
                           offset (i % period);
                 if (offset < stride)
                     i += stride - offset;
                 
-                while (i < r.end()) {
+                while (i < r) {
                     output[i - stride] = input[i];
                     i++;
                     if (i % stride) continue;
@@ -134,8 +134,11 @@ namespace quantum {
         details::sigma_x_even even (target, input, output);
         details::sigma_x_odd  odd  (target, input, output);
         
-        tbb::parallel_for (range (0, n, 1024), even);
-        tbb::parallel_for (range (0, n, 1024), odd);
+        even(n);
+        odd(n);
+        
+        //tbb::parallel_for (range (0, n, 1024), even);
+        //tbb::parallel_for (range (0, n, 1024), odd);
     }
     
     
@@ -342,6 +345,7 @@ namespace quantum {
         details::measure_odd  odd  (target, angle, input, output);
         
         tbb::parallel_for(range (0, n), even);
+        
         tbb::parallel_for(range (0, n), odd);
     }
     
