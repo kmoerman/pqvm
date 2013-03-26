@@ -16,7 +16,7 @@ int main (int argc, char** argv) {
     }
     
     size_type  size = atoi(argv[1]),
-    target = atoi(argv[2]);
+             target = atoi(argv[2]);
     char       iter = (argc > 4) ? atoi(argv[4]) : 5;
     std::string imp = (argc > 3) ? argv[3] : "tbb";
     
@@ -30,9 +30,8 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    //measure_sequential ("sigma-z-"+imp+".data", iter) {
+    for (;iter > 0; --iter)
         sigma_z(target, a, b);
-    //}
     
     return 0;
     

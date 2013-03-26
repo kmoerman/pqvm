@@ -31,9 +31,8 @@ int main (int argc, char** argv) {
         *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    //measure_sequential ("kronecker-"+imp+".data", iterations) {
+    for (;iter > 0; --iter)
         kronecker(a, b, c);
-    //}
         
     return 0;
     

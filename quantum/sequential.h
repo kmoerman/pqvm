@@ -60,7 +60,7 @@ namespace quantum { namespace sequential {
     
     void sigma_x (const size_type target, quregister& input, quregister& output) {
         size_type   stride  (1 << target),
-                    period  (stride << 1),
+                    period  (2 * stride),
                     n       (input.size());
         
         output.reserve(n);

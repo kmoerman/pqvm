@@ -96,7 +96,7 @@ namespace quantum { namespace itbb {
 
             void operator () (range& r) const {
                 size_type stride (1 << target),
-                          period (stride << 1),
+                          period (2 * stride),
                           i      (r.begin()),
                           offset (i % period);
                 if (offset < stride)

@@ -30,9 +30,8 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    //measure_sequential ("sigma-x-"+imp+".data", iter) {
+    for (;iter > 0; --iter)
         sigma_x(target, a, b);
-    //}
     
     return 0;
     
