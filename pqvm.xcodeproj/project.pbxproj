@@ -14,7 +14,6 @@
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x.cpp */; };
 		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
-		D0F76FA81700714E00595879 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
 		D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA61700714E00595879 /* sigma-z.cpp */; };
 /* End PBXBuildFile section */
 
@@ -56,7 +55,7 @@
 		4ACD86961701F71400C5E854 /* sequential.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sequential.h; path = quantum/sequential.h; sourceTree = "<group>"; };
 		4ACD86971701F71400C5E854 /* tbb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = tbb.h; path = quantum/tbb.h; sourceTree = "<group>"; };
 		4ACD86981701F71400C5E854 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = types.h; path = quantum/types.h; sourceTree = "<group>"; };
-		4ACD86991701F71400C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vector.h; path = quantum/vector.h; sourceTree = "<group>"; };
+		4ACD869A170200CC00C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		D06C191A1700C79100B58CFB /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,7 +100,6 @@
 			children = (
 				4ACD86951701F71400C5E854 /* quantum.h */,
 				4ACD86981701F71400C5E854 /* types.h */,
-				4ACD86991701F71400C5E854 /* vector.h */,
 				4ACD86941701F71400C5E854 /* openmp.h */,
 				4ACD86961701F71400C5E854 /* sequential.h */,
 				4ACD86971701F71400C5E854 /* tbb.h */,
@@ -114,10 +112,11 @@
 			children = (
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
-				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
-				4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */,
-				4ACD868F1701EAC600C5E854 /* qvm.c */,
 				4ACD86901701EAC600C5E854 /* qvm.h */,
+				4A0E0ADB16EA2D40002F1ECA /* pqvm.h */,
+				4ACD869A170200CC00C5E854 /* vector.h */,
+				4ACD868F1701EAC600C5E854 /* qvm.c */,
+				4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */,
 				4ACD86931701F70500C5E854 /* quantum */,
 				D0F76FA21700712700595879 /* tests */,
 				4A3CAB6516FDE80300D3966C /* scraps */,
@@ -234,7 +233,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0F76FA71700714E00595879 /* kronecker.cpp in Sources */,
-				D0F76FA81700714E00595879 /* performance.cpp in Sources */,
 				D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */,
 				D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */,
 			);

@@ -4,7 +4,7 @@
 #include "types.h"
 #include <tbb/tbb.h>
 
-namespace quantum { namespace tbb {
+namespace quantum { namespace itbb {
 
     typedef tbb::blocked_range<size_type> range;
     

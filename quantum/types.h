@@ -4,7 +4,7 @@
 #include <complex>
 #include <iostream>
 
-#include "vector.h"
+#include "../vector.h"
 
 namespace quantum {
     
