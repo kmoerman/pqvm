@@ -34,7 +34,6 @@ int main (int argc, char** argv) {
         sigma_x(target, a, b);
     //}
     
-    
     return 0;
     
 }

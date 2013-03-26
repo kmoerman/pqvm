@@ -15,7 +15,7 @@ int main (int argc, char** argv) {
         return EXIT_FAILURE;
     }
     
-    size_type  size = atoi(argv[1]),
+    size_type  size = atoi(argv[1]);
     char       iter = (argc > 3) ? atoi(argv[3]) : 5;
     std::string imp = (argc > 2) ? argv[2] : "tbb";
     
