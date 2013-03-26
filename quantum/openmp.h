@@ -1,28 +1,9 @@
-#ifndef pqvm_quantum_h
-#define pqvm_quantum_h
+#ifndef pqvm_quantum_openmp_h
+#define pqvm_quantum_openmp_h
 
-#include <iostream>
-#include <complex>
-#include <tbb/tbb.h>
+#include "types.h"
 
-#include "../vector.h"
-
-namespace quantum {
-    
-    typedef float real;
-    typedef std::complex<real> complex;
-    typedef vector<complex> quregister;
-    typedef quregister::iterator iterator;
-    typedef quregister::size_type size_type;
-    
-    std::ostream& operator << (std::ostream& out, const quregister& reg) {
-        out << "(";
-        for (quregister::const_iterator i (reg.begin()), n (reg.end()); i != n; ++i) {
-            out << std::real(*i) << "+" << std::imag(*i) << "i ";
-        }
-        out << ")" << std::endl;
-        return out;
-    }
+namespace quantum { namespace openmp {
     
     /*
      * Some quantum operators are implemented as strided access pattern. The vectors
@@ -77,7 +58,7 @@ namespace quantum {
      *
      */
     
-    void sigma_x (size_type target, quregister& input, quregister& output) {
+    void sigma_x (const size_type target, quregister& input, quregister& output) {
         size_type   stride  (1 << target),
                     n       (input.size()),
                     period  (stride << 1);
@@ -204,7 +185,7 @@ namespace quantum {
      *
      */
     
-    void measure (size_type target, real angle, quregister& input, quregister& output) {
+    void measure (const size_type target, const real angle, quregister& input, quregister& output) {
         size_type   n       (input.size() / 2),
                     stride  (1 << target),
                     period  (stride << 1);
@@ -227,6 +208,6 @@ namespace quantum {
                 output[k] += factor * input[i + j];
     }
     
-}
+} }
 
 #endif

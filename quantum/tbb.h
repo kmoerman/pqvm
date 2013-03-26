@@ -1,29 +1,12 @@
-#ifndef pqvm_quantum_h
-#define pqvm_quantum_h
+#ifndef pqvm_quantum_tbb_h
+#define pqvm_quantum_tbb_h
 
-#include <iostream>
-#include <complex>
+#include "types.h"
 #include <tbb/tbb.h>
 
-#include "../vector.h"
+namespace quantum { namespace tbb {
 
-namespace quantum {
-    
-    typedef float real;
-    typedef std::complex<real> complex;
-    typedef vector<complex> quregister;
-    typedef quregister::iterator iterator;
-    typedef quregister::size_type size_type;
     typedef tbb::blocked_range<size_type> range;
-    
-    std::ostream& operator << (std::ostream& out, const quregister& reg) {
-        out << "(";
-        for (quregister::const_iterator i (reg.begin()), n (reg.end()); i != n; ++i) {
-            out << std::real(*i) << "+" << std::imag(*i) << "i ";
-        }
-        out << ")" << std::endl;
-        return out;
-    }
     
     /*
      * Some quantum operators are implemented as strided access pattern. The vectors
@@ -129,7 +112,7 @@ namespace quantum {
         };
     }
     
-    void sigma_x (size_type target, quregister& input, quregister& output) {
+    void sigma_x (const size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
         output.reserve(n);
         details::sigma_x_even even (target, input, output);
@@ -174,7 +157,7 @@ namespace quantum {
         };
     }
     
-    void sigma_z (size_type target, quregister& input, quregister& output) {
+    void sigma_z (const size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
         output.reserve(n);
         tbb::parallel_for (range (0, n), details::sigma_z (target, input, output));
@@ -334,7 +317,7 @@ namespace quantum {
         };
     }
     
-    void measure (size_type target, real angle, quregister& input, quregister& output) {
+    void measure (const size_type target, const real angle, quregister& input, quregister& output) {
         size_type n (input.size() / 2);
         output.reserve(n);
         
@@ -344,6 +327,7 @@ namespace quantum {
         tbb::parallel_for(range (0, n), even);
         tbb::parallel_for(range (0, n), odd);
     }
-}
+    
+} }
 
 #endif

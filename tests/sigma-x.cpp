@@ -1,25 +1,27 @@
+#include <string>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 
 #include "../performance.h"
-#include "../quantum/sequential.h"
+#include "../quantum/quantum.h"
 
 using namespace quantum;
 
 int main (int argc, char** argv) {
     
-    
-    if (argc < 2 || argc > 3) {
-        std::cout << "Usage: sigma-x problem-size target [iterations=5]" << std::endl;
+    if (argc < 2 || argc > 5) {
+        std::cout << "Usage: sigma-x problem-size target [implementation=tbb [iterations=5]]" << std::endl;
         return EXIT_FAILURE;
     }
     
-    size_type size = atoi(argv[1]),
-            target = atoi(argv[2]);
-    int iterations = (argc == 4) ? atoi(argv[3]) : 5;
+    size_type  size = atoi(argv[1]),
+             target = atoi(argv[2]);
+    char       iter = (argc > 4) ? atoi(argv[4]) : 5;
+    std::string imp = (argc > 3) ? argv[3] : "tbb";
     
     srand(time(NULL));
+    implementation(imp);
     
     quregister a (size),
                b;
@@ -28,13 +30,9 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    //std::cout << a;
-    
-    //measure_sequential ("sigma-x-omp.data", iterations) {
+    //measure_sequential ("sigma-x-"+imp+".data", iter) {
         sigma_x(target, a, b);
     //}
-    
-    //std::cout << b;
     
     return 0;
     
