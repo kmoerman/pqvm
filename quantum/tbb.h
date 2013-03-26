@@ -328,6 +328,10 @@ namespace quantum { namespace itbb {
         tbb::parallel_for(range (0, n), odd);
     }
     
+    void initialize () {
+        tbb::task_scheduler_init i;
+    }
+    
 } }
 
 #endif

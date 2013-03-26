@@ -208,6 +208,8 @@ namespace quantum { namespace openmp {
                 output[k] += factor * input[i + j];
     }
     
+    void initialize () {}
+    
 } }
 
 #endif

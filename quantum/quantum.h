@@ -14,7 +14,8 @@
     sigma_z      = &namespace::sigma_z,      \
     controlled_z = &namespace::controlled_z, \
     kronecker    = &namespace::kronecker,    \
-    measure      = &namespace::measure       \
+    measure      = &namespace::measure,      \
+    namespace::initialize()                  \
 
 namespace quantum {
     

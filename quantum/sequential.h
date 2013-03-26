@@ -198,6 +198,8 @@ namespace quantum { namespace sequential {
                 output[k] += factor * input[i + j];
     }
     
+    void initialize () {}
+    
 } }
 
 #endif
