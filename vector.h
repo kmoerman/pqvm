@@ -1,6 +1,7 @@
 #ifndef pqvm_vector_h
 #define pqvm_vector_h
 
+#include <iostream>
 #include <memory>
 #include <stdexcept>
 
@@ -81,6 +82,11 @@ public:
     inline void empty () {
         if (size() == 0) return;
         _alloc.deallocate(_begin, size());
+        _begin = NULL;
+        _end = NULL;
+    }
+    
+    inline void reset () {
         _begin = NULL;
         _end = NULL;
     }

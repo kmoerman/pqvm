@@ -15,11 +15,9 @@ namespace quantum {
     typedef quregister::size_type size_type;
     
     std::ostream& operator << (std::ostream& out, const quregister& reg) {
-        out << "(";
-        for (quregister::const_iterator i (reg.begin()), n (reg.end()); i != n; ++i) {
-            out << std::real(*i) << "+" << std::imag(*i) << "i ";
+        for (size_type i (0), n (reg.size()); i != n; ++i) {
+            out << std::real(reg[i]) << " + " << std::imag(reg[i]) << "i |" << i << ">" << std::endl;
         }
-        out << ")" << std::endl;
         return out;
     }
 }

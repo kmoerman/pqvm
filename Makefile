@@ -7,8 +7,8 @@ SOURCES = $(addsuffix .cpp, $(TARGETS))
 DEST    = $(addsuffix .o,   $(TARGETS))
 
 
-INCPATH = -I ./sexp/include
-LIBPATH = -L ./sexp/lib
+INCPATH = -I ../local/include
+LIBPATH = -L ../local/lib
 LIBS = -lsexp -ltbb
 OFLAGS = -Wall #-O2
 DFLAGS = -g3

@@ -32,9 +32,9 @@ namespace quantum {
     void (*copy)         (quregister& input, quregister& output);
     
     void implementation (std::string imp) {
-        if (imp == "openmp")
+        if (imp == "omp")
             QUANTUM_IMPLEMENTATION (openmp);
-        if (imp == "sequential")
+        if (imp == "seq")
             QUANTUM_IMPLEMENTATION (sequential);
         if (imp == "tbb")
             QUANTUM_IMPLEMENTATION (itbb);

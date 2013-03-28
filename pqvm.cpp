@@ -11,9 +11,11 @@
 #include <ctype.h>
 #include <limits.h>
 
-#include <sexp.h>
-#include <sexp_ops.h>
-#include <sexp_vis.h>
+#include <sexp/sexp.h>
+#include <sexp/sexp_ops.h>
+#include <sexp/sexp_vis.h>
+
+#include <iostream>
 
 #include "quantum/quantum.h"
 
@@ -36,6 +38,7 @@ typedef quantum::size_type tangle_size_t;
 typedef quantum::size_type pos_t;
 
 int _verbose_ = 0;
+
 quantum::quregister _proto_diag_qubit_;
 quantum::quregister _proto_dual_diag_qubit_;
 
@@ -48,7 +51,7 @@ typedef struct qid_list {
 } qid_list_t;
 
 typedef struct tangle {
-    tangle_size_t size;
+    qid_t size;
     qid_list_t* qids;
     quantum::quregister qureg;
 } tangle_t;
@@ -57,7 +60,7 @@ tangle_t* init_tangle() {
     tangle_t* tangle = (tangle_t*) malloc(sizeof(tangle_t));   //ALLOC tangle
     tangle->size = 0;
     tangle->qids = NULL;
-    tangle->qureg = quantum::quregister ();
+    tangle->qureg.reset();
     return tangle;
 }
 
@@ -118,7 +121,7 @@ qubit_t _invalid_qubit_ = { NULL, 0, 0 };
 
 // use this function to return a correct qureg position
 //  libquantum uses an reverse order (least significant == 0)
-// and so does namespace ::quantum
+//  as does namespace ::quantum
 pos_t get_target( const qubit_t qubit ) {
     return qubit.tangle->size - qubit.pos - 1;
 }
@@ -152,9 +155,9 @@ typedef struct qmem {
 
 void print_signal_map( const signal_map_t* signal_map ) {
     printf(" {\n");
-    for( int qid=0 ; qid<MAX_QUBITS ; ++qid ) {
+    for( qid_t qid=0 ; qid<MAX_QUBITS ; ++qid ) {
         if( BITTEST(signal_map->entries, qid) )
-            printf("  %d -> %d,\n", qid,
+            printf("  %ld -> %d,\n", qid,
                    BITTEST(signal_map->signals, qid) ? 1 : 0 );
     }
     printf(" }\n");
@@ -374,8 +377,7 @@ add_tangle( const qid_t qid,
     // update qmem info
     qmem->size += 1;
     // init quantum state
-    quantum::copy (_proto_diag_qubit_,
-                       tangle->qureg);
+    quantum::copy (_proto_diag_qubit_, tangle->qureg);
     return tangle;
 }
 
@@ -391,12 +393,14 @@ add_qubit( const qid_t qid,
     tangle->size += 1;
     // tensor |+> to tangle
     quantum::quregister old_qureg = tangle->qureg;
-    tangle->qureg = quantum::quregister ();
+    tangle->qureg.reset();
     quantum::kronecker(old_qureg, _proto_diag_qubit_, tangle->qureg);
+    
     // out with the old
     //quantum_delete( &tangle->qureg );
     // in with the new
     //tangle->qureg = new_qureg;
+    
     // ::quantum : destructor takes care of deallocation of old_qureg
     // check for leaks with valgrind to be sure
 }
@@ -460,7 +464,7 @@ merge_tangles(tangle_t* tangle_1,
     append_qids( tangle_2->qids, tangle_1->qids);
     // tensor both quregs
     quantum::quregister old_tangle1 = tangle_1->qureg;
-    tangle_1->qureg = quantum::quregister();
+    tangle_1->qureg.reset();
     
     quantum::kronecker( old_tangle1, tangle_2->qureg, tangle_1->qureg );
     
@@ -627,18 +631,23 @@ void qop_cz( const qubit_t qubit_1, const qubit_t qubit_2 ) {
     /* printf("\n"); */
     /* printf("  calling cz with targets %d and %d\n, ", tar1, tar2); */
     
-    quantum::controlled_z(tar1, tar2, get_qureg(qubit_1), get_qureg(qubit_1) );
-    
+    quantum::quregister old_qureg = get_qureg(qubit_1);
+    qubit_1.tangle->qureg.reset();
+    quantum::controlled_z(tar1, tar2, old_qureg, qubit_1.tangle->qureg );
 }
 
 void qop_x( const qubit_t qubit ) {
     assert( !invalid(qubit) );
-    quantum::sigma_x( get_target(qubit), get_qureg(qubit), get_qureg(qubit) );
+    quantum::quregister old_qureg = get_qureg(qubit);
+    qubit.tangle->qureg.reset();
+    quantum::sigma_x( get_target(qubit), old_qureg, qubit.tangle->qureg );
 }
 
 void qop_z( const qubit_t qubit ) {
     assert( !invalid(qubit) );
-    quantum::sigma_z( get_target(qubit), get_qureg(qubit), get_qureg(qubit) );
+    quantum::quregister old_qureg = get_qureg(qubit);
+    qubit.tangle->qureg.reset();
+    quantum::sigma_z( get_target(qubit), old_qureg, qubit.tangle->qureg );
 }
 
 /***************
@@ -797,7 +806,7 @@ void eval_M(sexp_t* exp, qmem_t* qmem) {
     //  quantum_inv_phase_kick( get_target(qubit), angle, get_qureg(qubit) );
     
     quantum::quregister old_qureg = get_qureg(qubit);
-    qubit.tangle->qureg = quantum::quregister ();
+    qubit.tangle->qureg.reset();
     signal = quantum::measure( get_target(qubit),
                                       angle,
                                       old_qureg, qubit.tangle->qureg );
@@ -973,7 +982,7 @@ void parse_tangle( const sexp_t* exp, qmem_t* qmem ) {
         if( !invalid(qubit) ) {
             fprintf( stderr,
                     "ERROR: trying to add already existing qubit "
-                    "during input file initialization (qid:%d)\n",
+                    "during input file initialization (qid:%ld)\n",
                     qubit.qid );
             exit(EXIT_FAILURE);
         }
@@ -983,7 +992,7 @@ void parse_tangle( const sexp_t* exp, qmem_t* qmem ) {
     
     qmem->size += 1;
     tangle->size = sexp_list_length(qids_exp);
-    tangle->qureg = quantum::quregister( 1 << tangle->size );
+    tangle->qureg.reserve( 1 << tangle->size );
     tangle->qids = add_qid( get_qid(qids), tangle->qids );
     while(qids->next) {
         qids=qids->next;
@@ -1127,20 +1136,20 @@ int main(int argc, char* argv[]) {
             abort ();
     }
     
-    //  
+    //
     
     if (_verbose_) {
         printf("Initial QMEM:\n ");
         print_qmem( qmem );
     }
     if( interactive ) {
-        printf("Starting QVM in interactive mode.\n qvm> ");
+        printf("Starting PQVM in interactive mode.\npqvm> ");
         input_port = init_iowrap( 0 );  // we are going to read from stdin
         mc_program = read_one_sexp( input_port );
         while( mc_program ) {
             eval( mc_program->list, qmem );
             print_qmem( qmem );
-            printf("\n qvm> ");
+            printf("\npqvm> ");
             destroy_sexp( mc_program );
             mc_program = read_one_sexp( input_port );
         }

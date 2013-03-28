@@ -279,7 +279,7 @@ namespace quantum { namespace itbb {
                 size_type stride (1 << target),
                           period (stride << 1),
                           i      (r.begin()),
-                          j      (period * (i / stride) + stride + i % stride);
+                          j      ((i / stride) * period + (i % stride));
                 
                 while (i < r.end()) {
                     output[i] = input[j];
@@ -303,11 +303,12 @@ namespace quantum { namespace itbb {
                 size_type stride (1 << target),
                           period (stride << 1),
                           i      (r.begin()),
-                          j      (period * (i / stride) + i % stride);
-                complex factor (exp(complex (0, -angle)));
+                          j      ((i / stride) * period + (i % stride) + stride);
+                
+                complex   factor (std::exp(complex (0, -angle)));
                 
                 while (i < r.end()) {
-                    output[i] += factor * input[j];
+                    output[i] -= input[j] * factor;
                     ++i;
                     ++j;
                     if (i % stride) continue;
@@ -328,6 +329,38 @@ namespace quantum { namespace itbb {
         tbb::parallel_for(range (0, n), odd);
         
         return 1;
+    }
+    
+    /*
+     * Copy.
+     */
+    namespace details {
+        
+        struct copy {
+            iterator input, output;
+            
+            copy (quregister& input_, quregister& output_) :
+            input(input_.begin()), output(output_.begin()) {}
+            
+            void operator () (const range& r) const {
+                for (size_type i (r.begin()); i < r.end(); ++i)
+                    output[i] = input[i];
+            }
+            
+        };
+        
+    }
+    
+    void copy (quregister& input, quregister& output) {
+        size_type n (input.size());
+        
+        output.reserve(n);
+        
+        tbb::parallel_for(range (0, n), details::copy (input, output));
+    }
+    
+    void initialize () {
+        tbb::task_scheduler_init i;
     }
     
     /*
@@ -373,11 +406,14 @@ namespace quantum { namespace itbb {
     void normalize (quregister& input, quregister& output) {
         size_type n (input.size());
         output.reserve(n);
+        real limit = 1.0e-8;
         
         details::norm norm (input);
         
         tbb::parallel_reduce(range (0, n), norm);
-        tbb::parallel_for(range (0, n), details::normalize (norm.total, input, output));
+        if (std::abs(1 - norm.total) > limit)
+            tbb::parallel_for(range (0, n), details::normalize (norm.total, input, output));
+        else copy(input, output);
     }
     
     /*
@@ -411,38 +447,6 @@ namespace quantum { namespace itbb {
         output.reserve(n);
         
         tbb::parallel_for(range (0, n), details::phase_kick (target, gamma, input, output));
-    }
-    
-    /*
-     * Copy.
-     */
-    namespace details {
-        
-        struct copy {
-            iterator input, output;
-            
-            copy (quregister& input_, quregister& output_) :
-            input(input_.begin()), output(output_.begin()) {}
-            
-            void operator () (const range& r) const {
-                for (size_type i (r.begin()); i < r.end(); ++i)
-                    output[i] = input[i];
-            }
-            
-        };
-        
-    }
-    
-    void copy (quregister& input, quregister& output) {
-        size_type n (input.size());
-        
-        output.reserve(n);
-        
-        tbb::parallel_for(range (0, n), details::copy (input, output));
-    }
-    
-    void initialize () {
-        tbb::task_scheduler_init i;
     }
     
 } }

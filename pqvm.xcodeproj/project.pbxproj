@@ -13,6 +13,7 @@
 		4ACD869B1702229C00C5E854 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
 		4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ACD869C17032E3200C5E854 /* normalize.cpp */; };
 		4ACD86A11703A35600C5E854 /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACD86A01703A35600C5E854 /* libsexp.a */; };
+		D022F25717046500007BA49E /* libquantum.c in Sources */ = {isa = PBXBuildFile; fileRef = D022F25617046500007BA49E /* libquantum.c */; };
 		D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x.cpp */; };
 		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
 		D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA61700714E00595879 /* sigma-z.cpp */; };
@@ -57,6 +58,7 @@
 		4ACD869A170200CC00C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		4ACD869C17032E3200C5E854 /* normalize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = normalize.cpp; path = tests/normalize.cpp; sourceTree = "<group>"; };
 		4ACD86A01703A35600C5E854 /* libsexp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsexp.a; path = sexp/lib/libsexp.a; sourceTree = "<group>"; };
+		D022F25617046500007BA49E /* libquantum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = libquantum.c; path = tests/libquantum.c; sourceTree = "<group>"; };
 		D06C191A1700C79100B58CFB /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +153,7 @@
 				D0F76FA61700714E00595879 /* sigma-z.cpp */,
 				D0F76FA31700714E00595879 /* kronecker.cpp */,
 				D0F76FA41700714E00595879 /* performance.cpp */,
+				D022F25617046500007BA49E /* libquantum.c */,
 			);
 			name = tests;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */,
 				D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */,
 				4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */,
+				D022F25717046500007BA49E /* libquantum.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

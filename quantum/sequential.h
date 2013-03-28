@@ -127,7 +127,7 @@ namespace quantum { namespace sequential {
         output.reserve(n);
         
         for (size_type i = 0; i < n; ++i)
-            output[i] = (i & mask) ? -input[i] : input[i];
+            output[i] = ((i & mask) == mask) ? -input[i] : input[i];
 
     };
     
@@ -175,17 +175,17 @@ namespace quantum { namespace sequential {
      *         00  01  10  11
      *     
      *     even: D[j]  = A[Ej]
-     *     odd:  D[j] += exp(-a*i) * A[Oj]
+     *     odd:  D[j] += - A[Oj] * exp(-a*i)
      *
      */
     
     int measure (const size_type target, const real angle, quregister& input, quregister& output) {
-        size_type   n       (input.size() / 2),
+        size_type   n       (input.size()),
                     stride  (1 << target),
-                    period  (stride << 1);
-        complex     factor  (exp(complex (0, -angle)));
+                    period  (stride * 2);
+        complex     factor  (std::exp(complex (0, -angle)));
         
-        output.reserve(n);
+        output.reserve(n/2);
         
         //even
         for (size_type i = 0, k = 0; i < n; i += period)
@@ -195,9 +195,21 @@ namespace quantum { namespace sequential {
         //odd
         for (size_type i = 0, k = 0; i < n; i += period)
             for (size_type j = stride; j < period; ++j, ++k)
-                output[k] += factor * input[i + j];
+                output[k] -= input[i + j] * factor;
         
         return 1;
+    }
+    
+    /*
+     * Copy.
+     */
+    void copy (quregister& input, quregister& output) {
+        size_type n (input.size());
+        
+        output.reserve(n);
+        
+        for (size_type i = 0; i < n; ++i)
+            output[i] = input[i];
     }
     
     /*
@@ -210,11 +222,14 @@ namespace quantum { namespace sequential {
         output.reserve(n);
         
         real norm = 0;
+        real limit = 1.0e-8;
         for (size_type i = 0; i < n; ++i)
             norm += std::norm(input[i]);
         
-        for (size_type i = 0; i < n; ++i)
-            output[i] = input[i] / norm;
+        if (std::abs(1 - norm) > limit)
+            for (size_type i = 0; i < n; ++i)
+                output[i] = input[i] / norm;
+        else copy(input, output);
     }
     
     /*
@@ -230,18 +245,6 @@ namespace quantum { namespace sequential {
         for (size_type i = 0; i < n; ++i)
             output[i] = (i & mask) ? factor * input[i] : input[i];
         
-    }
-    
-    /*
-     * Copy.
-     */
-    void copy (quregister& input, quregister& output) {
-        size_type n (input.size());
-        
-        output.reserve(n);
-        
-        for (size_type i = 0; i < n; ++i)
-            output[i] = input[i];
     }
     
     void initialize () {}

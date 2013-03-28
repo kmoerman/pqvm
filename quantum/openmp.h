@@ -131,7 +131,7 @@ namespace quantum { namespace openmp {
         
         #pragma omp parallel for
         for (size_type i = 0; i < n; ++i)
-            output[i] = (i & mask) ? -input[i] : input[i];
+            output[i] = ((i & mask) == mask) ? -input[i] : input[i];
         
     };
     
@@ -186,12 +186,12 @@ namespace quantum { namespace openmp {
      */
     
     int measure (const size_type target, const real angle, quregister& input, quregister& output) {
-        size_type   n       (input.size() / 2),
+        size_type   n       (input.size()),
                     stride  (1 << target),
                     period  (stride << 1);
-        complex     factor  (exp(complex (0, -angle)));
+        complex     factor  (std::exp(complex (0, -angle)));
         
-        output.reserve(n);
+        output.reserve(n/2);
         
         //even
         size_type k = 0;
@@ -200,14 +200,28 @@ namespace quantum { namespace openmp {
             for (size_type j = 0; j < stride; ++j, ++k)
                 output[k] = input[i + j];
         
+        
         //odd
         k = 0;
         #pragma omp parallel for
         for (size_type i = 0; i < n; i += period)
             for (size_type j = stride; j < period; ++j, ++k)
-                output[k] += factor * input[i + j];
+                output[k] -= input[i + j] * factor;
         
         return 1;
+    }
+    
+    /*
+     * Copy.
+     */
+    void copy (quregister& input, quregister& output) {
+        size_type n (input.size());
+        
+        output.reserve(n);
+        
+        #pragma omp parallel for
+        for (size_type i = 0; i < n; ++i)
+            output[i] = input[i];
     }
     
     /*
@@ -219,14 +233,18 @@ namespace quantum { namespace openmp {
         size_type n (input.size());
         output.reserve(n);
         
-        real norm = 0;
+        real norm = 0, limit = 1.0e-8;
         #pragma omp parallel for reduction(+:norm)
         for (size_type i = 0; i < n; ++i)
             norm += std::norm(input[i]);
         
-        #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i)
-            output[i] = input[i] / norm;
+
+        if (std::abs(1 - norm) > limit) {
+            #pragma omp parallel for
+            for (size_type i = 0; i < n; ++i)
+                output[i] = input[i] / norm;
+        }
+        else copy(input, output);
     }
     
     /*
@@ -243,19 +261,6 @@ namespace quantum { namespace openmp {
         for (size_type i = 0; i < n; ++i)
             output[i] = (i & mask) ? factor * input[i] : input[i];
         
-    }
-    
-    /*
-     * Copy.
-     */
-    void copy (quregister& input, quregister& output) {
-        size_type n (input.size());
-        
-        output.reserve(n);
-        
-        #pragma omp parallel for
-        for (size_type i = 0; i < n; ++i)
-            output[i] = input[i];
     }
     
     void initialize () {}

@@ -1,5 +1,4 @@
-CC = g++
-
+CXX = g++]
 SOURCES = $(wildcard *.cpp)
 DEPS    = ../performance.h $(wildcard ../quantum/*.h) ../vector.h
 TARGETS = $(basename $(SOURCES))
@@ -19,11 +18,11 @@ endif
 
 all: $(TARGETS)
 
-$(TARGETS): $(SOURCES) $(DEST)
-	$(CC) $(CFLAGS) $@.o $(LIBS) -o $@
+$(TARGETS): $(SOURCES) $(DEPS) $(DEST)
+	$(CXX) $(CFLAGS) $@.o $(LIBS) -o $@
 
 %.o: %.cpp $(DEPS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(TARGETS) $(DEST)
