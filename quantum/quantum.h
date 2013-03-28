@@ -9,13 +9,16 @@
 #include "sequential.h"
 #include "tbb.h"
 
-#define QUANTUM_IMPLEMENTATION(namespace)    \
-    sigma_x      = &namespace::sigma_x,      \
-    sigma_z      = &namespace::sigma_z,      \
-    controlled_z = &namespace::controlled_z, \
-    kronecker    = &namespace::kronecker,    \
-    measure      = &namespace::measure,      \
-    namespace::initialize()                  \
+#define QUANTUM_IMPLEMENTATION(namespace)     \
+    sigma_x      = &namespace::sigma_x,       \
+    sigma_z      = &namespace::sigma_z,       \
+    controlled_z = &namespace::controlled_z,  \
+    kronecker    = &namespace::kronecker,     \
+    measure      = &namespace::measure,       \
+    normalize    = &namespace::normalize,     \
+    phase_kick   = &namespace::phase_kick,    \
+    copy         = &namespace::copy,          \
+    namespace::initialize()
 
 namespace quantum {
     
@@ -23,7 +26,10 @@ namespace quantum {
     void (*sigma_z)      (const size_type, quregister&, quregister&);
     void (*controlled_z) (const size_type, const size_type, quregister&, quregister&);
     void (*kronecker)    (quregister&, quregister&, quregister&);
-    void (*measure)      (const size_type, const real, quregister&, quregister&);
+    int  (*measure)      (const size_type, const real, quregister&, quregister&);
+    void (*normalize)    (quregister&, quregister&);
+    void (*phase_kick)   (const size_type, const real, quregister&, quregister&);
+    void (*copy)         (quregister& input, quregister& output);
     
     void implementation (std::string imp) {
         if (imp == "openmp")
@@ -34,6 +40,10 @@ namespace quantum {
             QUANTUM_IMPLEMENTATION (itbb);
     }
     
+    void print (const quregister& reg) {
+        std::cout << reg;
+    }
+
 }
 
 #endif

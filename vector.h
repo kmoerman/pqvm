@@ -54,16 +54,18 @@ public:
     
     /*
      * Destructor.
-     * Basic destruction only. No destuctors are called on the member objects.
+     * Deallocation only, no destuctors are called on the member objects.
      */
     ~vector () {
-        _alloc.deallocate(_begin, size());
+        if (size() > 0)
+            _alloc.deallocate(_begin, size());
     }
     
     /*
      * Storage.
      */
     inline void reserve (const size_type n) {
+        if (size() > 0) return;
         _begin = _alloc.allocate(n);
         _end = _begin + n;
     }
@@ -76,10 +78,11 @@ public:
         return _alloc;
     }
     
-    inline allocator_type empty () {
+    inline void empty () {
+        if (size() == 0) return;
         _alloc.deallocate(_begin, size());
-        _begin = 0;
-        _end = 0;
+        _begin = NULL;
+        _end = NULL;
     }
     
     /*

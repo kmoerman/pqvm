@@ -8,7 +8,7 @@
 
 namespace quantum {
     
-    typedef float real;
+    typedef double real;
     typedef std::complex<real> complex;
     typedef vector<complex> quregister;
     typedef quregister::iterator iterator;

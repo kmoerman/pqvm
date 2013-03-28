@@ -179,7 +179,7 @@ namespace quantum { namespace sequential {
      *
      */
     
-    void measure (const size_type target, const real angle, quregister& input, quregister& output) {
+    int measure (const size_type target, const real angle, quregister& input, quregister& output) {
         size_type   n       (input.size() / 2),
                     stride  (1 << target),
                     period  (stride << 1);
@@ -196,6 +196,52 @@ namespace quantum { namespace sequential {
         for (size_type i = 0, k = 0; i < n; i += period)
             for (size_type j = stride; j < period; ++j, ++k)
                 output[k] += factor * input[i + j];
+        
+        return 1;
+    }
+    
+    /*
+     * Normalize.
+     * The sum of the amplitudes should equal 1.
+     */
+    
+    void normalize (quregister& input, quregister& output) {
+        size_type n (input.size());
+        output.reserve(n);
+        
+        real norm = 0;
+        for (size_type i = 0; i < n; ++i)
+            norm += std::norm(input[i]);
+        
+        for (size_type i = 0; i < n; ++i)
+            output[i] = input[i] / norm;
+    }
+    
+    /*
+     * Phase-kick.
+     */
+    void phase_kick (size_type target, real gamma, quregister& input, quregister& output) {
+        size_type   n       (input.size()),
+                    mask    (1 << target);
+        complex     factor  (std::conj(std::exp(complex(0, gamma))));
+        
+        output.reserve(n);
+        
+        for (size_type i = 0; i < n; ++i)
+            output[i] = (i & mask) ? factor * input[i] : input[i];
+        
+    }
+    
+    /*
+     * Copy.
+     */
+    void copy (quregister& input, quregister& output) {
+        size_type n (input.size());
+        
+        output.reserve(n);
+        
+        for (size_type i = 0; i < n; ++i)
+            output[i] = input[i];
     }
     
     void initialize () {}

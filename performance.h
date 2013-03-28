@@ -30,7 +30,9 @@ namespace performance {
     }
     
     inline void set_threads (int n) {
-        tbb::task_scheduler_init init(n);
+        static tbb::task_scheduler_init init;
+        init.terminate();
+        init.initialize(n);
     }
     
     namespace details {
@@ -45,19 +47,20 @@ namespace performance {
          */
         
         struct parallel {
-            std::fstream output;
             time begin;
-            int threads;
-            int iterations;
             int iteration;
-            double interval;
+            int iterations;
+            std::fstream output;
+            int threads;
             bool verbose;
             
             //calculate and print the interval
             //increment the iteration counter
             inline void after () {
-                interval = diff(begin, now());
+                double interval = diff(begin, now());
                 output << threads << "\t" << interval << std::endl;
+                if (verbose)
+                    std::cout << threads << " threads, iteration: " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 ++iteration;
             }
             
@@ -72,18 +75,15 @@ namespace performance {
                         return false;
                     }
                     iteration = 0;
-                    tbb::task_scheduler_init init(threads);
+                    set_threads (threads);
                 }
-                if (verbose)
-                    std::cout << threads << " threads, iteration: " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 begin = now();
                 return true;
             }
             
             //initialize the output file and set the initial number of threads
-            parallel (std::string filename, int iters, bool v_ = true):
-            iterations(iters), iteration (0), threads(1), verbose(v_),
-            output(filename.c_str(), std::ios_base::out) {
+            parallel (std::string filename, int iters, bool v = true):
+            iteration (0), iterations(iters), output(filename.c_str(), std::ios_base::out),  threads(1), verbose(v) {
                 output << "# Wall-clock time (seconds) for " << iterations
                        << " iterations on 1" << " to " << max_threads() << " threads."
                        << std::endl;
@@ -96,38 +96,36 @@ namespace performance {
         };
         
         struct sequential {
-            std::fstream output;
             time begin;
-            int iterations;
             int iteration;
-            double interval;
+            int iterations;
+            std::fstream output;
             bool verbose;
             
             //calculate and print the interval and
             //increment the iteration counter
             inline void after () {
-                interval = diff(begin, now());
+                double interval = diff(begin, now());
                 output << interval << std::endl;
+                if (verbose)
+                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 ++iteration;
             }
             
             //decide wether to continue or not
             //store the starting time for the subsequent measurement
             inline bool before () {
-                if (iteration < iterations) {
+                if (iteration == iterations) {
                     output.close();
                     return false;
                 }
-                if (verbose)
-                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
                 begin = now();
                 return true;
             }
             
             //initialize the output file
-            sequential (std::string filename, int iters, bool v_ = true):
-            iterations (iters), iteration (0), begin (now()),
-            output (filename.c_str(), std::ios_base::out), verbose(v_) {
+            sequential (std::string filename, int iters, bool v = true):
+            begin (now()), iteration (0), iterations (iters), output (filename.c_str(), std::ios_base::out), verbose(v) {
                 output  << "# Wall-clock time (seconds) for " << iterations
                         << " iterations on 1 thread." << std::endl;
             }   
@@ -137,17 +135,17 @@ namespace performance {
             }
         };
         
-        #define MS_CONCAT_(x, y) x ## y
-        #define MS_CONCAT(x, y) MS_CONCAT_(x, y)
-        #define MS_EXPERIMENT MS_CONCAT(experiment_, __LINE__)
+        #define PERF_CONCAT_(x, y) x ## y
+        #define PERF_CONCAT(x, y) PERF_CONCAT_(x, y)
+        #define PERF_EXPERIMENT PERF_CONCAT(experiment_, __LINE__)
                 
         #define measure_parallel(...) \
-            for (performance::details::parallel MS_EXPERIMENT (__VA_ARGS__); \
-                 MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
+            for (performance::details::parallel PERF_EXPERIMENT (__VA_ARGS__); \
+                 PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
                 
         #define measure_sequential(...) \
-            for (performance::details::sequential MS_EXPERIMENT (__VA_ARGS__); \
-                 MS_EXPERIMENT.before(); MS_EXPERIMENT.after())
+            for (performance::details::sequential PERF_EXPERIMENT (__VA_ARGS__); \
+                 PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
         
     }
 }
