@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "types.h"
-
 #include "openmp.h"
 #include "sequential.h"
 #include "tbb.h"
@@ -38,6 +37,13 @@ namespace quantum {
             QUANTUM_IMPLEMENTATION (sequential);
         if (imp == "tbb")
             QUANTUM_IMPLEMENTATION (itbb);
+    }
+    
+    std::ostream& operator << (std::ostream& out, const quregister& reg) {
+        for (size_type i (0), n (reg.size()); i != n; ++i) {
+            out << std::real(reg[i]) << " + " << std::imag(reg[i]) << "i |" << i << ">" << std::endl;
+            }
+        return out;
     }
     
     void print (const quregister& reg) {

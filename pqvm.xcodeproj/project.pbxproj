@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		4A0E0ACA16EA28FC002F1ECA /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */; };
+		4A3980621705B25100A5D521 /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A3980611705B25100A5D521 /* libsexp.a */; };
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		4ACD869B1702229C00C5E854 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
 		4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ACD869C17032E3200C5E854 /* normalize.cpp */; };
-		4ACD86A11703A35600C5E854 /* libsexp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ACD86A01703A35600C5E854 /* libsexp.a */; };
 		D022F25717046500007BA49E /* libquantum.c in Sources */ = {isa = PBXBuildFile; fileRef = D022F25617046500007BA49E /* libquantum.c */; };
 		D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x.cpp */; };
 		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
@@ -46,6 +46,7 @@
 		4A0E0AD816EA2D40002F1ECA /* bitmask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bitmask.h; sourceTree = "<group>"; };
 		4A0E0AD916EA2D40002F1ECA /* performance.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; path = performance.h; sourceTree = "<group>"; };
 		4A0E0ADA16EA2D40002F1ECA /* pqvm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pqvm.cpp; sourceTree = "<group>"; };
+		4A3980611705B25100A5D521 /* libsexp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsexp.a; path = ../../../../usr/local/lib/libsexp.a; sourceTree = "<group>"; };
 		4A3CAB6616FDE80300D3966C /* gates.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gates.c; sourceTree = "<group>"; };
 		4A3CAB6716FDE80300D3966C /* qops.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = qops.cpp; sourceTree = "<group>"; };
 		4ACD868F1701EAC600C5E854 /* qvm.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = qvm.c; sourceTree = "<group>"; };
@@ -57,7 +58,6 @@
 		4ACD86981701F71400C5E854 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = types.h; path = quantum/types.h; sourceTree = "<group>"; };
 		4ACD869A170200CC00C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		4ACD869C17032E3200C5E854 /* normalize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = normalize.cpp; path = tests/normalize.cpp; sourceTree = "<group>"; };
-		4ACD86A01703A35600C5E854 /* libsexp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsexp.a; path = sexp/lib/libsexp.a; sourceTree = "<group>"; };
 		D022F25617046500007BA49E /* libquantum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = libquantum.c; path = tests/libquantum.c; sourceTree = "<group>"; };
 		D06C191A1700C79100B58CFB /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,7 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A0E0ACA16EA28FC002F1ECA /* libtbb.dylib in Frameworks */,
-				4ACD86A11703A35600C5E854 /* libsexp.a in Frameworks */,
+				4A3980621705B25100A5D521 /* libsexp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				4A0E0ACC16EA2C8C002F1ECA /* libquantum.a */,
-				4ACD86A01703A35600C5E854 /* libsexp.a */,
+				4A3980611705B25100A5D521 /* libsexp.a */,
 				4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */,
 			);
 			name = libraries;
