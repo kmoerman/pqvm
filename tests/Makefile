@@ -1,12 +1,12 @@
-CXX = g++]
+CXX = g++
 SOURCES = $(wildcard *.cpp)
 DEPS    = ../performance.h $(wildcard ../quantum/*.h) ../vector.h
 TARGETS = $(basename $(SOURCES))
 DEST    = $(addsuffix .o,   $(TARGETS))
 
-INCPATH = #-I
-LIBPATH = #-L
-LIBS = -ltbb
+INCPATH = -I../../local/include
+LIBPATH = -L../../local/lib
+LIBS = -lpfm -lpapi -ltbb
 OFLAGS = -Wall #-O2
 DFLAGS = -g3
 CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp

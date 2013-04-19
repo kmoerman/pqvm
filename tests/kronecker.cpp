@@ -1,7 +1,5 @@
 #include <string>
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 
 #include "../performance.h"
 #include "../quantum/quantum.h"
@@ -11,13 +9,16 @@ using namespace quantum;
 int main (int argc, char** argv) {
     
     if (argc < 2 || argc > 4) {
-        std::cout << "Usage: kronecker problem-size [implementation=tbb [iterations=5]]" << std::endl;
+        std::cout << "Usage: kronecker problem-size [implementation=tbb [iterations=3]]" << std::endl;
         return EXIT_FAILURE;
     }
     
     size_type  size = atoi(argv[1]);
-    char       iter = (argc > 3) ? atoi(argv[3]) : 5;
+    int        iter = (argc > 3) ? atoi(argv[3]) : 3;
     std::string imp = (argc > 2) ? argv[2] : "tbb";
+    
+    std::string file = "kronecker-";
+    file += imp + ".data";
     
     srand(time(NULL));
     implementation(imp);
@@ -31,9 +32,10 @@ int main (int argc, char** argv) {
         *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    for (;iter > 0; --iter)
+    measure_parallel (file, iter) {
         kronecker(a, b, c);
-        
+    }
+    
     return 0;
     
 }

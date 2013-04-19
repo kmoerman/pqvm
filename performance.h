@@ -7,23 +7,56 @@
 #include <tbb/task_scheduler_init.h>
 #include <tbb/tick_count.h>
 
-/*
- * The measure namespace exposes the tbb::tick_count functionality,
- * and allows us to control the number of threads during measurements.
- */
+#include <stdlib.h>
+#include <stdio.h>
+#include <papi.h>
+
+
+
 namespace performance {
     
-    typedef tbb::tick_count time;
+    //PAPI
+    const int num_papi_events = 1;
+    int num_hwd_counters;
+    int papi_events[num_papi_events] = {
+        PAPI_MEM_SCY //Cycles stalled waiting for memory access.
+    };
+    
+    void output_papi_headers (std::ostream& o, std::string sep) {
+        o  << "PAPI_MEM_SCY" << sep;
+    }
+    
+    void output_papi_counters (std::ostream& o, long_long values[]) {
+        for (int i = 0; i < num_papi_events; ++i)
+            o << values[i] << " ";
+    }
+    
+    void handle_papi_error (int retval) {
+        std::cout << "PAPI error " << retval << PAPI_strerror(retval);
+        exit(1);
+    }
+    
+    void ini () {
+        if ((num_hwd_counters = PAPI_num_counters()) <= PAPI_OK)
+            handle_papi_error(1);
+        
+        if (num_hwd_counters > num_papi_events)
+            num_hwd_counters = num_papi_events;
+    }
+    
+    //PAPI WALL-CLOCK TIMER
+    typedef long_long time;
     typedef double interval;
     
     inline time now () {
-        return time::now();
+        return PAPI_get_real_usec();
     }
     
     inline interval diff (time start, time end) {
-        return (end - start).seconds();
+        return ((double) (end - start)) / 1000000;
     }
     
+    //TBB THREADS
     inline int max_threads () {
         static const int n = tbb::task_scheduler_init::default_num_threads();
         return n;
@@ -57,10 +90,16 @@ namespace performance {
             //calculate and print the interval
             //increment the iteration counter
             inline void after () {
-                double interval = diff(begin, now());
-                output << threads << "\t" << interval << std::endl;
+                double interval = diff (begin, now());
+                long_long values[num_papi_events];
+                if (PAPI_stop_counters(values, num_papi_events) != PAPI_OK)
+                    handle_papi_error(1);
+                output << threads << "\t" << interval << "\t";
+                output_papi_counters(output, values);
+                output << std::endl;
                 if (verbose)
-                    std::cout << threads << " threads, iteration: " << iteration + 1 << ": " << interval << "s"<< std::endl;
+                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
+                
                 ++iteration;
             }
             
@@ -75,8 +114,11 @@ namespace performance {
                         return false;
                     }
                     iteration = 0;
+                    if (verbose)
+                        std::cout << "threads: " << threads << std::endl;
                     set_threads (threads);
                 }
+                PAPI_start_counters(papi_events, num_hwd_counters);
                 begin = now();
                 return true;
             }
@@ -84,9 +126,11 @@ namespace performance {
             //initialize the output file and set the initial number of threads
             parallel (std::string filename, int iters, bool v = true):
             iteration (0), iterations(iters), output(filename.c_str(), std::ios_base::out),  threads(1), verbose(v) {
-                output << "# Wall-clock time (seconds) for " << iterations
+                output << "# PAPI events for " << iterations
                        << " iterations on 1" << " to " << max_threads() << " threads."
-                       << std::endl;
+                       << "TIME\t";
+                output_papi_headers(output, "\t");
+                output << std::endl;
                 set_threads (threads);
             }
             
@@ -135,6 +179,24 @@ namespace performance {
             }
         };
         
+        struct increase_threads {
+            int threads;
+            
+            inline void after () {
+                threads++;
+            }
+            
+            inline bool before () {
+                if (threads > max_threads())
+                    return false;
+                set_threads(threads);
+                return true;
+                
+            }
+            
+            increase_threads (int ini_threads): threads (ini_threads) {}
+        };
+        
         #define PERF_CONCAT_(x, y) x ## y
         #define PERF_CONCAT(x, y) PERF_CONCAT_(x, y)
         #define PERF_EXPERIMENT PERF_CONCAT(experiment_, __LINE__)
@@ -146,6 +208,10 @@ namespace performance {
         #define measure_sequential(...) \
             for (performance::details::sequential PERF_EXPERIMENT (__VA_ARGS__); \
                  PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
+        
+        #define increase_threads(...) \
+            for (performance::details::increase_threads PERF_EXPERIMENT (__VA_ARGS__); \
+                PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
         
     }
 }
