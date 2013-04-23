@@ -17,6 +17,7 @@
 
 #include <iostream>
 
+#include "thread-control.h"
 #include "quantum/quantum.h"
 
 #include "bitmask.h"
@@ -1095,7 +1096,7 @@ int main(int argc, char* argv[]) {
     //override later
     quantum::implementation("tbb");
     
-    while ((c = getopt (argc, argv, "isvmf:p:o::")) != -1)
+    while ((c = getopt (argc, argv, "isvmt:f:p:o::")) != -1)
         switch (c)
     {
         case 'i':
@@ -1108,6 +1109,12 @@ int main(int argc, char* argv[]) {
             _verbose_ = 1;
             break;
         case 'm':
+            break;
+        case 't':
+            if (strcmp(optarg, "") == 0)
+                thread_control::set_threads(0);
+            else
+                thread_control::set_threads(atoi(optarg));
             break;
         case 'f':
             initialize_input_state(optarg, qmem);
@@ -1204,4 +1211,3 @@ int main(int argc, char* argv[]) {
     return 0;
     
 }
-

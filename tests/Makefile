@@ -7,9 +7,9 @@ DEST    = $(addsuffix .o,   $(TARGETS))
 INCPATH = -I../../local/include
 LIBPATH = -L../../local/lib
 LIBS = -lpfm -lpapi -ltbb
-OFLAGS = -Wall #-O2
+OFLAGS = -Wall -O2
 DFLAGS = -g3
-CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp
+CFLAGS = -march=native $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Linux)
@@ -24,8 +24,8 @@ $(TARGETS): $(SOURCES) $(DEPS) $(DEST)
 %.o: %.cpp $(DEPS)
 	$(CXX) $(CFLAGS) -c $< -o $@
 
+run: all
+	./run-tests.sh
+
 clean:
 	rm -f $(TARGETS) $(DEST)
-
-virgin:
-	rm -f $(TARGETS) $(DEST) *.data *~

@@ -14,11 +14,12 @@ int main (int argc, char** argv) {
     }
     
     size_type  size = atoi(argv[1]);
-    int        iter = (argc > 3) ? atoi(argv[3]) : 3;
+    int        iter = (argc > 3) ? atoi(argv[3]) : 10;
     std::string imp = (argc > 2) ? argv[2] : "tbb";
     
-    std::string file = "kronecker-";
-    file += imp + ".data";
+    std::ostringstream filestr;
+    filestr << "data/kronecker-" << size << "-" << imp << ".data";
+    std::string file = filestr.str();
     
     srand(time(NULL));
     implementation(imp);
@@ -32,9 +33,14 @@ int main (int argc, char** argv) {
         *j = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    measure_parallel (file, iter) {
-        kronecker(a, b, c);
-    }
+    performance::init();
+    
+    if (imp == "tbb" || imp == "tbb_ran")
+        measure_parallel (file, iter, false)
+            kronecker(a, b, c);
+    else
+        measure_sequential (file, iter, false)
+            kronecker(a, b, c);
     
     return 0;
     

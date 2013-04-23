@@ -17,8 +17,12 @@ int main (int argc, char** argv) {
     
     size_type  size = atoi(argv[1]),
              target = atoi(argv[2]);
-    char       iter = (argc > 4) ? atoi(argv[4]) : 5;
+    char       iter = (argc > 4) ? atoi(argv[4]) : 10;
     std::string imp = (argc > 3) ? argv[3] : "tbb";
+    
+    std::ostringstream filestr;
+    filestr << "data/sigma-z-" << size << "-" << target << "-" << imp << ".data";
+    std::string file = filestr.str();
     
     srand(time(NULL));
     implementation(imp);
@@ -30,8 +34,14 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
-    for (;iter > 0; --iter)
-        sigma_z(target, a, b);
+    performance::init();
+    
+    if (imp == "tbb" || imp == "tbb_ran")
+        measure_parallel (file, iter, false)
+            sigma_z(target, a, b);
+    else
+        measure_sequential (file, iter, false)
+            sigma_z(target, a, b);
     
     return 0;
     

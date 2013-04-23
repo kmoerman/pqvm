@@ -14,6 +14,7 @@
 		4ACD869B1702229C00C5E854 /* performance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* performance.cpp */; };
 		4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ACD869C17032E3200C5E854 /* normalize.cpp */; };
 		D022F25717046500007BA49E /* libquantum.c in Sources */ = {isa = PBXBuildFile; fileRef = D022F25617046500007BA49E /* libquantum.c */; };
+		D02772FA1726B72A0043AD02 /* grainsize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D02772F91726B72A0043AD02 /* grainsize.cpp */; };
 		D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x.cpp */; };
 		D0F76FA71700714E00595879 /* kronecker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA31700714E00595879 /* kronecker.cpp */; };
 		D0F76FAA1700714E00595879 /* sigma-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA61700714E00595879 /* sigma-z.cpp */; };
@@ -59,6 +60,9 @@
 		4ACD869A170200CC00C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		4ACD869C17032E3200C5E854 /* normalize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = normalize.cpp; path = tests/normalize.cpp; sourceTree = "<group>"; };
 		D022F25617046500007BA49E /* libquantum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = libquantum.c; path = tests/libquantum.c; sourceTree = "<group>"; };
+		D02772F91726B72A0043AD02 /* grainsize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = grainsize.cpp; path = tests/grainsize.cpp; sourceTree = "<group>"; };
+		D02772FB1726C5910043AD02 /* tbb-range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "tbb-range.h"; path = "quantum/tbb-range.h"; sourceTree = "<group>"; };
+		D02772FC1726DE650043AD02 /* thread-control.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "thread-control.h"; sourceTree = "<group>"; };
 		D06C191A1700C79100B58CFB /* sigma-x.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "sigma-x.cpp"; path = "tests/sigma-x.cpp"; sourceTree = "<group>"; };
 		D0EAD5CA16E75F290026EE11 /* pqvm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = pqvm; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0EAD5E616E762D40026EE11 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +109,7 @@
 				4ACD86941701F71400C5E854 /* openmp.h */,
 				4ACD86961701F71400C5E854 /* sequential.h */,
 				4ACD86971701F71400C5E854 /* tbb.h */,
+				D02772FB1726C5910043AD02 /* tbb-range.h */,
 			);
 			name = quantum;
 			sourceTree = "<group>";
@@ -114,6 +119,7 @@
 			children = (
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
+				D02772FC1726DE650043AD02 /* thread-control.h */,
 				4ACD86901701EAC600C5E854 /* qvm.h */,
 				4ACD869A170200CC00C5E854 /* vector.h */,
 				4ACD868F1701EAC600C5E854 /* qvm.c */,
@@ -154,6 +160,7 @@
 				D0F76FA31700714E00595879 /* kronecker.cpp */,
 				D0F76FA41700714E00595879 /* performance.cpp */,
 				D022F25617046500007BA49E /* libquantum.c */,
+				D02772F91726B72A0043AD02 /* grainsize.cpp */,
 			);
 			name = tests;
 			sourceTree = "<group>";
@@ -241,6 +248,7 @@
 				D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */,
 				4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */,
 				D022F25717046500007BA49E /* libquantum.c in Sources */,
+				D02772FA1726B72A0043AD02 /* grainsize.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
