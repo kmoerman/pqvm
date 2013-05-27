@@ -5,6 +5,7 @@ DEPS    = ../performance.h ../options.h $(wildcard ../quantum/*.h) ../vector.h
 TARGETS = $(basename $(SOURCES))
 OBJECTS = $(addsuffix .o, $(TARGETS))
 
+
 INCPATH = -I $$HOME/local/include
 LIBPATH = -L $$HOME/local/lib
 LIBS    = -lpfm -lpapi -ltbb -lstdc++ -lm
@@ -26,6 +27,7 @@ $(TARGETS): % : %.o
 
 %.o: %.cpp $(DEPS)
 	$(CXX) -c $(CFLAGS) -o $@ $<
+
 
 run-test: all
 	./run-tests.sh

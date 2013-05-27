@@ -1096,7 +1096,10 @@ int main(int argc, char* argv[]) {
     //override later
     quantum::implementation("tbb");
     
+
     while ((c = getopt (argc, argv, "rsvmp:f:i:o::g:")) != -1)
+
+
         switch (c)
     {
         case 'r': //interactie = REPL

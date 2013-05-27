@@ -1,4 +1,5 @@
 #include <string>
+#include <sstream>
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -64,6 +65,7 @@ int main (int argc, char** argv) {
     
     //initialize random state
     srand(seed);
+
     implementation(imp);
     
     size_type size = 1 << num_qubits;

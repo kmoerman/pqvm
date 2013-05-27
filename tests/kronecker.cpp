@@ -11,6 +11,7 @@ using namespace quantum;
 
 int main (int argc, char** argv) {
     
+
     //default options
     int num_qubits = 10; //q
     int num_repeat = 1;  //r

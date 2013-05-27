@@ -7,13 +7,23 @@
 
 
 namespace quantum {
-    size_type grainsize = 128;
+
+
+
+    
+    size_type grainsize = 1024;
+    
+
 }
 
 #include "openmp.h"
 #include "sequential.h"
 #include "tbb.h"
+
 #include "tbb-mcp.h"
+
+
+
 
 #define QUANTUM_IMPLEMENTATION(namespace)     \
     sigma_x      = &namespace::sigma_x,       \
@@ -42,6 +52,7 @@ namespace quantum {
         grainsize = g;
     }
     
+
     //set implementation at runtime
     void implementation (std::string imp) {
         if (imp == "omp")

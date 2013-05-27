@@ -120,7 +120,10 @@
 			children = (
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
+
 				4AC7AEB8172D601C003FF9F9 /* options.h */,
+
+
 				D02772FC1726DE650043AD02 /* thread-control.h */,
 				4ACD86901701EAC600C5E854 /* qvm.h */,
 				4ACD869A170200CC00C5E854 /* vector.h */,
