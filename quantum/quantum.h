@@ -4,9 +4,16 @@
 #include <iostream>
 
 #include "types.h"
+
+
+namespace quantum {
+    size_type grainsize = 128;
+}
+
 #include "openmp.h"
 #include "sequential.h"
 #include "tbb.h"
+#include "tbb-mcp.h"
 
 #define QUANTUM_IMPLEMENTATION(namespace)     \
     sigma_x      = &namespace::sigma_x,       \
@@ -21,6 +28,7 @@
 
 namespace quantum {
     
+    //exported function:
     void (*sigma_x)      (const size_type, quregister&, quregister&);
     void (*sigma_z)      (const size_type, quregister&, quregister&);
     void (*controlled_z) (const size_type, const size_type, quregister&, quregister&);
@@ -30,6 +38,11 @@ namespace quantum {
     void (*phase_kick)   (const size_type, const real, quregister&, quregister&);
     void (*copy)         (quregister& input, quregister& output);
     
+    void set_grainsize(size_type g) {
+        grainsize = g;
+    }
+    
+    //set implementation at runtime
     void implementation (std::string imp) {
         if (imp == "omp")
             QUANTUM_IMPLEMENTATION (openmp);
@@ -37,8 +50,11 @@ namespace quantum {
             QUANTUM_IMPLEMENTATION (sequential);
         if (imp == "tbb")
             QUANTUM_IMPLEMENTATION (itbb);
+        if (imp == "tbb_mcp")
+            QUANTUM_IMPLEMENTATION (itbb_mcp);
     }
     
+    //output
     std::ostream& operator << (std::ostream& out, const quregister& reg) {
         for (size_type i (0), n (reg.size()); i != n; ++i) {
             out << std::real(reg[i]) << " + " << std::imag(reg[i]) << "i |" << i << ">" << std::endl;

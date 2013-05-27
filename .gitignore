@@ -63,3 +63,6 @@ plot/*.png
 *.data
 *.png
 *.pdf
+data/*
+tests/data/*
+tests/perf/*

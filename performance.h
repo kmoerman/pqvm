@@ -1,34 +1,38 @@
-#ifndef MEASURE_H
-#define MEASURE_H
+#ifndef pqvm_performance_h
+#define pqvm_performance_h
 
 #include <iostream>
 #include <fstream>
+
 #include <string>
-#include <tbb/task_scheduler_init.h>
-#include <tbb/tick_count.h>
+
+#include "quantum/quantum.h"
+#include "thread-control.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <papi.h>
 
-
-
 namespace performance {
     
+    using namespace thread_control;
+    
     //PAPI
-    const int num_papi_events = 1;
+    const int num_papi_events = 2;
     int num_hwd_counters;
     int papi_events[num_papi_events] = {
-        PAPI_MEM_SCY //Cycles stalled waiting for memory access.
+        PAPI_L1_TCM,
+        PAPI_L2_TCM
     };
     
     void output_papi_headers (std::ostream& o, std::string sep) {
-        o  << "PAPI_MEM_SCY" << sep;
+        o   << "PAPI_L1_TCM" << sep
+            << "PAPI_L2_TCM";
     }
     
     void output_papi_counters (std::ostream& o, long_long values[]) {
         for (int i = 0; i < num_papi_events; ++i)
-            o << values[i] << " ";
+            o << values[i] << "\t";
     }
     
     void handle_papi_error (int retval) {
@@ -36,7 +40,7 @@ namespace performance {
         exit(1);
     }
     
-    void ini () {
+    void init () {
         if ((num_hwd_counters = PAPI_num_counters()) <= PAPI_OK)
             handle_papi_error(1);
         
@@ -56,27 +60,15 @@ namespace performance {
         return ((double) (end - start)) / 1000000;
     }
     
-    //TBB THREADS
-    inline int max_threads () {
-        static const int n = tbb::task_scheduler_init::default_num_threads();
-        return n;
-    }
-    
-    inline void set_threads (int n) {
-        static tbb::task_scheduler_init init;
-        init.terminate();
-        init.initialize(n);
-    }
-    
     namespace details {
         
         /**
          * Some machinery to perform sequential and parallel measurements in wall-
-         * clock time.
-         * A custom control structure to perform measurements can be made using the
-         * technique explained at <http://www.chiark.greenend.org.uk/~sgtatham/mp/>
-         * However, with a simple struct, we can maintain all of the state and use a
-         * basic for loop instead. Syntactic sugar is provided in the macros below.
+         * clock time, with a custom control structures
+         * With a simple struct, we can maintain all of the state and use a
+         * basic for loop. Syntactic sugar is provided in the macros below.
+         * See <http://www.chiark.greenend.org.uk/~sgtatham/mp/> for interesting
+         * approaches to creating custom control structures.
          */
         
         struct parallel {
@@ -98,7 +90,7 @@ namespace performance {
                 output_papi_counters(output, values);
                 output << std::endl;
                 if (verbose)
-                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
+                    std::cout << interval << "s"<< std::endl;
                 
                 ++iteration;
             }
@@ -114,10 +106,10 @@ namespace performance {
                         return false;
                     }
                     iteration = 0;
-                    if (verbose)
-                        std::cout << "threads: " << threads << std::endl;
-                    set_threads (threads);
                 }
+                set_threads (threads);
+                if (verbose)
+                    std::cout << "threads: " << threads << std::endl;
                 PAPI_start_counters(papi_events, num_hwd_counters);
                 begin = now();
                 return true;
@@ -126,12 +118,11 @@ namespace performance {
             //initialize the output file and set the initial number of threads
             parallel (std::string filename, int iters, bool v = true):
             iteration (0), iterations(iters), output(filename.c_str(), std::ios_base::out),  threads(1), verbose(v) {
-                output << "# PAPI events for " << iterations
-                       << " iterations on 1" << " to " << max_threads() << " threads."
-                       << "TIME\t";
+                output << "#PAPI events for " << iterations
+                       << " iterations on 1" << " to " << max_threads() << " threads." << std::endl
+                       << "#PROCESSORS\tTIME\t";
                 output_papi_headers(output, "\t");
                 output << std::endl;
-                set_threads (threads);
             }
             
             ~parallel () {
@@ -149,10 +140,15 @@ namespace performance {
             //calculate and print the interval and
             //increment the iteration counter
             inline void after () {
-                double interval = diff(begin, now());
-                output << interval << std::endl;
+                double interval = diff (begin, now());
+                long_long values[num_papi_events];
+                if (PAPI_stop_counters(values, num_papi_events) != PAPI_OK)
+                    handle_papi_error(1);
+                output << interval << "\t";
+                output_papi_counters(output, values);
+                output << std::endl;
                 if (verbose)
-                    std::cout << "iteration " << iteration + 1 << ": " << interval << "s"<< std::endl;
+                    std::cout << interval << "s"<< std::endl;
                 ++iteration;
             }
             
@@ -163,6 +159,7 @@ namespace performance {
                     output.close();
                     return false;
                 }
+                PAPI_start_counters(papi_events, num_hwd_counters);
                 begin = now();
                 return true;
             }
@@ -170,8 +167,11 @@ namespace performance {
             //initialize the output file
             sequential (std::string filename, int iters, bool v = true):
             begin (now()), iteration (0), iterations (iters), output (filename.c_str(), std::ios_base::out), verbose(v) {
-                output  << "# Wall-clock time (seconds) for " << iterations
-                        << " iterations on 1 thread." << std::endl;
+                output  << "#PAPI events for " << iterations
+                        << " iterations on 1 thread." << std::endl
+                        << "#TIME\t";
+                output_papi_headers(output, "\t");
+                output << std::endl;
             }   
             
             ~sequential () {
@@ -179,22 +179,36 @@ namespace performance {
             }
         };
         
-        struct increase_threads {
-            int threads;
+        struct decrease_grainsize {
+            size_t grainsize;
+            time begin;
+            std::fstream output;
             
             inline void after () {
-                threads++;
+                double interval = diff (begin, now());
+                output << grainsize << "\t" << interval << std::endl;
+                grainsize -= 1000;
+                quantum::set_grainsize(grainsize);
             }
             
             inline bool before () {
-                if (threads > max_threads())
+                if (grainsize < 1)
                     return false;
-                set_threads(threads);
+                quantum::set_grainsize(grainsize);
+                begin = now();
                 return true;
                 
             }
             
-            increase_threads (int ini_threads): threads (ini_threads) {}
+            decrease_grainsize (std::string f, size_t g): grainsize (g), output(f.c_str(), std::ios_base::out) {
+                set_threads(1);
+                output  << "#TIME for 1 iteration on 1 thread." << std::endl
+                << "#GRAINSIZE\tTIME" << std::endl;
+            }
+            
+            ~decrease_grainsize () {
+                output.close();
+            }
         };
         
         #define PERF_CONCAT_(x, y) x ## y
@@ -209,8 +223,8 @@ namespace performance {
             for (performance::details::sequential PERF_EXPERIMENT (__VA_ARGS__); \
                  PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
         
-        #define increase_threads(...) \
-            for (performance::details::increase_threads PERF_EXPERIMENT (__VA_ARGS__); \
+        #define decrease_grainsize(...) \
+            for (performance::details::decrease_grainsize PERF_EXPERIMENT (__VA_ARGS__); \
                 PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
         
     }

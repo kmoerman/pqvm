@@ -1,12 +1,10 @@
-#ifndef pqvm_quantum_tbb_h
-#define pqvm_quantum_tbb_h
+#ifndef pqvm_quantum_tbb_range_h
+#define pqvm_quantum_tbb_range_h
 
 #include "types.h"
 #include <tbb/tbb.h>
 
-namespace quantum { namespace itbb {
-    
-    typedef tbb::blocked_range<size_type> range;
+namespace quantum { namespace itbb_range {
     
     /*
      * Some quantum operators are implemented as strided access pattern. The vectors
@@ -412,7 +410,7 @@ namespace quantum { namespace itbb {
         
         tbb::parallel_reduce(range (0, n, grainsize), norm);
         if (std::abs(1 - norm.total) > limit)
-            tbb::parallel_for(range (0, n, grainsize), details::normalize (norm.total, input, output));
+            tbb::parallel_for(range (0, n, grainsoze), details::normalize (norm.total, input, output));
         else copy(input, output);
     }
     

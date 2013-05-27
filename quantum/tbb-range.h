@@ -1,10 +1,10 @@
-#ifndef pqvm_quantum_tbb_h
-#define pqvm_quantum_tbb_h
+#ifndef pqvm_quantum_tbb_range_h
+#define pqvm_quantum_tbb_range_h
 
 #include "types.h"
 #include <tbb/tbb.h>
 
-namespace quantum { namespace itbb {
+namespace quantum { namespace itbb_range {
     
     typedef tbb::blocked_range<size_type> range;
     

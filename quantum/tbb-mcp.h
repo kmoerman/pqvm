@@ -1,10 +1,14 @@
-#ifndef pqvm_quantum_tbb_h
-#define pqvm_quantum_tbb_h
+#ifndef pqvm_quantum_tbb_mcp_h
+#define pqvm_quantum_tbb_mcp_h
 
 #include "types.h"
 #include <tbb/tbb.h>
+#include <cstring>
+#include <iostream>
 
-namespace quantum { namespace itbb {
+#define Q_MIN ()
+
+namespace quantum { namespace itbb_mcp {
     
     typedef tbb::blocked_range<size_type> range;
     
@@ -18,7 +22,8 @@ namespace quantum { namespace itbb {
      *
      *     t = 1, s = 2, p = 4
      *
-     *         E1  E2  O1  O2  E3  E4  O3  O4
+     *          E1  E2  O1  O2  E3  E4  O3  O4
+     *         000 001 010 011 100 101 110 111
      *        +---+---+---+---+---+---+---+---+
      *     Q: | A | B | C | D | E | F | G | H |
      *        +---+---+---+---+---+---+---+---+
@@ -28,17 +33,26 @@ namespace quantum { namespace itbb {
      *        '               '       '
      *        '<----- p ----->'<- s ->'
      *
+     * possible range divisions:
+     *        |<----->|<->|<->|<->|<->|<----->|
+     *        |<------------->|<------------->|
+     *
+     * impossible range division:
+     *        |<----->|<------------->|<----->|
+     *
+     *
+     * As the state vectors are always sized in powers of 2 and TBB always halves the
+     * range, we can safely assume the range either fully lies within a single stride,
+     * or contains only full periods.
+     *
      * The odd/even access pattern permutes (E1 E1 E2 O2 E3 O3 E4 O4) into
      * (E1 E2 E3 E4 O1 O1 O3 O4) without the need to copy a permutation vector first.
-     *
-     * This should work well for large strides; for small strides, a single iteration
-     * might be faster. I assume the minimal stride period should equal the cache
-     * line size, but this needs experimental validation.
+     * This should work well for large strides; I assume the minimal stride period
+     * should equal the cache line size, but this needs experimental validation.
+     * 
      * The threads should be spread accross the destination vector, aligned with the
      * cache and with the stride periods. This can be achieved by setting the grainsize
      * parameter or set a partioner in tbb.
-     *
-     * @TODO Apply software prefetching (and test its performace).
      *
      */
     
@@ -67,22 +81,35 @@ namespace quantum { namespace itbb {
             const size_type target;
             const iterator input, output;
             
-            sigma_x_even (size_type target_, quregister& input_, quregister& output_) :
-            target (target_), input (input_.begin()), output (output_.begin()) {}
+            sigma_x_even (size_type t_, quregister& i_, quregister& o_) :
+            target (t_), input (i_.begin()), output (o_.begin()) {}
             
             void operator () (range& r) const {
-                size_type stride (1 << target),
-                period (stride << 1),
-                i      (r.begin()),
-                offset (i % period);
-                if (offset >= stride)
-                    i += period - offset;
+                size_type stride = 1 << target,
+                          period = stride << 1,
+                          i      = r.begin(),
+                          n      = r.size();
                 
-                while (i < r.end()) {
-                    output[i + stride] = input[i];
-                    i++;
-                    if (i % stride) continue;
-                    else i+= stride;
+                //When range is fully within a stride, copy the entire range
+                //to the right, but only when i is at an even position.
+                if (n < period) {
+                    if (!(i & stride))
+                        memcpy(output + i + stride, input + i, n * sizeof(complex));
+                    return;
+                }
+                
+                //When the range contains multiple periods, copy the even
+                //amplitudes in each period to the right.
+                size_type block  = stride * sizeof(complex),
+                          blocks = n / period;
+                iterator  ipt    = input  + i,
+                          opt    = output + i + stride;
+                
+                while (blocks > 0) {
+                    memcpy(opt, ipt, block);
+                    opt += period;
+                    ipt += period;
+                    --blocks;
                 }
             }
         };
@@ -91,23 +118,37 @@ namespace quantum { namespace itbb {
             const size_type target;
             const iterator input, output;
             
-            sigma_x_odd (size_type target_, quregister& input_, quregister& output_) :
-            target (target_), input (input_.begin()), output (output_.begin()) {}
+            sigma_x_odd (size_type t_, quregister& i_, quregister& o_) :
+            target (t_), input (i_.begin()), output (o_.begin()) {}
             
             void operator () (range& r) const {
-                size_type stride (1 << target),
-                period (2 * stride),
-                i      (r.begin()),
-                offset (i % period);
-                if (offset < stride)
-                    i += stride - offset;
+                size_type stride = 1 << target,
+                          period = stride << 1,
+                          i      = r.begin(),
+                          n      = r.size();
                 
-                while (i < r.end()) {
-                    output[i - stride] = input[i];
-                    i++;
-                    if (i % stride) continue;
-                    else i+= stride;
+                //When range is fully within a stride, copy the entire range
+                //to the left, but only when i is at an odd position.
+                if (n < period) {
+                    if (i & stride)
+                        memcpy(output + i - stride, input + i, n * sizeof(complex));
+                    return;
                 }
+                
+                //When the range contains multiple periods, copy the odd
+                //amplitudes in each period to the left.
+                size_type block  = stride * sizeof(complex),
+                          blocks = n / period;
+                iterator  ipt    = input  + i + stride,
+                          opt    = output + i;
+                
+                while (blocks) {
+                    memcpy(opt, ipt, block);
+                    opt+=period;
+                    ipt+=period;
+                    --blocks;
+                }
+                
             }
         };
     }

@@ -1,31 +1,31 @@
-CC = g++
-
+CXX = g++
 
 TARGETS = pqvm
 DEPS    = $(wildcard ../quantum/*.h) vector.h
 SOURCES = $(addsuffix .cpp, $(TARGETS))
-DEST    = $(addsuffix .o,   $(TARGETS))
+OBJECTS = $(addsuffix .o,   $(TARGETS))
 
-
-INCPATH = -I ../local/include
-LIBPATH = -L ../local/lib
+INCPATH = -I $$HOME/local/include
+LIBPATH = -L $$HOME/local/lib
 LIBS = -lsexp -ltbb
-OFLAGS = -Wall #-O2
+OFLAGS = -Wall -O2
 DFLAGS = -g3
-CFLAGS = $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp
+CFLAGS = -march=native $(OFLAGS) $(DFLAGS) $(INCPATH) $(LIBPATH) -fopenmp
 
 UNAME = $(shell uname)
 ifeq ($(UNAME), Linux)
 LIBS += -lrt
 endif
 
+.PHONY: all clean
+
 all: $(TARGETS)
 
-$(TARGETS): $(SOURCES) $(DEST)
-	$(CC) $(CFLAGS) $@.o $(LIBS) -o $@ 
+pqvm: $(OBJECTS)
+	$(CXX) $(CFLAGS) $(OBJECTS) $(LIBS) -o $@ 
 
 %.o: %.cpp $(DEPS)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) -c $(CFLAGS) -o $@ $<
 
 clean:
-	rm -f $(TARGETS) $(DEST)
+	rm -f $(TARGETS) $(OBJECTS)
