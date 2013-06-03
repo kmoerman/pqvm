@@ -39,6 +39,7 @@ typedef quantum::size_type tangle_size_t;
 typedef quantum::size_type pos_t;
 
 int _verbose_ = 0;
+int _in_place_ = 0;
 
 quantum::quregister _proto_diag_qubit_;
 quantum::quregister _proto_dual_diag_qubit_;
@@ -633,8 +634,13 @@ void qop_cz( const qubit_t qubit_1, const qubit_t qubit_2 ) {
     /* printf("  calling cz with targets %d and %d\n, ", tar1, tar2); */
     
     quantum::quregister old_qureg = get_qureg(qubit_1);
-    qubit_1.tangle->qureg.reset();
-    quantum::controlled_z(tar1, tar2, old_qureg, qubit_1.tangle->qureg );
+    if (_in_place_) {
+        quantum::controlled_z (tar1, tar2, old_qureg);
+    }
+    else {
+        qubit_1.tangle->qureg.reset();
+        quantum::controlled_z(tar1, tar2, old_qureg, qubit_1.tangle->qureg );
+    }
 }
 
 void qop_x( const qubit_t qubit ) {
@@ -647,8 +653,14 @@ void qop_x( const qubit_t qubit ) {
 void qop_z( const qubit_t qubit ) {
     assert( !invalid(qubit) );
     quantum::quregister old_qureg = get_qureg(qubit);
-    qubit.tangle->qureg.reset();
-    quantum::sigma_z( get_target(qubit), old_qureg, qubit.tangle->qureg );
+    if (_in_place_) {
+        quantum::sigma_z( get_target(qubit), old_qureg);
+    }
+    else {
+        quantum::quregister old_qureg = get_qureg(qubit);
+        qubit.tangle->qureg.reset();
+        quantum::sigma_z( get_target(qubit), old_qureg, qubit.tangle->qureg );
+    }
 }
 
 /***************
@@ -1124,6 +1136,7 @@ int main(int argc, char* argv[]) {
             break;
         case 'i':
             quantum::implementation(std::string(optarg));
+            if (std::string(optarg) == "tbb_blk") _in_place_ = 1;
             break;
         case 'o':
             output_file = optarg;

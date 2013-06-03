@@ -7,13 +7,9 @@
 
 
 namespace quantum {
-
-
-
     
     size_type grainsize = 1024;
     
-
 }
 
 #include "openmp.h"
@@ -21,6 +17,7 @@ namespace quantum {
 #include "tbb.h"
 
 #include "tbb-mcp.h"
+#include "tbb-blocks.h"
 
 
 
@@ -63,13 +60,15 @@ namespace quantum {
             QUANTUM_IMPLEMENTATION (itbb);
         if (imp == "tbb_mcp")
             QUANTUM_IMPLEMENTATION (itbb_mcp);
+        if (imp == "tbb_blk")
+            QUANTUM_IMPLEMENTATION (itbb_blk);
     }
     
     //output
     std::ostream& operator << (std::ostream& out, const quregister& reg) {
         for (size_type i (0), n (reg.size()); i != n; ++i) {
             out << std::real(reg[i]) << " + " << std::imag(reg[i]) << "i |" << i << ">" << std::endl;
-            }
+        }
         return out;
     }
     
