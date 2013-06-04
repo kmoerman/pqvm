@@ -5,6 +5,10 @@
 
 #include <tbb/task_scheduler_init.h>
 
+/*
+ * Explicitly set the number of threads, used in performance.h
+ * and in pqvm.cpp
+ */
 namespace thread_control {
 
     inline int max_threads () {

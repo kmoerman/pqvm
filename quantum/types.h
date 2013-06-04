@@ -4,6 +4,10 @@
 #include <complex>
 #include "../vector.h"
 
+/*
+ * Define the basic quantum types we use throughout th implementation
+ */
+
 namespace quantum {
     
     typedef double real;

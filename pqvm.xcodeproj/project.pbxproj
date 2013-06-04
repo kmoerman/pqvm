@@ -13,6 +13,7 @@
 		4AB88AA716FBA5D200BA5DFC /* libtbb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A0E0AC916EA28FC002F1ECA /* libtbb.dylib */; };
 		4ACD869B1702229C00C5E854 /* options.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D0F76FA41700714E00595879 /* options.cpp */; };
 		4ACD869D17032E3200C5E854 /* normalize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ACD869C17032E3200C5E854 /* normalize.cpp */; };
+		4AEA2888175E0DA3009F9595 /* control-z.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AEA2887175E0DA3009F9595 /* control-z.cpp */; };
 		D022F25717046500007BA49E /* libquantum.c in Sources */ = {isa = PBXBuildFile; fileRef = D022F25617046500007BA49E /* libquantum.c */; };
 		D02772FA1726B72A0043AD02 /* grainsize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D02772F91726B72A0043AD02 /* grainsize.cpp */; };
 		D06C191C1700C79100B58CFB /* sigma-x.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D06C191A1700C79100B58CFB /* sigma-x.cpp */; };
@@ -60,6 +61,9 @@
 		4ACD86981701F71400C5E854 /* types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = types.h; path = quantum/types.h; sourceTree = "<group>"; };
 		4ACD869A170200CC00C5E854 /* vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vector.h; sourceTree = "<group>"; };
 		4ACD869C17032E3200C5E854 /* normalize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = normalize.cpp; path = tests/normalize.cpp; sourceTree = "<group>"; };
+		4AEA2886175E0D8C009F9595 /* tbb-blocks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "tbb-blocks.h"; path = "quantum/tbb-blocks.h"; sourceTree = "<group>"; };
+		4AEA2887175E0DA3009F9595 /* control-z.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "control-z.cpp"; path = "tests/control-z.cpp"; sourceTree = "<group>"; };
+		4AEA2889175E2195009F9595 /* tbb-range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "tbb-range.h"; path = "quantum/tbb-range.h"; sourceTree = "<group>"; };
 		D022F25617046500007BA49E /* libquantum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = libquantum.c; path = tests/libquantum.c; sourceTree = "<group>"; };
 		D02772F91726B72A0043AD02 /* grainsize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = grainsize.cpp; path = tests/grainsize.cpp; sourceTree = "<group>"; };
 		D02772FB1726C5910043AD02 /* tbb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = tbb.h; path = quantum/tbb.h; sourceTree = "<group>"; };
@@ -105,12 +109,14 @@
 		4ACD86931701F70500C5E854 /* quantum */ = {
 			isa = PBXGroup;
 			children = (
-				4ACD86951701F71400C5E854 /* quantum.h */,
 				4ACD86981701F71400C5E854 /* types.h */,
-				4ACD86941701F71400C5E854 /* openmp.h */,
+				4ACD86951701F71400C5E854 /* quantum.h */,
 				4ACD86961701F71400C5E854 /* sequential.h */,
 				D02772FB1726C5910043AD02 /* tbb.h */,
+				4ACD86941701F71400C5E854 /* openmp.h */,
+				4AEA2889175E2195009F9595 /* tbb-range.h */,
 				4A2D4C9B172F217E00632B67 /* tbb-mcp.h */,
+				4AEA2886175E0D8C009F9595 /* tbb-blocks.h */,
 			);
 			name = quantum;
 			sourceTree = "<group>";
@@ -120,10 +126,7 @@
 			children = (
 				4A0E0AD816EA2D40002F1ECA /* bitmask.h */,
 				4A0E0AD916EA2D40002F1ECA /* performance.h */,
-
 				4AC7AEB8172D601C003FF9F9 /* options.h */,
-
-
 				D02772FC1726DE650043AD02 /* thread-control.h */,
 				4ACD86901701EAC600C5E854 /* qvm.h */,
 				4ACD869A170200CC00C5E854 /* vector.h */,
@@ -160,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				D06C191A1700C79100B58CFB /* sigma-x.cpp */,
+				4AEA2887175E0DA3009F9595 /* control-z.cpp */,
 				4ACD869C17032E3200C5E854 /* normalize.cpp */,
 				D0F76FA61700714E00595879 /* sigma-z.cpp */,
 				D0F76FA31700714E00595879 /* kronecker.cpp */,
@@ -240,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A0E0ADE16EA3726002F1ECA /* pqvm.cpp in Sources */,
+				4AEA2888175E0DA3009F9595 /* control-z.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

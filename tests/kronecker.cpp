@@ -9,6 +9,19 @@
 
 using namespace quantum;
 
+/*
+ * The the performance of the X operator
+ * options:
+ *   q  number of qubits
+ *   r  number of iterations (set high to overcome init times)
+ *   i  select  quantum backend implementation
+ *   f  output filename
+ *   v  verbose output
+ *   g  grainsize
+ *   s  random seed, to obtain same results twice
+ *   p  explicitly set the number of threads
+ */
+
 int main (int argc, char** argv) {
     
 
@@ -20,10 +33,11 @@ int main (int argc, char** argv) {
     bool measure = false; //f
     bool verbose = false; //v
     set_grainsize (512); //g
+    uint seed = (uint)time(NULL); //s
     
     //get options
     int option;
-    while ((option = getopt (argc, argv, "q:r:i:f:p:vg:")) != -1) {
+    while ((option = getopt (argc, argv, "q:r:i:f:p:vg:s:")) != -1) {
         switch (option) {
             case 'q':
                 num_qubits = parseopt<int>();
@@ -46,6 +60,9 @@ int main (int argc, char** argv) {
                 break;
             case 'g':
                 set_grainsize(parseopt<size_type>());
+                break;
+            case 's':
+                seed = parseopt<uint>();
                 break;
         }
     }

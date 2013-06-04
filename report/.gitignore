@@ -1,0 +1,9 @@
+# ignore TeX stuff
+*.aux
+*.fdb*
+*.synctex*
+*.log
+*.fls
+*.toc
+*.upa
+*.upb

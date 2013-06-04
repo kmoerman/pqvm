@@ -4,6 +4,11 @@
 #include "types.h"
 #include <tbb/tbb.h>
 
+/*
+ * A basic quantum backend in TBB, more optimized versions to be found in the
+ * other headers.
+ */
+
 namespace quantum { namespace itbb {
     
     typedef tbb::blocked_range<size_type> range;

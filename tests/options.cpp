@@ -3,6 +3,8 @@
 
 #include "../options.h"
 
+/* test the options header */
+
 int main (int argc, char** argv) {
     
     std::string confession = "Mama, I killed a man.";

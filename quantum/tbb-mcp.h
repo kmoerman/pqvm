@@ -8,6 +8,10 @@
 
 #define Q_MIN ()
 
+/*
+ * A quantum backend using memcpy in the X operator
+ */
+
 namespace quantum { namespace itbb_mcp {
     
     typedef tbb::blocked_range<size_type> range;

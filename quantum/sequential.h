@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+/*
+ * A sequential quantum backend.
+ */
+
 namespace quantum { namespace sequential {
     
     /*

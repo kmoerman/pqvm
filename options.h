@@ -5,6 +5,11 @@
 #include <string>
 #include <sstream>
 
+/*
+ * template function to parse option arguments from getopt.h
+ * into a desired type (integer, float, string ...)
+ */
+
 template <typename T>
 T parseopt () {
     T t;

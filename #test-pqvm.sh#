@@ -1,9 +1,0 @@
-#! /bin/bash
-
-rm -f pqvm.data
-
-for i in {1..64}
-do
-    /usr/bin/time ./pqvm -t $i
-    
-done

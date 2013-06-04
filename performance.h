@@ -13,18 +13,27 @@
 #include <stdio.h>
 #include <papi.h>
 
+/*
+ * The performance namespace defines some wrappers around PAPI event counters.
+ * 
+ * The macros at the bottom provides control structures, to be wrapped around
+ * code parts that sould be measured.
+ */
+
 namespace performance {
     
     using namespace thread_control;
     
-    //PAPI
+    /*
+     * Set PAPI counters here
+     */
     const int num_papi_events = 2;
     int num_hwd_counters;
     int papi_events[num_papi_events] = {
         PAPI_L1_TCM,
         PAPI_L2_TCM
     };
-    
+
     void output_papi_headers (std::ostream& o, std::string sep) {
         o   << "PAPI_L1_TCM" << sep
             << "PAPI_L2_TCM";
@@ -211,18 +220,35 @@ namespace performance {
             }
         };
         
+        //hleper macros, for constructing unique variable names
         #define PERF_CONCAT_(x, y) x ## y
         #define PERF_CONCAT(x, y) PERF_CONCAT_(x, y)
         #define PERF_EXPERIMENT PERF_CONCAT(experiment_, __LINE__)
-                
+        
+        
+        /*
+         * Measure the parallel performance of (a number of iterations) a piece of code.
+         * The code will be executed a given number of iterations for each number
+         * of threads (increasing). Logs the reults to a file with given name.
+         *
+         * measure_parallel(string output_filename, int iterations [, bool verbose ])
+         */
         #define measure_parallel(...) \
             for (performance::details::parallel PERF_EXPERIMENT (__VA_ARGS__); \
                  PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
-                
+        /*
+         * Measure the sequential performance of (a number of iterations) a piece of code.
+         * Logs the reults to a file with given name.
+         *
+         * measure_sequential(string output_filename, int iterations [, bool verbose ])
+         */
         #define measure_sequential(...) \
             for (performance::details::sequential PERF_EXPERIMENT (__VA_ARGS__); \
                  PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())
-        
+        /*
+         * Repeat a piece of code while decreasing the TBB grainsize parameter
+         * 
+         */
         #define decrease_grainsize(...) \
             for (performance::details::decrease_grainsize PERF_EXPERIMENT (__VA_ARGS__); \
                 PERF_EXPERIMENT.before(); PERF_EXPERIMENT.after())

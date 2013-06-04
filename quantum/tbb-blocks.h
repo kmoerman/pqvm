@@ -9,6 +9,11 @@
 #define qb_min(a, b) (a < b ? a : b)
 #define qb_max(a, b) (a > b ? a : b)
 
+/*
+ * A quantum back end based on block movement of data
+ * Elemenitas all unnecesary data movement.
+ */
+
 namespace quantum { namespace itbb_blk {
     
     typedef tbb::blocked_range<size_type> range;
@@ -323,8 +328,7 @@ namespace quantum { namespace itbb_blk {
     /*
      * Measurement.
      * We measure in the (|+alpha>, |-alpha>) basis (on the equator of the
-     * Bloch sphere). For unitary operators, it suffices to assume the
-     * outcome signal zero (|+alpha>) and transform only the register.
+     * Bloch sphere). We only measure to the + state.
      * 
      * Measurement is performed on a target qubit t, relative to an angle a.
      *
@@ -505,6 +509,7 @@ namespace quantum { namespace itbb_blk {
     
     /*
      * Phase-kick.
+     * Dead code.
      */
     
     namespace details {

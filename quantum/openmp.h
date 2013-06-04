@@ -3,6 +3,10 @@
 
 #include "types.h"
 
+/*
+ * A quantum backend based on OpenMP
+ */
+
 namespace quantum { namespace openmp {
     
     /*

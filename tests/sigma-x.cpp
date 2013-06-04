@@ -10,12 +10,27 @@
 
 using namespace quantum;
 
+/*
+ * The the performance of the X operator
+ * options:
+ *   q  number of qubits
+ *   r  number of iterations (set high to overcome init times)
+ *   i  select  quantum backend implementation
+ *   f  output filename
+ *   t  target qubit number
+ *   v  verbose output
+ *   g  grainsize
+ *   s  random seed, to obtain same results twice
+ *   o  display the statevector (before and after) output on screen
+ *   p  explicitly set the number of threads
+ */
+
 int main (int argc, char** argv) {
     
     //default options
     int num_qubits = 20; //q
     int num_repeat = 1;  //r
-    std::string imp = "tbb"; //i
+    std::string imp = "tbb_blk"; //i
     std::string file = "sigma-x-speedup.data"; //f
     bool measure = false; //f
     size_type target = 10; //t
@@ -63,7 +78,10 @@ int main (int argc, char** argv) {
     }
     
     
-    //initialize random state
+    /*
+     * Initialize random state
+     * use a seed for repeatable results.
+     */
     srand(seed);
 
     implementation(imp);
@@ -77,6 +95,9 @@ int main (int argc, char** argv) {
         *i = complex ((rand() % 100) / 100.0, (rand() % 100) / 100.0);
     }
     
+    /*
+     * initilaize the performance counters
+     */
     performance::init();
     
     if (verbose) {
@@ -90,7 +111,11 @@ int main (int argc, char** argv) {
             << "MiB" << std::endl;
     }
     
-    //measure speedup
+    /*
+     * Either measure the speedup (if output file is give)
+     * Of just execute th operator (for external measurements with PERF
+     * or correctness testing.
+     */
     if (measure) {
         if (imp != "seq" && imp != "omp")
             measure_parallel (file, num_repeat, verbose)
@@ -101,14 +126,13 @@ int main (int argc, char** argv) {
                 sigma_x(target, a, b);
         }
     
-    //or just execute operation
     else {
         if (output) print(a);
         for (int i = 1;num_repeat > 0; --num_repeat) {
             if (verbose) std::cout << "iteration " << i++ << std::endl;
             sigma_x(target, a, b);
         }
-        if (output) print(b);
+        if (output) {if (imp == "tbb_blk") print(a); else print(b);}
     }
     return 0;
     
