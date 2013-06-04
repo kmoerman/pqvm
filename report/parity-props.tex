@@ -1,0 +1,15 @@
+
+\lemma \label{thm:ceil-floor-monotonic} For any continuous monotonically increasing function $f(x)$ with the property $f(x) \in \integer \implies x \in \integer$
+we have $$\floor*{f(x)} = \floor*{f(\floor{x})} \quad\text{and}\quad \ceil*{f(x)} = \ceil*{f(\ceil{x})}$$
+\proof See Knuth's \emph{Concrete Mathematics} \cite{knuth-graham-patashnik}, page 71.
+
+
+\lemma Given two integers $m$ and $n$ subject to addition and multiplication, the function $\parity_k$ obeys the identities
+\begin{equation}\label{eq:odd-even-props}
+\begin{split}
+\parity_k(m+n) &= \parity_k(m)\parity_k(n) + \parity_k(m) + \parity_k(n) \\
+\parity_k(mn) &= \parity_k(m)\parity_k(n) - \parity_k(m) - \parity_k(n)
+\end{split}
+\end{equation}
+
+\proof ---

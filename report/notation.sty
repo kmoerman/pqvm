@@ -1,0 +1,79 @@
+% VAR PHI LOOKS WAY BETTER
+%\let\uglyphi\phi
+%\let\phi\phi
+%\let\varphi\uglyphi
+
+% BINARY NUMBERS
+% in text the tt fonts are scaled to match lowercase,
+% in math mode they should match uppercase (i only use 0 1 and B)
+\newcommand{\bin}[1]{\text{\scalebox{1.12}{{\tt #1}}}}
+
+% DIRAC NOTATION
+% usepackage{bracket} puts too much space around the delimiters
+\newcommand{\bra}[1]{\langle#1\rvert}
+\newcommand{\ket}[1]{\lvert#1\rangle}
+\newcommand{\braket}[1]{\langle#1\rangle}
+
+\newcommand{\Ket}[1]{\left\lvert#1\right\rangle}
+\newcommand{\Bra}[1]{\left\langle#1\right\rvert}
+\newcommand{\Braket}[1]{\left\langle#1\right\rangle}
+
+
+%% SETS
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\Set}[1]{\left\{#1\right\}}
+
+\newcommand{\ketb}[1]{\ket{\bin{#1}}}
+\newcommand{\brab}[1]{\bra{\bin{#1}}}
+
+% INDEFINITE LARGE OPERATORS
+% \nolimits puts the superscripts too high
+\newcommand{\Tensor}[1]{\sideset{}{_{\negthinspace#1}}\bigotimes}
+\newcommand{\Product}[1]{\sideset{}{_{#1}}\prod}
+\newcommand{\Sum}[1]{\sideset{}{_{#1}}\sum}
+
+% NUMBER SPACES
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\integer}{\mathbb{Z}}
+\newcommand{\cbasis}{\bin{B}}
+\newcommand{\hilbert}{\mathcal{H}}
+\newcommand{\parity}{\mathcal{P}\hspace{-0.07em}}
+
+% DEFAULT MATRICES AND VECTORS
+\newcommand{\pmat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\bmat}[1]{\begin{bmatrix}#1\end{bmatrix}}
+\newcommand{\smat}[1]{\left(\begin{smallmatrix}#1\end{smallmatrix}\right)}
+\let\mat\pmat
+
+\newcount\colveccount
+\newcommand*\colvec[1]{
+        \global\colveccount#1
+        \begin{pmatrix}
+        \colvecnext
+}
+\def\colvecnext#1{
+        #1
+        \global\advance\colveccount-1
+        \ifnum\colveccount>0
+                \\
+                \expandafter\colvecnext
+        \else
+                \end{pmatrix}
+        \fi
+}
+
+\newcommand\transpose{\top}
+
+% IVERSON NOTATIONS
+\newcommand{\ive}[1]{{[#1]}}
+\newcommand{\ceil}[1]{\left\lceil #1\right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1\right\rfloor}
+\renewcommand{\div}{\backslash}
+
+% UNITARIES AND MEASUREMENT CALC
+\newcommand{\I}{\mat{1 & 0 \\ 0 & 1}}
+\newcommand{\X}{\mat{0 & 1 \\ 1 & 0}}
+\newcommand{\Z}{\mat{1 & \phantom{-}0 \\ 0 & -1}}
+\newcommand{\cZ}{\mat{1 & 0 & 0 & \phantom{-}0 \\ 0 & 1 & 0 & \phantom{-}0 \\ 0 & 0 & 1 & \phantom{-}0\\ 0& 0& 0 & -1}}
+\newcommand{\cU}{\widehat{U}}

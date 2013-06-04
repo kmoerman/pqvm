@@ -1,0 +1,18 @@
+\usepackage{xifthen, chngcntr}
+
+\newcommand{\thmlabelsep}{.}
+
+\newcommand{\maketheorem}[3][]{%
+  \newcounter{#2-theorem-count}%
+   \ifthenelse{\isempty{#1}}{}{\numberwithin{#2-theorem-count}{#1}}%
+   \expandafter\newcommand\csname #2\endcsname[1][]{%
+   \medskip\par\noindent %
+    \refstepcounter{#2-theorem-count}%
+    {\bf #3 %
+     \ifthenelse{\isempty{#1}}{}{\expandafter\csname the#1\endcsname\thmlabelsep}%
+\arabic{#2-theorem-count}}\enskip%
+   \ifthenelse{\isempty{##1}}{}{\textit{##1}}%
+    }}
+    
+\newcommand{\proof}[1][]{%
+\par\noindent{\bf Proof}\enskip\ifthenelse{\isempty{#1}}{}{\textit{#1}}}
