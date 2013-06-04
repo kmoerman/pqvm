@@ -633,11 +633,12 @@ void qop_cz( const qubit_t qubit_1, const qubit_t qubit_2 ) {
     /* printf("\n"); */
     /* printf("  calling cz with targets %d and %d\n, ", tar1, tar2); */
     
-    quantum::quregister old_qureg = get_qureg(qubit_1);
+
     if (_in_place_) {
-        quantum::controlled_z (tar1, tar2, old_qureg);
+        quantum::controlled_z (tar1, tar2, qubit_1.tangle->qureg, qubit_1.tangle->qureg);
     }
     else {
+        quantum::quregister old_qureg = get_qureg(qubit_1);
         qubit_1.tangle->qureg.reset();
         quantum::controlled_z(tar1, tar2, old_qureg, qubit_1.tangle->qureg );
     }
@@ -652,9 +653,8 @@ void qop_x( const qubit_t qubit ) {
 
 void qop_z( const qubit_t qubit ) {
     assert( !invalid(qubit) );
-    quantum::quregister old_qureg = get_qureg(qubit);
     if (_in_place_) {
-        quantum::sigma_z( get_target(qubit), old_qureg);
+        quantum::sigma_z( get_target(qubit), qubit.tangle->qureg, qubit.tangle->qureg);
     }
     else {
         quantum::quregister old_qureg = get_qureg(qubit);

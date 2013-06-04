@@ -1,4 +1,4 @@
-CXX     = clang
+CXX     = g++
 
 SOURCES = $(wildcard *.cpp)
 DEPS    = ../performance.h ../options.h $(wildcard ../quantum/*.h) ../vector.h

@@ -19,7 +19,7 @@ int main (int argc, char** argv) {
     std::string file = "kronecker-speedup.data"; //f
     bool measure = false; //f
     bool verbose = false; //v
-    set_grainsize (128); //g
+    set_grainsize (512); //g
     
     //get options
     int option;
@@ -83,7 +83,7 @@ int main (int argc, char** argv) {
     
     //measure speedup
     if (measure) {
-        if (imp == "tbb")
+        if (imp != "seq" && imp != "omp")
             measure_parallel (file, num_repeat, verbose)
                 kronecker(a, b, c);
         

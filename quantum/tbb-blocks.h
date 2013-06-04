@@ -186,7 +186,7 @@ namespace quantum { namespace itbb_blk {
             const size_type target;
             const iterator input;
             
-            sigma_z (size_type target_, quregister& input_,) :
+            sigma_z (size_type target_, quregister& input_) :
             target (target_), input (input_.begin()) {}
             
             void operator() (const range& r) const {
@@ -201,7 +201,7 @@ namespace quantum { namespace itbb_blk {
                     //skip even target blocks
                     for (i += block; i < n; i += block)
                     //loop amplitudes in odd target block
-                    for (size_t j = 0; j < block; ++j, ++i)
+                    for (size_type j = 0; j < block; ++j, ++i)
                         input[i] *= -1;
                             
                     //range contained in a period
@@ -216,7 +216,7 @@ namespace quantum { namespace itbb_blk {
         };
     }
     
-    void sigma_z (const size_type target, quregister& input) {
+    void sigma_z (const size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
         
         tbb::parallel_for (range (0, n, grainsize), details::sigma_z (target, input));
@@ -244,7 +244,7 @@ namespace quantum { namespace itbb_blk {
             const iterator input;
             
             controlled_z (const size_type control_, const size_type target_, quregister& input_) :
-            control (qb_max(control_, target_)), target (qb_min(control_, target_)) input (input_.begin()) {}
+            control (qb_max(control_, target_)), target (qb_min(control_, target_)), input (input_.begin()) {}
             
             void operator() (const range& r) const {
                 size_type i        = r.begin(),
@@ -258,11 +258,11 @@ namespace quantum { namespace itbb_blk {
                 //range contains at least one control period
                 if (size >= c_period)
                     //skip even control blocks
-                    for (i += c_block + t_block; i < n; i += c_block + t_block)
+                    for (i += c_block + t_block; i < n; i += c_block)
                     //skip even target blocks
-                    for (size_t j = 0; j < c_block; j += t_period, i += t_block)
+                    for (size_type j = 0; j < c_block; j += t_period, i += t_block)
                     //loop amplitudes in odd target block
-                    for (size_t k = 0; k < t_block; ++k, ++i)
+                    for (size_type k = 0; k < t_block; ++k, ++i)
                         input[i] *= -1;
                         
                 //range contained in a control period
@@ -272,7 +272,7 @@ namespace quantum { namespace itbb_blk {
                     if (i & c_block) {
                         if (size >= t_period)
                             for (i += t_block; i < n; i += t_block)
-                            for (size_t j = 0; j < t_block; ++j, ++i)
+                            for (size_type j = 0; j < t_block; ++j, ++i)
                                 input[i] *= -1;
                         else
                             if (i & t_block)
@@ -284,7 +284,7 @@ namespace quantum { namespace itbb_blk {
         };
     }
     
-    void controlled_z (const size_type control, const size_type target, quregister& input) {
+    void controlled_z (const size_type control, const size_type target, quregister& input, quregister& output) {
         size_type n (input.size());
         tbb::parallel_for (range (0, n, grainsize), details::controlled_z (control, target, input));
     };

@@ -20,7 +20,7 @@ int main (int argc, char** argv) {
     bool measure = false; //f
     size_type target = 10; //t
     bool verbose = false; //v
-    set_grainsize (128); //g
+    set_grainsize (512); //g
     uint seed = (uint)time(NULL); //s
     bool output = false; //o
     

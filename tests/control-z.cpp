@@ -15,9 +15,10 @@ int main (int argc, char** argv) {
     int num_qubits = 20; //q
     int num_repeat = 1;  //r
     std::string imp = "tbb"; //i
-    std::string file = "sigma-z-speedup.data"; //f
+    std::string file = "control-z-speedup.data"; //f
     bool measure = false; //f
     size_type target = 10; //t
+    size_type control = 15; //c
     bool verbose = false; //v
     set_grainsize (512); //g
     uint seed = (uint)time(NULL); //s
@@ -25,7 +26,7 @@ int main (int argc, char** argv) {
     
     //get options
     int option;
-    while ((option = getopt (argc, argv, "q:r:i:f:p:t:vg:s:o")) != -1) {
+    while ((option = getopt (argc, argv, "q:r:i:f:p:t:c:vg:s:o")) != -1) {
         switch (option) {
             case 'q':
                 num_qubits = parseopt<int>();
@@ -45,6 +46,9 @@ int main (int argc, char** argv) {
                 break;
             case 't':
                 target = parseopt<size_type>();
+                break;
+            case 'c':
+                control = parseopt<size_type>();
                 break;
             case 'v':
                 verbose = true;
@@ -79,9 +83,11 @@ int main (int argc, char** argv) {
     
     if (verbose) {
         std::cout
-        << "Running sigma-z on "
+        << "Running control-z on "
         << num_qubits << " qubits, target qubit "
         << target << std::endl
+        << "control qubit "
+        << control << std::endl
         << "State vector contains "
         << size << " amplitudes, "
         << ((double)(size* sizeof(complex)) / (1024*1024))
@@ -92,11 +98,11 @@ int main (int argc, char** argv) {
     if (measure) {
         if (imp != "seq" && imp != "omp")
             measure_parallel (file, num_repeat, verbose)
-            sigma_z(target, a, b);
+            controlled_z(control, target, a, b);
         
         else
             measure_sequential (file, num_repeat, verbose)
-            sigma_z(target, a, b);
+            controlled_z(control, target, a, b);
     }
     
     //or just execute operation
@@ -104,7 +110,7 @@ int main (int argc, char** argv) {
         if (output) print(a);
         for (int i = 1;num_repeat > 0; --num_repeat) {
             if (verbose) std::cout << "iteration " << i++ << std::endl;
-            sigma_z(target, a, b);
+            controlled_z(control, target, a, b);
         }
         if (output) {if (imp == "tbb_blk") print(a); else print(b);}
     }
