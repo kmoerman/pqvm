@@ -1106,7 +1106,7 @@ int main(int argc, char* argv[]) {
     opterr = 0;
     
     //override later
-    quantum::implementation("tbb");
+    quantum::implementation("tbb_blk");
     
 
     while ((c = getopt (argc, argv, "rsvmp:f:i:o::g:")) != -1)

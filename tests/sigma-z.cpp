@@ -29,7 +29,7 @@ int main (int argc, char** argv) {
     //default options
     int num_qubits = 20; //q
     int num_repeat = 1;  //r
-    std::string imp = "tbb"; //i
+    std::string imp = "tbb_blk"; //i
     std::string file = "sigma-z-speedup.data"; //f
     bool measure = false; //f
     size_type target = 10; //t
